@@ -1,0 +1,4 @@
+# Evaluation QA pairs for the AI report generator.
+# Each entry pairs a question with its expected grounded answer.
+# Populated later; placeholder for the skeleton.
+qa_pairs: []
