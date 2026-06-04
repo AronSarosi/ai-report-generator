@@ -1,31 +1,109 @@
-# ai-report-generator
+# AI Report Generator
 
-A data-agnostic AI report generator: feed it a data file and a template, and it
-produces a finished report — charts plus narrative grounded in the real numbers —
-exported to PowerPoint and PDF. Demoed on synthetic sales data.
+**Turn a data file into a finished, board-ready report — charts and narrative grounded in the real numbers — and ask questions of the same data in plain English.**
 
-> Skeleton only — feature logic is not implemented yet.
+Upload a CSV or Excel file, describe the report you want ("monthly sales review highlighting the winning products and regions"), and the app generates a consulting-grade PowerPoint + PDF: action-title slides, charts, and a written narrative where **every quoted number is pulled from the data and re-checked against it**. The same engine works on any tabular dataset — sales, budget-vs-actuals, inventory — because it discovers the schema at runtime instead of hardcoding it.
 
-## Layout
+> Status: working local app (Phase A). Built for a finance-team use case; data-agnostic by design.
+
+---
+
+## Why it's different from "ask ChatGPT to write a report"
+
+A language model asked to summarise a spreadsheet will happily **invent numbers**. This tool is built so it can't:
+
+1. It **computes** the real figures with SQL (period-over-period change, trends, top/bottom by every dimension, biggest movers) — deterministically, before any text is written.
+2. The model only ever **narrates those computed numbers**, and is given an explicit list of "approved figures" it is allowed to cite.
+3. A **verify step** then scans the narrative for any `$`/`%` figure that isn't in the approved set and regenerates that section.
+
+That grounding + verification loop is the whole point: a report a CFO can trust.
+
+---
+
+## What it does
+
+| Capability | What it is |
+|---|---|
+| **Generate Report** | data + a prompt → a finished PPTX/PDF (charts + grounded narrative) |
+| **Ask Your Data** | a plain-English question → safe read-only SQL → the answer (with the SQL one click away) |
+
+---
+
+## Architecture
 
 ```
-app/      Streamlit UI (streamlit_app.py) and FastAPI entrypoint (main.py)
-src/      Core library: config, data tools, RAG, report orchestration, rendering,
-          schemas, observability
-scripts/  Data generation and document ingestion utilities
-data/     db/ (SQLite), docs/ (source docs), charts/ (generated), out/ (reports)
-eval/     QA pairs and the evaluation runner
+            Streamlit UI  (upload data + prompt  ·  or ask a question)
+                                   │
+        ┌──────────────────────────┴───────────────────────────┐
+        │                                                       │
+   Generate Report                                         Ask Your Data
+        │                                                       │
+   LangGraph engine                                       Talk2Data
+   analyze → plan → write → verify → assemble             (text-to-SQL)
+        │                                                       │
+        ├── profiler  (discovers time / measures / dimensions) ─┤
+        ├── analytical battery  (the real numbers, in SQL)      │
+        ├── writer  (LLM, structured Pydantic output)           │
+        └── renderer (matplotlib charts + python-pptx → PDF)    │
+                                   │                            │
+                              SQLite (the uploaded data, loaded at runtime)
 ```
 
-## Setup
+## How it works (the pipeline, end to end)
+
+1. **Ingest** — the uploaded CSV/Excel/JSON is loaded into a **SQLite** table (`src/data_tool.py`).
+2. **Profile** — a runtime profiler inspects the table and infers each column's *role*: which is the **time** axis, which are numeric **measures** (revenue, units, budget…), which are categorical **dimensions** (region, department…). Nothing is hardcoded — this is what makes the engine data-agnostic.
+3. **Analytical battery** (`src/analysis.py`) — given only that profile, it computes a fixed set of real signals in SQL: headline total vs the prior period, the monthly trend, top/bottom breakdown by every dimension, and the biggest movers. Every value is a real query result.
+4. **Report engine** (`src/report.py`) — a **LangGraph** state machine: `analyze → plan → write → verify → assemble`. `plan` turns the battery into a section list; `write` calls the LLM with **structured (Pydantic) output** so it returns typed sections (action title, narrative, bullets), grounded in the battery's numbers; `verify` checks no invented figures slipped in; `assemble` produces a typed `Report`.
+5. **Talk2Data** (`src/data_tool.py`) — for the chat tab, the LLM writes a single read-only `SELECT` against the discovered schema. Safety is defense-in-depth: a **read-only SQLite connection**, single-statement + `SELECT`-only validation, a keyword denylist, a query timeout, and an enforced `LIMIT`.
+6. **Render** (`src/render.py`) — the `Report` becomes **matplotlib** charts and a **python-pptx** deck (one design system in `src/style.py`), then exports to **PDF** via LibreOffice.
+
+The design separates two responsibilities on purpose: **the system owns the numbers and charts; the model only writes prose.**
+
+## Data-agnostic, proven
+
+The repo ships two deliberately different synthetic datasets. The *same* engine produces a sales review from one and an FP&A spend report from the other:
+
+- `scripts/gen_sales_data.py` → daily sales (date · region · channel · category · product · revenue · margin)
+- `scripts/gen_budget_data.py` → monthly budget-vs-actuals (month · department · budget · actual · variance)
+
+It also degrades gracefully: data with **no date column** drops the trend analysis and reports on totals + breakdowns; data with **no numeric column** returns a clear message instead of crashing.
+
+## Tech stack
+
+Python 3.12 · **LangChain / LangGraph** · **OpenAI** (`gpt-4o-mini`, `text-embedding-3-small`) · **Pydantic v2** (structured output) · **SQLite** · **pandas** · **matplotlib** · **python-pptx** + LibreOffice (PDF) · **Streamlit** · Langfuse (observability, wiring in progress) · provider switch for **Azure OpenAI** (Phase B).
+
+## Run it locally
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-copy .env.example .env   # then fill in your keys
+copy .env.example .env          # then add your OPENAI_API_KEY
+.\.venv\Scripts\python.exe scripts\gen_sales_data.py      # build the sample data
+.\.venv\Scripts\streamlit run app/streamlit_app.py        # open http://localhost:8501
 ```
 
-## Stack
+`.env` keys: `OPENAI_API_KEY` (required), `OPENAI_CHAT_MODEL`, `OPENAI_EMBED_MODEL`, optional `LANGFUSE_*`, and `AZURE_*` for Phase B. `.env` is gitignored and never committed.
 
-Python 3.12 · LangChain / LangGraph · OpenAI · ChromaDB · pandas · matplotlib ·
-python-pptx · Streamlit · FastAPI · Langfuse
+## Project layout
+
+```
+app/      Streamlit UI (streamlit_app.py) + FastAPI entrypoint (main.py, Phase B)
+src/      config · schemas · style · data_tool (profile + Talk2Data) · analysis
+          (battery) · report (LangGraph) · render (PPTX/PDF) · rag · obs
+scripts/  synthetic data generators + favicon
+data/     db/ docs/ charts/ out/   (runtime; gitignored)
+docs/     report_design_spec.md (the MBB/Big-4 design system)
+```
+
+## Roadmap
+
+- **Observability** — Langfuse tracing of every model/tool call
+- **Evaluation harness** — automated check that every quoted number matches the source
+- **Talk2Document (RAG)** — answer questions from uploaded reference docs/templates
+- **Phase B (Azure)** — Azure OpenAI + Azure AI Search, FastAPI, Docker, Container Apps (scale-to-zero)
+
+## Notes
+
+- Cost is tiny: `gpt-4o-mini` keeps a full report well under a cent of API usage.
+- No secrets in the repo; the OpenAI key lives only in a local, gitignored `.env`.
