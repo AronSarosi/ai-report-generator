@@ -40,16 +40,16 @@ CSS = """
 [data-testid="stToolbar"], [data-testid="stDecoration"], #MainMenu, footer, .stDeployButton {display:none !important;}
 header[data-testid="stHeader"] {background:transparent;}
 [data-testid="stAppViewContainer"] {background-color:#0E1420; background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px); background-size:88px 88px;}
-.block-container {padding-top:1.1rem; max-width:1320px; zoom:0.93;}
+.block-container {padding-top:0.8rem; padding-bottom:3rem; max-width:1320px;}
 
-.app-title {text-align:center; font-family:Georgia,'Times New Roman',serif; color:#EAF1FB; font-weight:700; font-size:2.5rem; margin-bottom:.15rem;}
-.app-sub {text-align:center; color:#9AA4B4; font-size:1.05rem; max-width:920px; margin:0 auto 1.3rem auto; line-height:1.5;}
+.app-title {text-align:center; font-family:Georgia,'Times New Roman',serif; color:#EAF1FB; font-weight:700; font-size:2.15rem; margin-bottom:.1rem;}
+.app-sub {text-align:center; color:#9AA4B4; font-size:1.0rem; max-width:880px; margin:0 auto .8rem auto; line-height:1.45;}
 
 /* tabs: ONE joined full-width bar, split in half. Each box is fully colored
    (per-button background + border, so no uncolored strip at the bottom). */
 .stTabs [data-baseweb="tab-list"] {display:flex; width:100%; gap:0; border:none; padding:0; margin:0;}
 [data-baseweb="tab-highlight"], [data-baseweb="tab-border"] {display:none !important; height:0 !important; background:transparent !important;}
-.stTabs [data-baseweb="tab"] {flex:1; justify-content:center; margin:0; background:#1F2A44; background-clip:border-box; border:1px solid #2E3C52; border-radius:0; padding:.9rem 1rem; color:#C9D2DE; box-shadow:none !important;}
+.stTabs [data-baseweb="tab"] {flex:1; justify-content:center; margin:0; background:#1F2A44; background-clip:border-box; border:1px solid #2E3C52; border-radius:0; padding:.6rem 1rem; color:#C9D2DE; box-shadow:none !important;}
 .stTabs [data-baseweb="tab"]::after, .stTabs [data-baseweb="tab"]::before {display:none !important;}
 .stTabs [data-baseweb="tab"]:first-of-type {border-radius:10px 0 0 10px;}
 .stTabs [data-baseweb="tab"]:last-of-type {border-radius:0 10px 10px 0; border-left:none;}
@@ -57,7 +57,7 @@ header[data-testid="stHeader"] {background:transparent;}
 .stTabs [aria-selected="true"] {background:#2E6DB4; border-color:#2E6DB4;}
 .stTabs [aria-selected="true"] p {color:#fff;}
 
-.field-label {font-size:1.18rem; font-weight:600; color:#EAF1FB; margin:1.1rem 0 .4rem 0;}
+.field-label {font-size:1.08rem; font-weight:600; color:#EAF1FB; margin:.65rem 0 .3rem 0;}
 .lede {color:#C9D2DE; font-size:1.2rem; line-height:1.5; margin:.7rem 0 .9rem 0;}
 .hint {color:#8A94A6; font-size:.95rem; margin:.3rem 0 .2rem 0;}
 .datastatus {background:#16202E; border:1px solid #2E3C52; color:#D6DCE6; padding:.6rem .85rem; border-radius:6px; font-size:.98rem; margin:.5rem 0 .6rem 0;}
@@ -69,35 +69,35 @@ section[data-testid="stFileUploaderDropzone"] button {min-width:160px; width:160
 section[data-testid="stFileUploaderDropzone"] small {font-size:.92rem;}
 div[class*="st-key-sample_"] .stButton {display:flex; justify-content:flex-end; padding-right:1rem;}
 div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0rem;}
-.st-key-gen_btn button, .st-key-ask_btn button {min-width:180px;}
+.st-key-gen_btn button, .st-key-ask_btn button {min-width:200px;}
 .stTextArea textarea::placeholder, .stTextInput input::placeholder {font-style:italic; color:#7C8696;}
 
 /* illustration */
-.hero {display:flex; align-items:flex-start; justify-content:center; gap:.4rem; flex-wrap:wrap; margin-top:1.4rem;}
-.hero-col {flex:1; min-width:270px; max-width:385px; text-align:center;}
-.hero-cap {letter-spacing:.08em; font-size:.95rem; color:#9AA4B4; font-weight:700; margin-bottom:.9rem;}
-.hero-arrow {display:flex; flex-shrink:0; align-items:flex-start; justify-content:center; margin-top:118px;}
-.stack {position:relative; height:285px;}
-.filecard {position:absolute; left:50%; top:6px; width:300px; background:#fff; border:1px solid #C0C5C9; border-radius:9px; box-shadow:0 10px 26px rgba(0,0,0,.5); padding:.65rem;}
+.hero {display:flex; align-items:flex-start; justify-content:center; gap:.4rem; flex-wrap:wrap; margin-top:.5rem;}
+.hero-col {flex:1; min-width:260px; max-width:360px; text-align:center;}
+.hero-cap {letter-spacing:.08em; font-size:.9rem; color:#9AA4B4; font-weight:700; margin-bottom:.55rem;}
+.hero-arrow {display:flex; flex-shrink:0; align-items:flex-start; justify-content:center; margin-top:80px;}
+.stack {position:relative; height:196px;}
+.filecard {position:absolute; left:50%; top:6px; width:288px; background:#fff; border:1px solid #C0C5C9; border-radius:9px; box-shadow:0 10px 26px rgba(0,0,0,.5); padding:.5rem .6rem .35rem .6rem;}
 .filecard.back {transform:translate(-66%,30px) rotate(-5deg);}
 .filecard.front {transform:translate(-34%,0);}
 .fc-tag {display:inline-block; font-size:.88rem; font-weight:700; color:#fff; border-radius:3px; padding:.06rem .45rem; margin-bottom:.45rem;}
-.tag-csv {background:#2E6DB4;} .tag-xlsx {background:#2E8B6F;}
+.tag-csv {background:#2E6DB4;} .tag-xlsx {background:transparent; color:#1F2A44; padding:0;}
 .minitbl {width:100%; border-collapse:collapse; font-size:.86rem;}
-.minitbl th {background:#1F2A44; color:#fff; padding:3px 6px; text-align:left;}
-.minitbl td {border-bottom:1px solid #E6E8EB; padding:3px 6px; color:#3C4450;}
-.logo-badge {margin:26px auto 1.3rem auto; display:flex; justify-content:center;}
+.minitbl th {background:#1F2A44; color:#fff; padding:2px 5px; text-align:left;}
+.minitbl td {border-bottom:1px solid #E6E8EB; padding:2px 5px; color:#3C4450;}
+.logo-badge {margin:14px auto .8rem auto; display:flex; justify-content:center;}
 .logo-badge svg {filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));}
 .prompt-bubble {background:#1A2231; border:1px solid #3A4660; border-radius:11px; padding:.75rem .9rem; font-size:.96rem; color:#C4CCD8; text-align:left;}
-.report-thumb {width:320px; margin:0 auto; background:#fff; border:1px solid #C0C5C9; border-radius:9px; box-shadow:0 10px 26px rgba(0,0,0,.5); padding:.85rem; text-align:left;}
+.report-thumb {width:300px; margin:0 auto; background:#fff; border:1px solid #C0C5C9; border-radius:9px; box-shadow:0 10px 26px rgba(0,0,0,.5); padding:.6rem; text-align:left;}
 .rt-kicker {font-size:.86rem; color:#2E6DB4; font-weight:700; letter-spacing:.08em;}
 .rt-title {font-family:Georgia,serif; color:#1F2A44; font-weight:700; font-size:1.0rem; line-height:1.18; margin:.25rem 0 .65rem 0;}
-.rt-bars {display:flex; align-items:flex-end; gap:3px; height:64px;}
+.rt-bars {display:flex; align-items:flex-end; gap:3px; height:50px;}
 .rt-bars span {flex:1; background:#C0C5C9; border-radius:2px 2px 0 0;}
 .rt-bars span.hi {background:#2E6DB4;}
 .rt-take {margin-top:.65rem; background:#EAF2FB; border-left:3px solid #2E6DB4; border-radius:3px; padding:.45rem .55rem; font-size:.86rem; color:#1F2A44; line-height:1.35;}
 /* chat bubbles */
-.chat {width:320px; margin:0 auto; text-align:left;}
+.chat {width:300px; margin:0 auto; text-align:left;}
 .bubble {max-width:86%; padding:.55rem .75rem; border-radius:14px; font-size:.96rem; margin-bottom:.55rem; line-height:1.3;}
 .bubble.user {background:#2E6DB4; color:#fff; margin-left:auto;}
 .bubble.ai {background:#fff; color:#1F2A44; border:1px solid #C0C5C9;}
@@ -210,8 +210,7 @@ _DATA_CARDS = """
         <tr><td>2026-05</td><td>EMEA</td><td>Store</td><td>184k</td></tr>
         <tr><td>2026-05</td><td>APAC</td><td>Online</td><td>229k</td></tr>
         <tr><td>2026-04</td><td>LATAM</td><td>Store</td><td>112k</td></tr>
-        <tr><td>2026-04</td><td>US</td><td>Online</td><td>246k</td></tr>
-        <tr><td>2026-03</td><td>APAC</td><td>Store</td><td>221k</td></tr></table>
+        <tr><td>2026-04</td><td>US</td><td>Online</td><td>246k</td></tr></table>
       </div>
       <div class="filecard front">
         <span class="fc-tag tag-xlsx">budget.xlsx</span>
@@ -232,7 +231,7 @@ _BARS = ("".join(f'<span style="height:{h}%"></span>' for h in
          "".join(f'<span style="height:{h}%"></span>' for h in (74, 58, 46)))
 
 # Logo #8 (donut chart): the brand mark, placed in the illustration centre.
-LOGO_SVG = ('<svg viewBox="0 0 64 64" width="124" height="124">'
+LOGO_SVG = ('<svg viewBox="0 0 64 64" width="100" height="100">'
             '<rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/>'
             '<circle cx="32" cy="32" r="16" fill="none" stroke="#ffffff80" stroke-width="8.5"/>'
             '<circle cx="32" cy="32" r="16" fill="none" stroke="#ffffff" stroke-width="8.5" '
@@ -296,9 +295,10 @@ HERO_CHAT = f"""
 # Header
 # --------------------------------------------------------------------------- #
 st.markdown('<div class="app-title">AI Report Generator</div>', unsafe_allow_html=True)
-st.markdown('<div class="app-sub">Upload your data to generate a finished, board-ready report, with '
-            'charts and narrative grounded in the real figures, or ask questions in plain English and '
-            'get instant answers. Both run entirely on your own data.</div>', unsafe_allow_html=True)
+st.markdown('<div class="app-sub">Upload your sales, finance, or operations data and get a finished, '
+            'board-ready report in seconds, with charts and a narrative grounded in the real figures. '
+            'Or ask questions in plain English and get instant answers, all computed from your own '
+            'data.</div>', unsafe_allow_html=True)
 
 tab_gen, tab_chat = st.tabs(["Generate Report", "Ask Your Data"])
 
@@ -311,13 +311,13 @@ with tab_gen:
     prompt = st.text_area(
         "prompt", label_visibility="collapsed",
         placeholder="Example: Generate a monthly sales report highlighting the winning products and regions.",
-        height=78,
+        height=68,
         help="Describe the report in plain English. Mention a month (e.g. 'for May 2026') to pin the "
              "period, and what to focus on (winning products, weak regions, channel shifts).",
     )
     if st.button("Generate report", type="primary", key="gen_btn"):
         if not active:
-            st.warning('Upload a data file (or click "Use sample data") first.')
+            st.warning('Upload a data file or click "Use sample data" first.')
         elif not prompt.strip():
             st.warning("Describe the report you want (see the example in the box).")
         else:
@@ -354,11 +354,11 @@ with tab_gen:
 with tab_chat:
     active = data_panel("chat")
     field_label("What do you want to know?")
-    q = st.text_area("question", label_visibility="collapsed", height=78,
+    q = st.text_area("question", label_visibility="collapsed", height=68,
                      placeholder="Example: Which region declined the most last month?")
-    if st.button("Ask", type="primary", key="ask_btn"):
+    if st.button("Ask about your data", type="primary", key="ask_btn"):
         if not active:
-            st.warning('Upload a data file (or click "Use sample data") first.')
+            st.warning('Upload a data file or click "Use sample data" first.')
         elif not q.strip():
             st.warning("Type a question (see the example in the box).")
         else:

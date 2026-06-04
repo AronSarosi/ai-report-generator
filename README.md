@@ -71,7 +71,7 @@ It also degrades gracefully: data with **no date column** drops the trend analys
 
 ## Tech stack
 
-Python 3.12 · **LangChain / LangGraph** · **OpenAI** (`gpt-4o-mini`, `text-embedding-3-small`) · **Pydantic v2** (structured output) · **SQLite** · **pandas** · **matplotlib** · **python-pptx** + LibreOffice (PDF) · **Streamlit** · Langfuse (observability, wiring in progress) · provider switch for **Azure OpenAI** (Phase B).
+Python 3.12 · **LangChain / LangGraph** · **OpenAI** (`gpt-4o-mini`, `text-embedding-3-small`) · **Pydantic v2** (structured output) · **SQLite** · **pandas** · **matplotlib** · **python-pptx** + LibreOffice (PDF) · **Streamlit** · **Langfuse** (LLM tracing) · provider switch for **Azure OpenAI** (Phase B).
 
 ## Run it locally
 
@@ -98,7 +98,6 @@ docs/     report_design_spec.md (the MBB/Big-4 design system)
 
 ## Roadmap
 
-- **Observability** — Langfuse tracing of every model/tool call
 - **Evaluation harness** — automated check that every quoted number matches the source
 - **Talk2Document (RAG)** — answer questions from uploaded reference docs/templates
 - **Phase B (Azure)** — Azure OpenAI + Azure AI Search, FastAPI, Docker, Container Apps (scale-to-zero)

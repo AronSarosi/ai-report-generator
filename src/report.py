@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field
 from src.analysis import compute_battery
 from src.config import get_chat_model, get_settings
 from src.data_tool import profile_dataset
+from src.obs import get_callbacks
 from src.schemas import (ChartSpec, KeyMessage, Report, ReportRequest, ReportSection)
 
 
@@ -50,6 +51,19 @@ def pct(frac: Optional[float], signed: bool = True) -> str:
     if frac is None:
         return "n/a"
     return f"{frac * 100:+.1f}%" if signed else f"{frac * 100:.1f}%"
+
+
+_SMALL_WORDS = {"a", "an", "the", "of", "for", "vs", "and", "or", "in", "on", "to",
+                "by", "with", "at", "from", "as"}
+
+
+def smart_title(text: str) -> str:
+    """Title-case a user phrase but keep small words lowercase (never returns empty)."""
+    words = (text or "").split()
+    if not words:
+        return "Business Review"
+    return " ".join(w.lower() if (i and w.lower() in _SMALL_WORDS) else (w[:1].upper() + w[1:])
+                    for i, w in enumerate(words))
 
 
 # --------------------------------------------------------------------------- #
@@ -213,14 +227,15 @@ def _unapproved_figures(text: str, approved: list[str]) -> list[str]:
     return [t for t in _FIG_RE.findall(text) if _norm(t) not in ok]
 
 
-def _draft(spec: dict, model: str = None, strict: str = "") -> Any:
+def _draft(spec: dict, strict: str = "", config=None) -> Any:
     kind = spec["kind"]
     schema = {"exec": ExecDraft, "reco": RecsDraft}.get(kind, SectionDraft)
     llm = get_chat_model(temperature=0.3).with_structured_output(schema)
     user = (f"{spec['instruction']}\n\nGrounded data:\n{spec['grounding']}\n\n"
             f"Approved figures you may cite (use these exact strings, nothing else): "
             f"{spec['approved']}{strict}")
-    return llm.invoke([{"role": "system", "content": _WRITER_SYS}, {"role": "user", "content": user}])
+    return llm.invoke([{"role": "system", "content": _WRITER_SYS}, {"role": "user", "content": user}],
+                      config=config)
 
 
 def _section_from_draft(spec: dict, draft: SectionDraft) -> ReportSection:
@@ -273,11 +288,11 @@ def node_plan(state: GState) -> dict:
     return {"plan": _plan_sections(state["battery"], state["profile"])}
 
 
-def node_write(state: GState) -> dict:
+def node_write(state: GState, config=None) -> dict:
     sections: list[ReportSection] = []
     exec_draft, recs = None, []
     for spec in state["plan"]:
-        draft = _draft(spec)
+        draft = _draft(spec, config=config)
         if spec["kind"] == "exec":
             exec_draft = draft
         elif spec["kind"] == "reco":
@@ -287,7 +302,7 @@ def node_write(state: GState) -> dict:
     return {"sections": sections, "exec_draft": exec_draft, "recs": recs}
 
 
-def node_verify(state: GState) -> dict:
+def node_verify(state: GState, config=None) -> dict:
     """Re-check each written section for figures outside its approved set; regenerate once."""
     specs = {s["id"]: s for s in state["plan"]}
     fixed: list[ReportSection] = []
@@ -303,7 +318,7 @@ def node_verify(state: GState) -> dict:
         if bad:
             strict = (f"\n\nA previous draft invented these figures: {bad}. Rewrite using ONLY "
                       f"the approved figures above.")
-            sec = _section_from_draft(spec, _draft(spec, strict=strict))
+            sec = _section_from_draft(spec, _draft(spec, strict=strict, config=config))
         fixed.append(sec)
     return {"sections": fixed}
 
@@ -312,7 +327,7 @@ def node_assemble(state: GState) -> dict:
     b, profile, req = state["battery"], state["profile"], state["request"]
     ed: ExecDraft = state["exec_draft"]
     report = Report(
-        title=req.intent.title() if req.intent else "Business Review",
+        title=smart_title(req.intent),
         subtitle=f"Period {b['period']}  |  source table: {b['table']}",
         period=b["period"],
         governing_thought=ed.governing_thought if ed else "",
@@ -347,7 +362,9 @@ GRAPH = _build_graph()
 
 def build_report(request: Optional[ReportRequest] = None) -> Report:
     request = request or ReportRequest()
-    final = GRAPH.invoke({"request": request})
+    # Pass the Langfuse callback so the whole analyze->plan->write->verify->assemble run
+    # is captured as one trace (with every nested LLM call) in the Langfuse dashboard.
+    final = GRAPH.invoke({"request": request}, config={"callbacks": get_callbacks()})
     report = final["report"]
     try:  # persist for the UI/API and for cheap design iteration (render without re-LLM)
         out = Path(get_settings().out_dir)

@@ -217,8 +217,10 @@ def generate_sql(question: str, profile: DatasetProfile) -> str:
             anchor = (f'\nNote: the latest value of "{profile.time_col}" is {tcol.max}. '
                       f"Resolve relative periods like 'last month' or 'latest' against this date.")
     user = f"Schema:\n{profile.schema_prompt()}\n\nQuestion: {question}{anchor}\n\nReturn only the SQL."
+    from src.obs import get_callbacks
     msg = llm.invoke([{"role": "system", "content": _SQL_SYS},
-                      {"role": "user", "content": user}])
+                      {"role": "user", "content": user}],
+                     config={"callbacks": get_callbacks()})
     return _extract_sql(msg.content if hasattr(msg, "content") else str(msg))
 
 
