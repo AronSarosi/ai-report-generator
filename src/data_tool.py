@@ -32,15 +32,32 @@ from src.schemas import ColumnProfile, ColumnRole, DatasetProfile, SQLResult
 # --------------------------------------------------------------------------- #
 # Loading + profiling
 # --------------------------------------------------------------------------- #
-def load_csv_to_sqlite(csv_path, table: str = "sales", db_path=None) -> int:
-    """Load an uploaded CSV into a SQLite table (replacing it). Returns row count."""
+def load_file_to_sqlite(path, table: str = "data", db_path=None) -> int:
+    """Load a CSV / TSV / Excel / JSON file into a SQLite table (replacing it).
+
+    Returns the row count. Excel needs the openpyxl engine (in requirements).
+    """
     s = get_settings()
     db_path = Path(db_path or s.db_path)
     db_path.parent.mkdir(parents=True, exist_ok=True)
-    df = pd.read_csv(csv_path)
+    path = Path(path)
+    ext = path.suffix.lower()
+    if ext in (".xlsx", ".xlsm", ".xls"):
+        df = pd.read_excel(path)               # first sheet
+    elif ext in (".tsv", ".tab"):
+        df = pd.read_csv(path, sep="\t")
+    elif ext == ".json":
+        df = pd.read_json(path)
+    else:
+        df = pd.read_csv(path)
     with sqlite3.connect(db_path) as conn:
         df.to_sql(table, conn, if_exists="replace", index=False)
     return len(df)
+
+
+def load_csv_to_sqlite(csv_path, table: str = "sales", db_path=None) -> int:
+    """Back-compat wrapper around load_file_to_sqlite."""
+    return load_file_to_sqlite(csv_path, table=table, db_path=db_path)
 
 
 _DATE_NAME = re.compile(r"(date|month|day|period|time|year|week|quarter|_at$)", re.I)
@@ -94,9 +111,13 @@ def profile_dataset(db_path=None, table: str = "sales") -> DatasetProfile:
             if parsed.notna().any():
                 cmin, cmax = str(parsed.min().date()), str(parsed.max().date())
         elif is_numeric:
-            id_like = bool(_ID_NAME.search(name)) or (
-                n_unique == n_rows and pd.api.types.is_integer_dtype(ser)
-            )
+            # Treat an integer column as an identifier only by name, or when it is a
+            # contiguous run of distinct values (a row index / auto-increment id) -- NOT
+            # just because a measure happens to be all-distinct in a small file.
+            is_int = pd.api.types.is_integer_dtype(ser)
+            contiguous = bool(is_int and n_unique == n_rows and n_rows > 0 and ser.notna().all()
+                              and int(ser.max()) - int(ser.min()) + 1 == n_rows)
+            id_like = bool(_ID_NAME.search(name)) or contiguous
             if id_like:
                 role = ColumnRole.IDENTIFIER
             else:

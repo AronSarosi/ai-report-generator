@@ -28,7 +28,9 @@ from src.schemas import (ChartSpec, KeyMessage, Report, ReportRequest, ReportSec
 # --------------------------------------------------------------------------- #
 # Number formatting (used for BOTH approved figures and chart labels)
 # --------------------------------------------------------------------------- #
-def money(x: float) -> str:
+def money(x) -> str:
+    if x is None:
+        return "n/a"
     x = float(x)
     ax = abs(x)
     if ax >= 1e6:
@@ -38,7 +40,9 @@ def money(x: float) -> str:
     return f"${x:,.0f}"
 
 
-def signed_money(x: float) -> str:
+def signed_money(x) -> str:
+    if x is None:
+        return "n/a"
     return ("+" if x >= 0 else "-") + money(abs(x))
 
 
@@ -99,12 +103,14 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
     specs: list[dict] = []
 
     # --- Executive summary ---
-    exec_lines = [
-        f"Total {m}: {money(battery['period_total'])} in {period} "
-        f"(prior {prior}: {money(battery['prior_total'])}, change {pct(battery['delta_pct'])}).",
-    ]
-    approved = [money(battery["period_total"]), money(battery["prior_total"]),
-                pct(battery["delta_pct"]), signed_money(battery["delta"])]
+    if battery["prior_total"] is not None:
+        exec_lines = [f"Total {m}: {money(battery['period_total'])} in {period} "
+                      f"(prior {prior}: {money(battery['prior_total'])}, change {pct(battery['delta_pct'])})."]
+        approved = [money(battery["period_total"]), money(battery["prior_total"]),
+                    pct(battery["delta_pct"]), signed_money(battery["delta"])]
+    else:
+        exec_lines = [f"Total {m}: {money(battery['period_total'])} across {period}."]
+        approved = [money(battery["period_total"])]
     for dim in profile.dimensions:
         f = _dim_facts(battery, dim)
         if f["leader"][0] is not None:
@@ -123,24 +129,25 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
         "grounding": "\n".join(exec_lines), "approved": approved, "chart": None,
     })
 
-    # --- Performance vs prior (trend line) ---
+    # --- Performance vs prior (trend line) — only when the data has a time axis ---
     trend = battery["trend"]
-    months = [r[0] for r in trend.rows]
-    totals = [float(r[1] or 0) for r in trend.rows]
-    peak_val = max(totals) if totals else 0
-    perf_chart = ChartSpec(kind="line", title=f"Monthly {m}", x=months,
-                           series={m: totals}, highlight=months[-1] if months else None)
-    specs.append({
-        "id": "performance", "kind": "insight", "kicker": "FINANCIAL PERFORMANCE",
-        "instruction": f"Describe how {m} performed in {period} versus the prior month and the "
-                       f"recent trend (note any seasonal peak).",
-        "grounding": (f"Total {m} {period}: {money(battery['period_total'])} vs {prior}: "
-                      f"{money(battery['prior_total'])} ({pct(battery['delta_pct'])}). Peak month "
-                      f"{money(peak_val)}.\n\n{trend.title}\n{_table_md(trend.columns, trend.rows)}"),
-        "approved": [money(battery["period_total"]), money(battery["prior_total"]),
-                     pct(battery["delta_pct"]), signed_money(battery["delta"]), money(peak_val)],
-        "chart": perf_chart,
-    })
+    if trend is not None and trend.rows:
+        months = [r[0] for r in trend.rows]
+        totals = [float(r[1] or 0) for r in trend.rows]
+        peak_val = max(totals) if totals else 0
+        perf_chart = ChartSpec(kind="line", title=f"Monthly {m}", x=months,
+                               series={m: totals}, highlight=months[-1] if months else None)
+        specs.append({
+            "id": "performance", "kind": "insight", "kicker": "FINANCIAL PERFORMANCE",
+            "instruction": f"Describe how {m} performed in {period} versus the prior month and the "
+                           f"recent trend (note any seasonal peak).",
+            "grounding": (f"Total {m} {period}: {money(battery['period_total'])} vs {prior}: "
+                          f"{money(battery['prior_total'])} ({pct(battery['delta_pct'])}). Peak month "
+                          f"{money(peak_val)}.\n\n{trend.title}\n{_table_md(trend.columns, trend.rows)}"),
+            "approved": [money(battery["period_total"]), money(battery["prior_total"]),
+                         pct(battery["delta_pct"]), signed_money(battery["delta"]), money(peak_val)],
+            "chart": perf_chart,
+        })
 
     # --- One insight slide per dimension (bar) ---
     for dim in profile.dimensions:
@@ -156,12 +163,16 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
             approved += [signed_money(f["top_riser"][3])]
         if f["top_faller"]:
             approved += [signed_money(f["top_faller"][3])]
+        grounding = f"{bd.title}\n{_table_md(bd.columns, bd.rows)}"
+        instruction = f"Explain the {m} breakdown by {dim} for {period}: who leads and the concentration"
+        if mv.rows:
+            grounding += f"\n\n{mv.title}\n{_table_md(mv.columns, mv.rows, limit=6)}"
+            instruction += ", plus the biggest mover versus the prior period."
+        else:
+            instruction += "."
         specs.append({
             "id": f"dim_{dim}", "kind": "insight", "kicker": f"{dim.upper()} BREAKDOWN",
-            "instruction": f"Explain the {m} breakdown by {dim} for {period}: who leads, "
-                           f"concentration, and the biggest mover versus the prior month.",
-            "grounding": (f"{bd.title}\n{_table_md(bd.columns, bd.rows)}\n\n"
-                          f"{mv.title}\n{_table_md(mv.columns, mv.rows, limit=6)}"),
+            "instruction": instruction, "grounding": grounding,
             "approved": approved, "chart": chart,
         })
 
@@ -180,7 +191,12 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
 # --------------------------------------------------------------------------- #
 _WRITER_SYS = (
     "You are a management consultant writing a board-ready finance report in the McKinsey/BCG "
-    "style. Titles are full-sentence assertions (<=15 words, active voice, include a number). "
+    "style. The action title is the most important element: state the single key INSIGHT or its "
+    "implication as a full-sentence assertion (<=15 words, active voice, include the key number) "
+    "-- never a topic label like 'Revenue overview'. A reader skimming only the titles slide "
+    "after slide should get the whole story, so prefer 'why it matters' over 'what it is'. "
+    "Refer to the metric by the exact name used in the data (for example actual, spend, budget, "
+    "units); do NOT call it revenue unless that is genuinely its name. "
     "Write in crisp, executive prose. CRITICAL: you may cite ONLY the approved figures given to "
     "you, using those exact strings. Never invent or recompute any other number."
 )
@@ -229,10 +245,27 @@ class GState(TypedDict, total=False):
     report: Report
 
 
+_MONTHS = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+           "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
+
+
+def _period_from_intent(intent: Optional[str]) -> Optional[str]:
+    """Pull an explicit 'YYYY-MM' or 'Month YYYY' out of the prompt; else None (=latest)."""
+    t = (intent or "").lower()
+    m = re.search(r"(20\d\d)[-/ ](0[1-9]|1[0-2])\b", t)
+    if m:
+        return f"{m.group(1)}-{m.group(2)}"
+    m = re.search(r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(20\d\d)\b", t)
+    if m:
+        return f"{m.group(2)}-{_MONTHS[m.group(1)]:02d}"
+    return None
+
+
 def node_analyze(state: GState) -> dict:
     req = state["request"]
     profile = profile_dataset(table=req.table)
-    battery = compute_battery(profile, period=req.period)
+    period = req.period or _period_from_intent(req.intent)
+    battery = compute_battery(profile, period=period)
     return {"profile": profile, "battery": battery}
 
 

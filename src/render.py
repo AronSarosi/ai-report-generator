@@ -17,6 +17,7 @@ from matplotlib.ticker import FuncFormatter
 from pptx import Presentation
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Inches, Pt
 
 from src.config import get_settings
@@ -24,9 +25,9 @@ from src.report import money
 from src.schemas import ChartSpec, Report
 from src.style import (ACCENT, BODY_BOX, CONTENT_W_IN, FONT_BODY, FONT_HEAD, GRAY_100,
                        GRAY_300, GRAY_500, GRAY_900, INK, KICKER_BOX, MARGIN_IN, NEGATIVE,
-                       POSITIVE, RULE_Y_IN, SLIDE_H_IN, SLIDE_W_IN, SOURCE_BOX, SZ_BODY,
-                       SZ_DECK_TITLE, SZ_KICKER, SZ_SOURCE, SZ_SUB, SZ_TITLE, TITLE_BOX,
-                       apply_mpl_style)
+                       PAPER, POSITIVE, RULE_Y_IN, SLIDE_H_IN, SLIDE_W_IN, SOURCE_BOX,
+                       SZ_BODY, SZ_DECK_TITLE, SZ_KICKER, SZ_SOURCE, SZ_SUB, SZ_TITLE,
+                       TITLE_BOX, apply_mpl_style)
 
 
 # --------------------------------------------------------------------------- #
@@ -109,7 +110,7 @@ def _content_slide(prs, kicker, title, source):
     s = prs.slides.add_slide(prs.slide_layouts[6])
     _set(_box(s, *KICKER_BOX).paragraphs[0], kicker.upper(), SZ_KICKER, FONT_BODY, ACCENT, bold=True)
     _set(_box(s, *TITLE_BOX).paragraphs[0], title, SZ_TITLE, FONT_HEAD, INK, bold=True)
-    _rule(s, MARGIN_IN, RULE_Y_IN, 1.6, 2.5)  # short left accent tick, not a full-width AI bar
+    # No rule under the title — whitespace separates it (underlines read as AI-generated).
     if source:
         _set(_box(s, *SOURCE_BOX).paragraphs[0], source, SZ_SOURCE, FONT_BODY, GRAY_500)
     return s
@@ -144,17 +145,30 @@ def _insight_slide(prs, sec, chart_path: Optional[Path]):
         s.shapes.add_picture(str(chart_path), Inches(0.5), Inches(1.95), width=Inches(7.6))
     if sec.narrative:
         _set(_box(s, 0.5, 6.0, 7.6, 0.95).paragraphs[0], sec.narrative, 11, FONT_BODY, GRAY_500)
-    # so-what callout box
-    box = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(8.5), Inches(1.95), Inches(4.3), Inches(4.0))
-    box.fill.solid(); box.fill.fore_color.rgb = _rgb(GRAY_100)
-    box.line.color.rgb = _rgb(ACCENT); box.line.width = Pt(1)
-    box.shadow.inherit = False
-    tf = box.text_frame; tf.word_wrap = True
-    tf.margin_left = Inches(0.2); tf.margin_right = Inches(0.2); tf.margin_top = Inches(0.18)
-    _set(tf.paragraphs[0], "SO WHAT", 12, FONT_BODY, ACCENT, bold=True)
-    p = tf.add_paragraph(); _set(p, sec.so_what or "", 13, FONT_BODY, GRAY_900); p.space_after = Pt(10)
-    for b in sec.bullets[:3]:
-        p = tf.add_paragraph(); _set(p, "•  " + b, 11, FONT_BODY, GRAY_900); p.space_after = Pt(4)
+    _callout(s, "KEY TAKEAWAY", sec.so_what or "", sec.bullets[:3])
+
+
+def _callout(slide, label, takeaway, bullets, left=8.5, top=1.95, width=4.3):
+    """A navy header band over a light card — the insight callout."""
+    hdr = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(left), Inches(top), Inches(width), Inches(0.5))
+    hdr.fill.solid(); hdr.fill.fore_color.rgb = _rgb(INK); hdr.line.fill.background()
+    hdr.shadow.inherit = False
+    htf = hdr.text_frame; htf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    htf.margin_left = Inches(0.22); htf.margin_top = Inches(0.02); htf.margin_bottom = Inches(0.02)
+    _set(htf.paragraphs[0], label, 12, FONT_BODY, PAPER, bold=True)
+
+    body = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(left), Inches(top + 0.5), Inches(width), Inches(3.5))
+    body.fill.solid(); body.fill.fore_color.rgb = _rgb(GRAY_100)
+    body.line.color.rgb = _rgb(GRAY_300); body.line.width = Pt(0.75)
+    body.shadow.inherit = False
+    tf = body.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.TOP
+    tf.margin_left = Inches(0.24); tf.margin_right = Inches(0.24); tf.margin_top = Inches(0.26)
+    _set(tf.paragraphs[0], takeaway, 13, FONT_BODY, GRAY_900)
+    tf.paragraphs[0].alignment = PP_ALIGN.LEFT
+    tf.paragraphs[0].space_after = Pt(16)
+    for b in bullets:
+        p = tf.add_paragraph(); _set(p, "•  " + b, 11, FONT_BODY, GRAY_900)
+        p.alignment = PP_ALIGN.LEFT; p.space_after = Pt(7)
 
 
 def _reco_slide(prs, report: Report):
@@ -201,6 +215,19 @@ def export_pdf(pptx_path: Path, out_dir: Path) -> Optional[Path]:
     return pdf if pdf.exists() else None
 
 
+def _save_robust(prs, path: Path) -> Path:
+    """Save the deck, falling back to report-1.pptx, -2, ... if the file is open/locked."""
+    candidates = [path] + [path.with_name(f"{path.stem}-{i}{path.suffix}") for i in range(1, 50)]
+    for cand in candidates:
+        try:
+            prs.save(str(cand))
+            return cand
+        except PermissionError:
+            continue
+    raise PermissionError(f"Could not write {path.name} (is it open in PowerPoint?). "
+                          "Close it and try again.")
+
+
 # --------------------------------------------------------------------------- #
 # Orchestration
 # --------------------------------------------------------------------------- #
@@ -226,8 +253,7 @@ def render_report(report: Report, out_dir=None, charts_dir=None) -> dict:
     _reco_slide(prs, report)
     _sources_slide(prs, report)
 
-    pptx_path = out_dir / "report.pptx"
-    prs.save(pptx_path)
+    pptx_path = _save_robust(prs, out_dir / "report.pptx")
     pdf_path = export_pdf(pptx_path, out_dir)
     return {"pptx": pptx_path, "pdf": pdf_path, "charts_dir": charts_dir}
 

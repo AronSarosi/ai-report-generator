@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>AI Report Generator — Brand Options v2</title>
+<style>
+  :root { --bg:#0E1420; --navy:#1F2A44; --accent:#4A90D9; --ink:#E6E8EB; --muted:#8A94A6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:Arial, Helvetica, sans-serif; padding:40px; }
+  h1 { font-family:Georgia, serif; font-weight:700; font-size:2.2rem; text-align:center; margin:0 0 .2rem; }
+  .sub { text-align:center; color:var(--muted); margin-bottom:8px; }
+  .note { text-align:center; color:#6BA4DD; margin-bottom:34px; font-size:.95rem; }
+  h2 { font-family:Georgia, serif; border-bottom:1px solid #2A3344; padding-bottom:8px; margin-top:46px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:18px; margin-top:22px; }
+  .card { background:#141C29; border:1px solid #283446; border-radius:12px; padding:16px; text-align:center; }
+  .tile { background:var(--navy); border-radius:10px; height:118px; display:flex; align-items:center; justify-content:center; }
+  .tile svg { width:80px; height:80px; }
+  .row2 { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:12px; }
+  .chip-light { background:#fff; border-radius:8px; width:46px; height:46px; display:flex; align-items:center; justify-content:center; }
+  .chip-light svg { width:32px; height:32px; }
+  .lbl { margin-top:12px; font-weight:700; font-size:1.05rem; }
+  .name { color:var(--muted); font-size:.82rem; }
+  .bgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:18px; margin-top:22px; }
+  .swatch { height:165px; border-radius:12px; border:1px solid #283446; position:relative; overflow:hidden; }
+  .swatch .tag { position:absolute; left:12px; bottom:10px; background:#0009; padding:3px 9px; border-radius:8px; font-size:.8rem; }
+</style>
+</head>
+<body>
+  <h1>AI Report Generator</h1>
+  <div class="sub">Logo options (app-icon style, like your pick #10) &amp; grid backgrounds</div>
+  <div class="note">Reply with one <b>LOGO #</b> and one <b>BACKGROUND #</b> and I'll wire them in.</div>
+
+  <h2>Logos &nbsp;<span class="name">— rounded-square app icon, accent fill, white symbol</span></h2>
+  <div class="grid">
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><path d="M26 21 L45 32 L26 43 Z" fill="#fff"/></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><path d="M26 21 L45 32 L26 43 Z" fill="#fff"/></svg></div></div>
+      <div class="lbl">1</div><div class="name">Play / generate (your #10)</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><g fill="#fff"><rect x="19" y="34" width="7" height="12" rx="1.5"/><rect x="28.5" y="27" width="7" height="19" rx="1.5"/><rect x="38" y="20" width="7" height="26" rx="1.5"/></g></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><g fill="#fff"><rect x="19" y="34" width="7" height="12" rx="1.5"/><rect x="28.5" y="27" width="7" height="19" rx="1.5"/><rect x="38" y="20" width="7" height="26" rx="1.5"/></g></svg></div></div>
+      <div class="lbl">2</div><div class="name">Ascending bars</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><path d="M32 17 L45 33 H37 V47 H27 V33 H19 Z" fill="#fff"/></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><path d="M32 17 L45 33 H37 V47 H27 V33 H19 Z" fill="#fff"/></svg></div></div>
+      <div class="lbl">3</div><div class="name">Upward arrow</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><polyline points="18,42 27,33 34,38 46,22" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="46" cy="22" r="3.4" fill="#fff"/></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><polyline points="18,42 27,33 34,38 46,22" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="46" cy="22" r="3.4" fill="#fff"/></svg></div></div>
+      <div class="lbl">4</div><div class="name">Trend line</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><rect x="22" y="17" width="20" height="30" rx="3" fill="#fff"/><g stroke="#4A90D9" stroke-width="2.2" stroke-linecap="round"><line x1="26" y1="24" x2="38" y2="24"/><line x1="26" y1="30" x2="38" y2="30"/><line x1="26" y1="36" x2="33" y2="36"/></g></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><rect x="22" y="17" width="20" height="30" rx="3" fill="#fff"/><g stroke="#4A90D9" stroke-width="2.2" stroke-linecap="round"><line x1="26" y1="24" x2="38" y2="24"/><line x1="26" y1="30" x2="38" y2="30"/><line x1="26" y1="36" x2="33" y2="36"/></g></svg></div></div>
+      <div class="lbl">5</div><div class="name">Document</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><path d="M32 16 C33.5 27 37 30.5 48 32 C37 33.5 33.5 37 32 48 C30.5 37 27 33.5 16 32 C27 30.5 30.5 27 32 16 Z" fill="#fff"/></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><path d="M32 16 C33.5 27 37 30.5 48 32 C37 33.5 33.5 37 32 48 C30.5 37 27 33.5 16 32 C27 30.5 30.5 27 32 16 Z" fill="#fff"/></svg></div></div>
+      <div class="lbl">6</div><div class="name">Spark</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><g fill="#ffffff70"><rect x="19" y="34" width="7" height="12" rx="1.5"/><rect x="28.5" y="29" width="7" height="17" rx="1.5"/><rect x="38" y="23" width="7" height="23" rx="1.5"/></g><polyline points="22,33 32,28 41,22" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><g fill="#ffffff70"><rect x="19" y="34" width="7" height="12" rx="1.5"/><rect x="28.5" y="29" width="7" height="17" rx="1.5"/><rect x="38" y="23" width="7" height="23" rx="1.5"/></g><polyline points="22,33 32,28 41,22" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="lbl">7</div><div class="name">Bars + trend</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><circle cx="32" cy="32" r="13" fill="none" stroke="#ffffff55" stroke-width="7"/><circle cx="32" cy="32" r="13" fill="none" stroke="#fff" stroke-width="7" stroke-dasharray="34 100" transform="rotate(-90 32 32)"/></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><circle cx="32" cy="32" r="13" fill="none" stroke="#ffffff55" stroke-width="7"/><circle cx="32" cy="32" r="13" fill="none" stroke="#fff" stroke-width="7" stroke-dasharray="34 100" transform="rotate(-90 32 32)"/></svg></div></div>
+      <div class="lbl">8</div><div class="name">Donut</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><circle cx="29" cy="29" r="11" fill="none" stroke="#fff" stroke-width="3.4"/><line x1="37" y1="37" x2="46" y2="46" stroke="#fff" stroke-width="4" stroke-linecap="round"/><g fill="#fff"><rect x="25" y="29" width="3" height="6"/><rect x="29.5" y="25" width="3" height="10"/><rect x="34" y="27" width="3" height="8"/></g></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><circle cx="29" cy="29" r="11" fill="none" stroke="#fff" stroke-width="3.4"/><line x1="37" y1="37" x2="46" y2="46" stroke="#fff" stroke-width="4" stroke-linecap="round"/><g fill="#fff"><rect x="25" y="29" width="3" height="6"/><rect x="29.5" y="25" width="3" height="10"/><rect x="34" y="27" width="3" height="8"/></g></svg></div></div>
+      <div class="lbl">9</div><div class="name">Analyze (lens + bars)</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><path d="M34 15 L21 35 H30 L28 49 L43 28 H34 Z" fill="#fff"/></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><path d="M34 15 L21 35 H30 L28 49 L43 28 H34 Z" fill="#fff"/></svg></div></div>
+      <div class="lbl">10</div><div class="name">Bolt (fast)</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><g fill="#fff"><rect x="20" y="20" width="10.5" height="10.5" rx="2"/><rect x="33.5" y="20" width="10.5" height="10.5" rx="2"/><rect x="20" y="33.5" width="10.5" height="10.5" rx="2"/><rect x="33.5" y="33.5" width="10.5" height="10.5" rx="2" fill="#ffffff99"/></g></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><g fill="#fff"><rect x="20" y="20" width="10.5" height="10.5" rx="2"/><rect x="33.5" y="20" width="10.5" height="10.5" rx="2"/><rect x="20" y="33.5" width="10.5" height="10.5" rx="2"/><rect x="33.5" y="33.5" width="10.5" height="10.5" rx="2" fill="#ffffff99"/></g></svg></div></div>
+      <div class="lbl">11</div><div class="name">Grid of tiles</div></div>
+
+    <div class="card"><div class="tile"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><text x="32" y="42" font-family="Georgia, serif" font-size="25" fill="#fff" text-anchor="middle" font-weight="700">AR</text></svg></div>
+      <div class="row2"><div class="chip-light"><svg viewBox="0 0 64 64"><rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/><text x="32" y="42" font-family="Georgia, serif" font-size="25" fill="#fff" text-anchor="middle" font-weight="700">AR</text></svg></div></div>
+      <div class="lbl">12</div><div class="name">Monogram “AR”</div></div>
+
+  </div>
+
+  <h2>Grid Backgrounds &nbsp;<span class="name">— variations on #1 (opacity, color, spacing)</span></h2>
+  <div class="bgrid">
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#ffffff0a 1px,transparent 1px),linear-gradient(90deg,#ffffff0a 1px,transparent 1px); background-size:34px 34px;"><span class="tag">1 — white, very faint, 34px</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#ffffff12 1px,transparent 1px),linear-gradient(90deg,#ffffff12 1px,transparent 1px); background-size:34px 34px;"><span class="tag">2 — white, soft, 34px</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#ffffff1f 1px,transparent 1px),linear-gradient(90deg,#ffffff1f 1px,transparent 1px); background-size:34px 34px;"><span class="tag">3 — white, medium, 34px</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#ffffff12 1px,transparent 1px),linear-gradient(90deg,#ffffff12 1px,transparent 1px); background-size:24px 24px;"><span class="tag">4 — white, soft, 24px (tighter)</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#ffffff14 1px,transparent 1px),linear-gradient(90deg,#ffffff14 1px,transparent 1px); background-size:48px 48px;"><span class="tag">5 — white, soft, 48px (wider)</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#4A90D920 1px,transparent 1px),linear-gradient(90deg,#4A90D920 1px,transparent 1px); background-size:34px 34px;"><span class="tag">6 — accent blue, faint, 34px</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#4A90D936 1px,transparent 1px),linear-gradient(90deg,#4A90D936 1px,transparent 1px); background-size:28px 28px;"><span class="tag">7 — accent blue, stronger, 28px</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#9FB6D414 1px,transparent 1px),linear-gradient(90deg,#9FB6D414 1px,transparent 1px); background-size:34px 34px;"><span class="tag">8 — cool blue-gray, 34px</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:radial-gradient(900px 320px at 50% -14%, #4A90D924, transparent 70%),linear-gradient(#ffffff10 1px,transparent 1px),linear-gradient(90deg,#ffffff10 1px,transparent 1px); background-size:auto,34px 34px,34px 34px;"><span class="tag">9 — grid + soft top glow</span></div>
+    <div class="swatch" style="background-color:#0E1420; background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px),linear-gradient(#ffffff1a 1px,transparent 1px),linear-gradient(90deg,#ffffff1a 1px,transparent 1px); background-size:17px 17px,17px 17px,85px 85px,85px 85px;"><span class="tag">10 — major + minor grid</span></div>
+  </div>
+</body>
+</html>

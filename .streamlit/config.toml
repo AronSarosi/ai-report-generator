@@ -1,0 +1,15 @@
+# Professional dark theme + chrome settings for the Streamlit app.
+
+[theme]
+base = "dark"
+primaryColor = "#4A90D9"
+backgroundColor = "#0E1420"
+secondaryBackgroundColor = "#1A2231"
+textColor = "#E6E8EB"
+
+[client]
+# Hide the developer toolbar (the "Deploy" button + menu) for a clean app look.
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false

@@ -7,7 +7,7 @@ findings to surface (this is what separates a convincing demo from random noise)
   - One category (Beauty & Wellness) is surging; one (Media & Entertainment) is
     structurally declining; the rest are mild/flat.
   - The Online channel steadily takes share from In-store.
-  - One region (South) underperforms and is trending down.
+  - One region (LATAM) underperforms and is trending down.
   - Clear seasonality: a Q4 holiday spike, a summer dip, and weekend uplift.
 
 Everything is driven by a fixed seed so the data is fully reproducible. Money
@@ -41,12 +41,12 @@ START_DATE = date(2024, 6, 1)
 # --------------------------------------------------------------------------- #
 # Dimensions and the "story" knobs
 # --------------------------------------------------------------------------- #
-REGIONS = {            # base demand multiplier per region
-    "North": 1.10,
-    "South": 0.85,     # the underperformer (also given a downward trend below)
-    "East": 1.00,
-    "West": 1.25,      # the star region
-    "Central": 0.95,
+REGIONS = {                   # base demand multiplier per region (board-level regions)
+    "North America": 1.25,    # the star region
+    "EMEA": 1.05,
+    "APAC": 1.00,
+    "LATAM": 0.85,            # the underperformer (also given a downward trend below)
+    "UK & Ireland": 0.95,
 }
 CHANNELS = ["In-store", "Online"]
 
@@ -110,7 +110,7 @@ def generate() -> pd.DataFrame:
 
             for region, region_base in REGIONS.items():
                 region_factor = region_base
-                if region == "South":        # extra downward drift for the laggard
+                if region == "LATAM":        # extra downward drift for the laggard
                     region_factor *= _lerp(1.05, 0.65, t)
 
                 for channel in CHANNELS:
