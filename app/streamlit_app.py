@@ -153,6 +153,14 @@ def _load_sample() -> None:
         except Exception:  # noqa: BLE001
             pass
     sample = Path(settings.out_dir) / "sales_sample.csv"
+    if not sample.exists():
+        # Fresh deploy with no baked-in data: generate the sample on demand.
+        import subprocess
+        gen = Path(__file__).resolve().parents[1] / "scripts" / "gen_sales_data.py"
+        try:
+            subprocess.run([sys.executable, str(gen)], check=True, capture_output=True, timeout=180)
+        except Exception:  # noqa: BLE001
+            pass
     if sample.exists():
         n = load_file_to_sqlite(sample, table="sales")
         st.session_state["tables"]["sales"] = {"rows": n, "file": "sample sales data"}

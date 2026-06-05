@@ -1,4 +1,26 @@
-# Evaluation QA pairs for the AI report generator.
-# Each entry pairs a question with its expected grounded answer.
-# Populated later; placeholder for the skeleton.
-qa_pairs: []
+# Known-answer questions over the sample sales data.
+#
+# Each item is a natural-language question plus the ground-truth SQL that computes the
+# correct answer directly from the database. The eval runs the question through Talk2Data
+# (the LLM-generated read-only SQL) and checks the answer matches the ground truth.
+qa_pairs:
+  - question: "What was the total revenue in May 2026?"
+    truth_sql: "SELECT ROUND(SUM(revenue)) FROM sales WHERE substr(date,1,7)='2026-05'"
+  - question: "How many distinct product categories are there?"
+    truth_sql: "SELECT COUNT(DISTINCT category) FROM sales"
+  - question: "How many distinct products are there?"
+    truth_sql: "SELECT COUNT(DISTINCT product) FROM sales"
+  - question: "Which region had the highest total revenue in May 2026?"
+    truth_sql: "SELECT region FROM sales WHERE substr(date,1,7)='2026-05' GROUP BY region ORDER BY SUM(revenue) DESC LIMIT 1"
+  - question: "Which region had the lowest total revenue in May 2026?"
+    truth_sql: "SELECT region FROM sales WHERE substr(date,1,7)='2026-05' GROUP BY region ORDER BY SUM(revenue) ASC LIMIT 1"
+  - question: "What was the total revenue for the Online channel in May 2026?"
+    truth_sql: "SELECT ROUND(SUM(revenue)) FROM sales WHERE substr(date,1,7)='2026-05' AND channel='Online'"
+  - question: "Which product generated the most revenue overall?"
+    truth_sql: "SELECT product FROM sales GROUP BY product ORDER BY SUM(revenue) DESC LIMIT 1"
+  - question: "What was the total gross profit in May 2026?"
+    truth_sql: "SELECT ROUND(SUM(gross_profit)) FROM sales WHERE substr(date,1,7)='2026-05'"
+  - question: "How many units were sold in total in May 2026?"
+    truth_sql: "SELECT SUM(units) FROM sales WHERE substr(date,1,7)='2026-05'"
+  - question: "What was the total revenue for the Beauty & Wellness category in May 2026?"
+    truth_sql: "SELECT ROUND(SUM(revenue)) FROM sales WHERE substr(date,1,7)='2026-05' AND category='Beauty & Wellness'"
