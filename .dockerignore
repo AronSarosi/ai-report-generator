@@ -1,0 +1,22 @@
+# Keep the build context (and the image) small and secret-free.
+.venv/
+.git/
+.gitignore
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# NEVER ship secrets into the image.
+.env
+.env.local
+
+# Runtime data is regenerated inside the image by the gen_*_data scripts.
+data/db/
+data/out/
+data/charts/
+
+# Dev-only extras.
+.claude/
+design/
+docs/
+*.md
