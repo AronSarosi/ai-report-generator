@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional, TypedDict
+from typing import Any, Callable, Optional, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field
@@ -66,6 +66,12 @@ def smart_title(text: str) -> str:
                     for i, w in enumerate(words))
 
 
+def _fallback_title(table: Optional[str]) -> str:
+    """A clean, data-derived title when the model doesn't give a good one."""
+    name = (table or "data").replace("_", " ").strip()
+    return smart_title(f"{name} Performance Review")
+
+
 # --------------------------------------------------------------------------- #
 # Structured-output drafts (the LLM fills ONLY text fields)
 # --------------------------------------------------------------------------- #
@@ -77,6 +83,9 @@ class SectionDraft(BaseModel):
 
 
 class ExecDraft(BaseModel):
+    title: str = Field(description="A concise, board-ready report title of 3-6 words that names "
+                       "the subject and the angle (e.g. 'Monthly Sales Performance', "
+                       "'Budget vs Actuals Review'). Do NOT copy the user's prompt verbatim.")
     governing_thought: str = Field(description="One sentence the whole report proves")
     key_messages: list[KeyMessage] = Field(description="3-5 assertions, each with a number and a status")
 
@@ -137,7 +146,8 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
             approved.append(signed_money(r[3]))
     specs.append({
         "id": "exec", "kind": "exec", "kicker": "EXECUTIVE SUMMARY",
-        "instruction": "Write the executive summary as a governing thought plus 3-5 key messages. "
+        "instruction": "Write a concise 3-6 word report title (name the subject and angle, do not "
+                       "copy the user's prompt), a governing thought, and 3-5 key messages. "
                        "Each key message is an assertion that includes a figure; set status to "
                        "positive/negative/neutral.",
         "grounding": "\n".join(exec_lines), "approved": approved, "chart": None,
@@ -326,8 +336,13 @@ def node_verify(state: GState, config=None) -> dict:
 def node_assemble(state: GState) -> dict:
     b, profile, req = state["battery"], state["profile"], state["request"]
     ed: ExecDraft = state["exec_draft"]
+    # Prefer the model's concise title; fall back to a clean data-derived one. Guard against
+    # the model echoing a long prompt (a title should be short).
+    title = (ed.title or "").strip() if ed else ""
+    if not title or len(title.split()) > 9:
+        title = _fallback_title(b["table"])
     report = Report(
-        title=smart_title(req.intent),
+        title=smart_title(title),
         subtitle=f"Period {b['period']}  |  source table: {b['table']}",
         period=b["period"],
         governing_thought=ed.governing_thought if ed else "",
@@ -360,12 +375,37 @@ def _build_graph():
 GRAPH = _build_graph()
 
 
-def build_report(request: Optional[ReportRequest] = None) -> Report:
+# Human-readable label for each graph node, surfaced as live progress in the UI.
+_STEP_LABELS = {
+    "analyze": "Profiling the data and computing the analytics",
+    "plan_sections": "Planning the report sections",
+    "write": "Writing the narrative",
+    "verify": "Verifying every figure against the data",
+    "assemble": "Assembling the report",
+}
+
+
+def build_report(request: Optional[ReportRequest] = None,
+                 progress: Optional[Callable[[str], None]] = None) -> Report:
+    """Build the report. If `progress` is given, it is called with a human-readable label
+    as each pipeline step (analyze->plan->write->verify->assemble) completes."""
     request = request or ReportRequest()
     # Pass the Langfuse callback so the whole analyze->plan->write->verify->assemble run
     # is captured as one trace (with every nested LLM call) in the Langfuse dashboard.
-    final = GRAPH.invoke({"request": request}, config={"callbacks": get_callbacks()})
-    report = final["report"]
+    cfg = {"callbacks": get_callbacks()}
+    if progress is None:
+        report = GRAPH.invoke({"request": request}, config=cfg)["report"]
+    else:
+        report = None
+        # stream_mode="updates" yields {node_name: state_delta} after each node runs.
+        for chunk in GRAPH.stream({"request": request}, config=cfg, stream_mode="updates"):
+            for node, delta in chunk.items():
+                if node in _STEP_LABELS:
+                    progress(_STEP_LABELS[node])
+                if isinstance(delta, dict) and "report" in delta:
+                    report = delta["report"]
+        if report is None:  # safety net if streaming didn't surface the assembled report
+            report = GRAPH.invoke({"request": request}, config=cfg)["report"]
     try:  # persist for the UI/API and for cheap design iteration (render without re-LLM)
         out = Path(get_settings().out_dir)
         out.mkdir(parents=True, exist_ok=True)

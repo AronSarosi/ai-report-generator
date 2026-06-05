@@ -118,10 +118,11 @@ def _content_slide(prs, kicker, title, source):
 
 def _title_slide(prs, report: Report):
     s = prs.slides.add_slide(prs.slide_layouts[6])
-    _set(_box(s, 0.7, 2.4, 11.9, 1.4).paragraphs[0], report.title, SZ_DECK_TITLE, FONT_HEAD, INK, bold=True)
-    _rule(s, 0.75, 3.75, 3.0, 3)
-    _set(_box(s, 0.7, 3.95, 11.9, 0.6).paragraphs[0], report.subtitle, SZ_SUB, FONT_BODY, GRAY_500)
-    _set(_box(s, 0.7, 4.5, 11.9, 0.5).paragraphs[0],
+    # Title can wrap to two lines, so give it a tall box and let whitespace (not an
+    # underline) separate it from the subtitle — accent rules read as AI-generated.
+    _set(_box(s, 0.7, 2.25, 11.9, 1.7).paragraphs[0], report.title, SZ_DECK_TITLE, FONT_HEAD, INK, bold=True)
+    _set(_box(s, 0.7, 4.05, 11.9, 0.6).paragraphs[0], report.subtitle, SZ_SUB, FONT_BODY, GRAY_500)
+    _set(_box(s, 0.7, 4.6, 11.9, 0.5).paragraphs[0],
          f"Generated {report.generated_at}   |   CONFIDENTIAL", 11, FONT_BODY, GRAY_500)
 
 
@@ -131,9 +132,10 @@ def _exec_slide(prs, report: Report):
     tf = _box(s, 0.5, 2.05, CONTENT_W_IN, 4.6)
     for i, km in enumerate(report.key_messages):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
-        color = {"positive": POSITIVE, "negative": NEGATIVE}.get(km.status, GRAY_500)
+        # One universal bullet color (the brand blue) regardless of sentiment — colored
+        # red/green dots read like a status alert rather than a finished report.
         chip = p.add_run(); chip.text = "●  "
-        chip.font.color.rgb = _rgb(color); chip.font.size = Pt(16); chip.font.bold = True
+        chip.font.color.rgb = _rgb(ACCENT); chip.font.size = Pt(16); chip.font.bold = True
         _set(p, km.text, 16, FONT_BODY, GRAY_900)
         p.space_after = Pt(16)
 
@@ -179,15 +181,6 @@ def _reco_slide(prs, report: Report):
         p = tf.paragraphs[0] if i == 1 else tf.add_paragraph()
         _set(p, f"{i}.   {rec}", 16, FONT_BODY, GRAY_900)
         p.space_after = Pt(16)
-
-
-def _sources_slide(prs, report: Report):
-    s = _content_slide(prs, "APPENDIX", "Sources & methodology", "")
-    tf = _box(s, 0.5, 2.05, CONTENT_W_IN, 4.6)
-    for i, src in enumerate(report.sources):
-        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
-        _set(p, "•  " + src, 13, FONT_BODY, GRAY_900)
-        p.space_after = Pt(10)
 
 
 # --------------------------------------------------------------------------- #
@@ -251,7 +244,8 @@ def render_report(report: Report, out_dir=None, charts_dir=None) -> dict:
             render_chart(sec.chart, cpath)
         _insight_slide(prs, sec, cpath)
     _reco_slide(prs, report)
-    _sources_slide(prs, report)
+    # No standalone "Sources & methodology" slide — a single-line appendix reads as an
+    # unfinished slide. Provenance lives in each slide's source footer and in report.json.
 
     pptx_path = _save_robust(prs, out_dir / "report.pptx")
     pdf_path = export_pdf(pptx_path, out_dir)

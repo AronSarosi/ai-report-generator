@@ -34,15 +34,22 @@ st.set_page_config(page_title="AI Report Generator",
 settings = get_settings()
 UPLOAD_TYPES = ["csv", "tsv", "xlsx", "xlsm", "xls", "json"]
 
+# Pre-filled prompts so clicking "Use sample data" lets the user run immediately.
+SAMPLE_GEN_PROMPT = "Generate a monthly sales report highlighting the winning products and regions."
+SAMPLE_CHAT_Q = "Which region declined the most last month?"
+
 # Minimum sizes: nothing below 10pt (~0.84rem); written text >= 11pt (~0.92rem).
 CSS = """
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700;900&display=swap');
 [data-testid="stToolbar"], [data-testid="stDecoration"], #MainMenu, footer, .stDeployButton {display:none !important;}
 header[data-testid="stHeader"] {background:transparent;}
 [data-testid="stAppViewContainer"] {background-color:#0E1420; background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px); background-size:88px 88px;}
-.block-container {padding-top:0.8rem; padding-bottom:3rem; max-width:1320px;}
+/* Symmetric breathing room: as much empty space below the content as above the title,
+   so the page always scrolls a little past the illustration (never clips it). */
+.block-container {padding-top:1.6rem; padding-bottom:7rem; max-width:1320px;}
 
-.app-title {text-align:center; font-family:Georgia,'Times New Roman',serif; color:#EAF1FB; font-weight:700; font-size:2.15rem; margin-bottom:.1rem;}
+.app-title {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:2.35rem; letter-spacing:-.01em; margin-bottom:.12rem;}
 .app-sub {text-align:center; color:#9AA4B4; font-size:1.0rem; max-width:880px; margin:0 auto .8rem auto; line-height:1.45;}
 
 /* tabs: ONE joined full-width bar, split in half. Each box is fully colored
@@ -72,11 +79,13 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .st-key-gen_btn button, .st-key-ask_btn button {min-width:200px;}
 .stTextArea textarea::placeholder, .stTextInput input::placeholder {font-style:italic; color:#7C8696;}
 
-/* illustration */
-.hero {display:flex; align-items:flex-start; justify-content:center; gap:.4rem; flex-wrap:wrap; margin-top:.5rem;}
-.hero-col {flex:1; min-width:260px; max-width:360px; text-align:center;}
+/* illustration: input  ->  arrow + prompt  ->  output */
+.hero {display:flex; align-items:center; justify-content:center; gap:1.1rem; flex-wrap:wrap; margin-top:1rem;}
+.hero-col {flex:1 1 300px; min-width:280px; max-width:360px; text-align:center;}
 .hero-cap {letter-spacing:.08em; font-size:.9rem; color:#9AA4B4; font-weight:700; margin-bottom:.55rem;}
-.hero-arrow {display:flex; flex-shrink:0; align-items:flex-start; justify-content:center; margin-top:80px;}
+.hero-mid {display:flex; flex-direction:column; align-items:center; gap:.7rem; flex:0 0 auto; min-width:180px; max-width:220px;}
+.hero-prompt {background:#1A2231; border:1px solid #3A4660; border-radius:11px; padding:.6rem .8rem; font-size:.92rem; color:#C4CCD8; text-align:left; line-height:1.42;}
+.straight-arrow {line-height:0;}
 .stack {position:relative; height:196px;}
 .filecard {position:absolute; left:50%; top:6px; width:288px; background:#fff; border:1px solid #C0C5C9; border-radius:9px; box-shadow:0 10px 26px rgba(0,0,0,.5); padding:.5rem .6rem .35rem .6rem;}
 .filecard.back {transform:translate(-66%,30px) rotate(-5deg);}
@@ -86,9 +95,6 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .minitbl {width:100%; border-collapse:collapse; font-size:.86rem;}
 .minitbl th {background:#1F2A44; color:#fff; padding:2px 5px; text-align:left;}
 .minitbl td {border-bottom:1px solid #E6E8EB; padding:2px 5px; color:#3C4450;}
-.logo-badge {margin:14px auto .8rem auto; display:flex; justify-content:center;}
-.logo-badge svg {filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));}
-.prompt-bubble {background:#1A2231; border:1px solid #3A4660; border-radius:11px; padding:.75rem .9rem; font-size:.96rem; color:#C4CCD8; text-align:left;}
 .report-thumb {width:300px; margin:0 auto; background:#fff; border:1px solid #C0C5C9; border-radius:9px; box-shadow:0 10px 26px rgba(0,0,0,.5); padding:.6rem; text-align:left;}
 .rt-kicker {font-size:.86rem; color:#2E6DB4; font-weight:700; letter-spacing:.08em;}
 .rt-title {font-family:Georgia,serif; color:#1F2A44; font-weight:700; font-size:1.0rem; line-height:1.18; margin:.25rem 0 .65rem 0;}
@@ -183,6 +189,12 @@ def data_panel(suffix: str) -> str | None:
                         '"Use sample data", to begin.</div>', unsafe_allow_html=True)
         if c_btn.button("Use sample data", key=f"sample_{suffix}"):
             _load_sample()
+            # Pre-fill this tab's prompt so the user can generate/ask right away. (Only the
+            # current tab's widget is set — it is created after this, so the write is safe.)
+            if suffix == "gen" and not st.session_state.get("gen_prompt"):
+                st.session_state["gen_prompt"] = SAMPLE_GEN_PROMPT
+            elif suffix == "chat" and not st.session_state.get("chat_q"):
+                st.session_state["chat_q"] = SAMPLE_CHAT_Q
             tables = st.session_state.get("tables", {})
     if not tables:
         return None
@@ -238,31 +250,20 @@ _BARS = ("".join(f'<span style="height:{h}%"></span>' for h in
          '<span class="hi" style="height:100%"></span>' +
          "".join(f'<span style="height:{h}%"></span>' for h in (74, 58, 46)))
 
-# Logo #8 (donut chart): the brand mark, placed in the illustration centre.
-LOGO_SVG = ('<svg viewBox="0 0 64 64" width="100" height="100">'
-            '<rect x="3" y="3" width="58" height="58" rx="14" fill="#4A90D9"/>'
-            '<circle cx="32" cy="32" r="16" fill="none" stroke="#ffffff80" stroke-width="8.5"/>'
-            '<circle cx="32" cy="32" r="16" fill="none" stroke="#ffffff" stroke-width="8.5" '
-            'stroke-dasharray="67 110" transform="rotate(-90 32 32)"/></svg>')
-LOGO_BADGE = f'<div class="logo-badge">{LOGO_SVG}</div>'
-
-# Upward-curving connector arrow between the 3 illustration steps (bold + compact).
-CURVE_ARROW = ('<svg width="68" height="46" viewBox="0 0 68 46" fill="none" stroke="#4A90D9" '
-               'stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">'
-               '<path d="M7 34 C 20 9, 44 9, 59 25"/>'
-               '<path d="M59 25 L 49 25"/><path d="M59 25 L 55 15"/></svg>')
+# One clean, straight arrow pointing input -> output. Nothing overlaps it.
+STRAIGHT_ARROW = ('<svg class="straight-arrow" width="150" height="30" viewBox="0 0 150 30" '
+                  'fill="none" stroke="#4A90D9" stroke-width="5" stroke-linecap="round" '
+                  'stroke-linejoin="round"><path d="M6 15 L132 15"/>'
+                  '<path d="M132 15 L116 6"/><path d="M132 15 L116 24"/></svg>')
 
 HERO_GENERATE = f"""
 <div class="hero">
   {_DATA_CARDS}
-  <div class="hero-arrow">{CURVE_ARROW}</div>
-  <div class="hero-col">
-    <div class="hero-cap">AI REPORT GENERATOR</div>
-    {LOGO_BADGE}
-    <div class="prompt-bubble">&ldquo;Generate a monthly sales report, highlighting the winning
+  <div class="hero-mid">
+    <div class="hero-prompt">&ldquo;Generate a monthly sales report, highlighting the winning
     products and regions.&rdquo;</div>
+    {STRAIGHT_ARROW}
   </div>
-  <div class="hero-arrow">{CURVE_ARROW}</div>
   <div class="hero-col">
     <div class="hero-cap">FINISHED REPORT</div>
     <div class="report-thumb">
@@ -278,14 +279,11 @@ HERO_GENERATE = f"""
 HERO_CHAT = f"""
 <div class="hero">
   {_DATA_CARDS}
-  <div class="hero-arrow">{CURVE_ARROW}</div>
-  <div class="hero-col">
-    <div class="hero-cap">AI DATA ANALYST</div>
-    {LOGO_BADGE}
-    <div class="prompt-bubble">Ask anything in plain English. The agent writes safe SQL and answers
-    from your data.</div>
+  <div class="hero-mid">
+    <div class="hero-prompt">Ask anything in plain English &mdash; the agent writes safe SQL and
+    answers from your data.</div>
+    {STRAIGHT_ARROW}
   </div>
-  <div class="hero-arrow">{CURVE_ARROW}</div>
   <div class="hero-col">
     <div class="hero-cap">LIVE CONVERSATION</div>
     <div class="chat">
@@ -317,7 +315,7 @@ with tab_gen:
     active = data_panel("gen")
     field_label("What report do you want?")
     prompt = st.text_area(
-        "prompt", label_visibility="collapsed",
+        "prompt", key="gen_prompt", label_visibility="collapsed",
         placeholder="Example: Generate a monthly sales report highlighting the winning products and regions.",
         height=68,
         help="Describe the report in plain English. Mention a month (e.g. 'for May 2026') to pin the "
@@ -329,31 +327,40 @@ with tab_gen:
         elif not prompt.strip():
             st.warning("Describe the report you want (see the example in the box).")
         else:
+            # Live, step-by-step progress so the wait is transparent and engaging.
+            status = st.status("Generating your report… (usually 20–40 seconds)", expanded=True)
             try:
-                with st.spinner("Analyzing, planning, writing, verifying, rendering…"):
-                    report = build_report(ReportRequest(intent=prompt, table=active))
-                    paths = render_report(report)
-                st.success(f"Report generated for period {report.period}.")
-                st.subheader(report.title)
-                st.markdown(f"**{report.governing_thought}**")
-                for km in report.key_messages:
-                    dot = {"positive": "🟢", "negative": "🔴"}.get(km.status, "⚪")
-                    st.markdown(f"{dot} {km.text}")
-                d1, d2 = st.columns(2)
-                d1.download_button("⬇ Download PPTX", Path(paths["pptx"]).read_bytes(), "report.pptx",
-                                   "application/vnd.openxmlformats-officedocument.presentationml.presentation")
-                if paths["pdf"]:
-                    d2.download_button("⬇ Download PDF", Path(paths["pdf"]).read_bytes(),
-                                       "report.pdf", "application/pdf")
-                st.divider()
-                for sec in report.sections:
-                    st.markdown(f"#### {sec.action_title}")
-                    if sec.so_what:
-                        st.info(f"**Key takeaway:** {sec.so_what}")
+                report = build_report(ReportRequest(intent=prompt, table=active),
+                                      progress=lambda label: status.write(f"✓ {label}"))
+                status.write("✓ Rendering the slides and PDF")
+                paths = render_report(report)
+                status.update(label=f"Report ready for period {report.period}.",
+                              state="complete", expanded=False)
+                st.session_state["gen_result"] = {
+                    "pptx": str(paths["pptx"]),
+                    "pdf": str(paths["pdf"]) if paths.get("pdf") else None,
+                    "period": report.period,
+                }
             except ValueError as e:  # intentional guardrails -> show the clean message
+                status.update(label="Couldn't generate the report", state="error")
+                st.session_state.pop("gen_result", None)
                 st.error(str(e))
             except Exception as e:  # noqa: BLE001
+                status.update(label="Something went wrong", state="error")
+                st.session_state.pop("gen_result", None)
                 st.error(f"Something went wrong: {e}")
+
+    # Download buttons live outside the click branch so they survive the rerun a download
+    # triggers (otherwise downloading the PPTX would make the PDF button vanish).
+    res = st.session_state.get("gen_result")
+    if res:
+        st.success(f"Your report for period {res['period']} is ready — open it to view the full deck.")
+        d1, d2 = st.columns(2)
+        d1.download_button("⬇ Download PPTX", Path(res["pptx"]).read_bytes(), "report.pptx",
+                           "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+        if res["pdf"]:
+            d2.download_button("⬇ Download PDF", Path(res["pdf"]).read_bytes(),
+                               "report.pdf", "application/pdf")
     st.markdown(HERO_GENERATE, unsafe_allow_html=True)
 
 # --------------------------------------------------------------------------- #
@@ -362,7 +369,7 @@ with tab_gen:
 with tab_chat:
     active = data_panel("chat")
     field_label("What do you want to know?")
-    q = st.text_area("question", label_visibility="collapsed", height=68,
+    q = st.text_area("question", key="chat_q", label_visibility="collapsed", height=68,
                      placeholder="Example: Which region declined the most last month?")
     if st.button("Ask about your data", type="primary", key="ask_btn"):
         if not active:
