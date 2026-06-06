@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+from collections import namedtuple
 from pathlib import Path
 from typing import Optional
 
@@ -31,9 +32,22 @@ from src.style import (ACCENT, BODY_BOX, CONTENT_W_IN, FONT_BODY, FONT_HEAD, GRA
 
 
 # --------------------------------------------------------------------------- #
+# Brand theme (defaults to the house style; an uploaded template overrides it)
+# --------------------------------------------------------------------------- #
+Theme = namedtuple("Theme", "accent ink font_head font_body")
+
+
+def _theme(brand: Optional[dict]) -> Theme:
+    brand = brand or {}
+    return Theme(accent=brand.get("accent") or ACCENT, ink=brand.get("ink") or INK,
+                 font_head=brand.get("font_head") or FONT_HEAD,
+                 font_body=brand.get("font_body") or FONT_BODY)
+
+
+# --------------------------------------------------------------------------- #
 # Charts
 # --------------------------------------------------------------------------- #
-def render_chart(spec: ChartSpec, path: Path) -> Path:
+def render_chart(spec: ChartSpec, path: Path, accent: str = ACCENT) -> Path:
     import matplotlib.pyplot as plt
 
     apply_mpl_style()
@@ -42,9 +56,9 @@ def render_chart(spec: ChartSpec, path: Path) -> Path:
 
     if spec.kind == "line":
         xs = list(range(len(spec.x)))
-        ax.plot(xs, ys, color=ACCENT, linewidth=2, marker="o", markersize=3)
+        ax.plot(xs, ys, color=accent, linewidth=2, marker="o", markersize=3)
         if ys:
-            ax.scatter([xs[-1]], [ys[-1]], color=ACCENT, s=45, zorder=5)
+            ax.scatter([xs[-1]], [ys[-1]], color=accent, s=45, zorder=5)
             ax.annotate(money(ys[-1]), (xs[-1], ys[-1]), textcoords="offset points",
                         xytext=(-4, 8), ha="right", color=INK, fontsize=9, fontweight="bold")
         ax.set_xticks(xs)
@@ -54,7 +68,7 @@ def render_chart(spec: ChartSpec, path: Path) -> Path:
     else:  # horizontal bar (sorted desc -> largest on top)
         labels = spec.x
         y_pos = list(range(len(labels)))[::-1]
-        colors = [ACCENT if (spec.highlight and labels[i] == spec.highlight) else GRAY_300
+        colors = [accent if (spec.highlight and labels[i] == spec.highlight) else GRAY_300
                   for i in range(len(labels))]
         ax.barh(y_pos, ys, color=colors)
         ax.set_yticks(y_pos)
@@ -106,58 +120,58 @@ def _rule(slide, left, top, width, pt_height, color=ACCENT):
     return shp
 
 
-def _content_slide(prs, kicker, title, source):
+def _content_slide(prs, kicker, title, source, t):
     s = prs.slides.add_slide(prs.slide_layouts[6])
-    _set(_box(s, *KICKER_BOX).paragraphs[0], kicker.upper(), SZ_KICKER, FONT_BODY, ACCENT, bold=True)
-    _set(_box(s, *TITLE_BOX).paragraphs[0], title, SZ_TITLE, FONT_HEAD, INK, bold=True)
+    _set(_box(s, *KICKER_BOX).paragraphs[0], kicker.upper(), SZ_KICKER, t.font_body, t.accent, bold=True)
+    _set(_box(s, *TITLE_BOX).paragraphs[0], title, SZ_TITLE, t.font_head, t.ink, bold=True)
     # No rule under the title — whitespace separates it (underlines read as AI-generated).
     if source:
-        _set(_box(s, *SOURCE_BOX).paragraphs[0], source, SZ_SOURCE, FONT_BODY, GRAY_500)
+        _set(_box(s, *SOURCE_BOX).paragraphs[0], source, SZ_SOURCE, t.font_body, GRAY_500)
     return s
 
 
-def _title_slide(prs, report: Report):
+def _title_slide(prs, report: Report, t):
     s = prs.slides.add_slide(prs.slide_layouts[6])
     # Title can wrap to two lines, so give it a tall box and let whitespace (not an
     # underline) separate it from the subtitle — accent rules read as AI-generated.
-    _set(_box(s, 0.7, 2.25, 11.9, 1.7).paragraphs[0], report.title, SZ_DECK_TITLE, FONT_HEAD, INK, bold=True)
-    _set(_box(s, 0.7, 4.05, 11.9, 0.6).paragraphs[0], report.subtitle, SZ_SUB, FONT_BODY, GRAY_500)
+    _set(_box(s, 0.7, 2.25, 11.9, 1.7).paragraphs[0], report.title, SZ_DECK_TITLE, t.font_head, t.ink, bold=True)
+    _set(_box(s, 0.7, 4.05, 11.9, 0.6).paragraphs[0], report.subtitle, SZ_SUB, t.font_body, GRAY_500)
     _set(_box(s, 0.7, 4.6, 11.9, 0.5).paragraphs[0],
-         f"Generated {report.generated_at}   |   CONFIDENTIAL", 11, FONT_BODY, GRAY_500)
+         f"Generated {report.generated_at}   |   CONFIDENTIAL", 11, t.font_body, GRAY_500)
 
 
-def _exec_slide(prs, report: Report):
+def _exec_slide(prs, report: Report, t):
     s = _content_slide(prs, "EXECUTIVE SUMMARY", report.governing_thought or "Executive summary",
-                       "Source: figures verified against the source data.")
+                       "Source: figures verified against the source data.", t)
     tf = _box(s, 0.5, 2.05, CONTENT_W_IN, 4.6)
     for i, km in enumerate(report.key_messages):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
-        # One universal bullet color (the brand blue) regardless of sentiment — colored
+        # One universal bullet color (the brand accent) regardless of sentiment — colored
         # red/green dots read like a status alert rather than a finished report.
         chip = p.add_run(); chip.text = "●  "
-        chip.font.color.rgb = _rgb(ACCENT); chip.font.size = Pt(16); chip.font.bold = True
-        _set(p, km.text, 16, FONT_BODY, GRAY_900)
+        chip.font.color.rgb = _rgb(t.accent); chip.font.size = Pt(16); chip.font.bold = True
+        _set(p, km.text, 16, t.font_body, GRAY_900)
         p.space_after = Pt(16)
 
 
-def _insight_slide(prs, sec, chart_path: Optional[Path]):
+def _insight_slide(prs, sec, chart_path: Optional[Path], t):
     src = f"Source: {sec.citations[0] if sec.citations else 'database'} — verified against the data."
-    s = _content_slide(prs, sec.kicker, sec.action_title, src)
+    s = _content_slide(prs, sec.kicker, sec.action_title, src, t)
     if chart_path:
         s.shapes.add_picture(str(chart_path), Inches(0.5), Inches(1.95), width=Inches(7.6))
     if sec.narrative:
-        _set(_box(s, 0.5, 6.0, 7.6, 0.95).paragraphs[0], sec.narrative, 11, FONT_BODY, GRAY_500)
-    _callout(s, "KEY TAKEAWAY", sec.so_what or "", sec.bullets[:3])
+        _set(_box(s, 0.5, 6.0, 7.6, 0.95).paragraphs[0], sec.narrative, 11, t.font_body, GRAY_500)
+    _callout(s, "KEY TAKEAWAY", sec.so_what or "", sec.bullets[:3], t)
 
 
-def _callout(slide, label, takeaway, bullets, left=8.5, top=1.95, width=4.3):
-    """A navy header band over a light card — the insight callout."""
+def _callout(slide, label, takeaway, bullets, t, left=8.5, top=1.95, width=4.3):
+    """A brand-colored header band over a light card — the insight callout."""
     hdr = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(left), Inches(top), Inches(width), Inches(0.5))
-    hdr.fill.solid(); hdr.fill.fore_color.rgb = _rgb(INK); hdr.line.fill.background()
+    hdr.fill.solid(); hdr.fill.fore_color.rgb = _rgb(t.ink); hdr.line.fill.background()
     hdr.shadow.inherit = False
     htf = hdr.text_frame; htf.vertical_anchor = MSO_ANCHOR.MIDDLE
     htf.margin_left = Inches(0.22); htf.margin_top = Inches(0.02); htf.margin_bottom = Inches(0.02)
-    _set(htf.paragraphs[0], label, 12, FONT_BODY, PAPER, bold=True)
+    _set(htf.paragraphs[0], label, 12, t.font_body, PAPER, bold=True)
 
     body = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(left), Inches(top + 0.5), Inches(width), Inches(3.5))
     body.fill.solid(); body.fill.fore_color.rgb = _rgb(GRAY_100)
@@ -165,21 +179,21 @@ def _callout(slide, label, takeaway, bullets, left=8.5, top=1.95, width=4.3):
     body.shadow.inherit = False
     tf = body.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.TOP
     tf.margin_left = Inches(0.24); tf.margin_right = Inches(0.24); tf.margin_top = Inches(0.26)
-    _set(tf.paragraphs[0], takeaway, 13, FONT_BODY, GRAY_900)
+    _set(tf.paragraphs[0], takeaway, 13, t.font_body, GRAY_900)
     tf.paragraphs[0].alignment = PP_ALIGN.LEFT
     tf.paragraphs[0].space_after = Pt(16)
     for b in bullets:
-        p = tf.add_paragraph(); _set(p, "•  " + b, 11, FONT_BODY, GRAY_900)
+        p = tf.add_paragraph(); _set(p, "•  " + b, 11, t.font_body, GRAY_900)
         p.alignment = PP_ALIGN.LEFT; p.space_after = Pt(7)
 
 
-def _reco_slide(prs, report: Report):
+def _reco_slide(prs, report: Report, t):
     s = _content_slide(prs, "RECOMMENDATIONS", "Priorities for the coming month",
-                       "Source: figures verified against the source data.")
+                       "Source: figures verified against the source data.", t)
     tf = _box(s, 0.5, 2.05, CONTENT_W_IN, 4.6)
     for i, rec in enumerate(report.recommendations, 1):
         p = tf.paragraphs[0] if i == 1 else tf.add_paragraph()
-        _set(p, f"{i}.   {rec}", 16, FONT_BODY, GRAY_900)
+        _set(p, f"{i}.   {rec}", 16, t.font_body, GRAY_900)
         p.space_after = Pt(16)
 
 
@@ -224,26 +238,29 @@ def _save_robust(prs, path: Path) -> Path:
 # --------------------------------------------------------------------------- #
 # Orchestration
 # --------------------------------------------------------------------------- #
-def render_report(report: Report, out_dir=None, charts_dir=None) -> dict:
+def render_report(report: Report, out_dir=None, charts_dir=None, brand=None) -> dict:
     s = get_settings()
     out_dir = Path(out_dir or s.out_dir)
     charts_dir = Path(charts_dir or s.charts_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     charts_dir.mkdir(parents=True, exist_ok=True)
 
+    # brand (optional) = {accent, ink, font_head, font_body} extracted from an uploaded template.
+    t = _theme(brand)
+
     prs = Presentation()
     prs.slide_width = Inches(SLIDE_W_IN)
     prs.slide_height = Inches(SLIDE_H_IN)
 
-    _title_slide(prs, report)
-    _exec_slide(prs, report)
+    _title_slide(prs, report, t)
+    _exec_slide(prs, report, t)
     for i, sec in enumerate(report.sections):
         cpath = None
         if sec.chart:
             cpath = charts_dir / f"chart_{i}.png"
-            render_chart(sec.chart, cpath)
-        _insight_slide(prs, sec, cpath)
-    _reco_slide(prs, report)
+            render_chart(sec.chart, cpath, accent=t.accent)
+        _insight_slide(prs, sec, cpath, t)
+    _reco_slide(prs, report, t)
     # No standalone "Sources & methodology" slide — a single-line appendix reads as an
     # unfinished slide. Provenance lives in each slide's source footer and in report.json.
 

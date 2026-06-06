@@ -13,3 +13,7 @@ toolbarMode = "minimal"
 
 [browser]
 gatherUsageStats = false
+
+[server]
+# Cap uploads (the default is 200MB). Visitors get a generous trial; see src/limits.py.
+maxUploadSize = 100

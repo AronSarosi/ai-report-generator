@@ -21,8 +21,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import pandas as pd  # noqa: E402
 import streamlit as st  # noqa: E402
 
+from src.branding import extract_brand  # noqa: E402
 from src.config import get_settings  # noqa: E402
 from src.data_tool import answer_data_question, load_file_to_sqlite, profile_dataset  # noqa: E402
+from src.legal import CONTACT_EMAIL, PRIVACY_MD, TERMS_MD  # noqa: E402
+from src.limits import LABEL, LIMITS, consume, remaining  # noqa: E402
 from src.render import render_report  # noqa: E402
 from src.report import build_report  # noqa: E402
 from src.schemas import ReportRequest  # noqa: E402
@@ -123,6 +126,37 @@ def hint(text: str) -> None:
 
 
 # --------------------------------------------------------------------------- #
+# Fair-use limits (lead-magnet gating; the OpenAI spend cap is the hard backstop)
+# --------------------------------------------------------------------------- #
+def _client_id() -> str:
+    """Stable id for fair-use limits: the client IP if the host exposes it, else a session id."""
+    try:
+        h = st.context.headers
+        fwd = (h.get("X-Forwarded-For") or h.get("X-Real-Ip") or "") if h else ""
+        ip = fwd.split(",")[0].strip()
+        if ip:
+            return ip
+    except Exception:  # noqa: BLE001
+        pass
+    if "_cid" not in st.session_state:
+        import uuid
+        st.session_state["_cid"] = "sess-" + uuid.uuid4().hex[:12]
+    return st.session_state["_cid"]
+
+
+def _limit_msg(kind: str) -> str:
+    return (f"You've used all {LIMITS[kind]} free {LABEL[kind]} this month. This is a free demo — "
+            f"if you'd like to use it for real, or have a custom version built for your team, "
+            f"get in touch: {CONTACT_EMAIL}.")
+
+
+def _usage_caption(kind: str) -> None:
+    left = remaining(_client_id(), kind)
+    st.markdown(f"<div class='hint'>{left} of {LIMITS[kind]} free {LABEL[kind]} left this month.</div>",
+                unsafe_allow_html=True)
+
+
+# --------------------------------------------------------------------------- #
 # Shared data handling (one upload, used by both tabs, via session_state)
 # --------------------------------------------------------------------------- #
 def _safe_table(name: str) -> str:
@@ -147,6 +181,12 @@ def _process_uploads(files) -> None:
             st.session_state["active_table"] = table
         except Exception as e:  # noqa: BLE001
             st.error(f"Couldn't load {f.name}: {e}")
+        finally:
+            # The raw upload isn't needed once it's in SQLite — delete it right away.
+            try:
+                tmp.unlink()
+            except OSError:
+                pass
 
 
 def _load_sample() -> None:
@@ -314,6 +354,38 @@ tab_gen, tab_chat = st.tabs(["Generate Report", "Ask Your Data"])
 # --------------------------------------------------------------------------- #
 with tab_gen:
     active = data_panel("gen")
+
+    # Optional brand template — the deck adopts its colors + fonts.
+    field_label("Brand template (optional)")
+    tmpl = st.file_uploader("template", type=["pptx", "potx"], key="tmpl_gen",
+                            label_visibility="collapsed",
+                            help="Upload a PowerPoint template or a past report and the deck adopts "
+                                 "its brand colors and fonts. Leave empty for the default style.")
+    if tmpl is not None:
+        sig = (tmpl.name, tmpl.size)
+        if st.session_state.get("_brand_sig") != sig:
+            tpath = Path(tempfile.gettempdir()) / "template_upload.pptx"
+            tpath.write_bytes(tmpl.getvalue())
+            st.session_state["brand"] = extract_brand(tpath)
+            st.session_state["_brand_sig"] = sig
+            try:
+                tpath.unlink()
+            except OSError:
+                pass
+        brand = st.session_state.get("brand") or {}
+        if brand:
+            st.markdown(
+                f"<div class='datastatus'>&#10003; Brand picked up from <b>{tmpl.name}</b> — accent "
+                f"<b>{brand.get('accent', '—')}</b>, fonts <b>{brand.get('font_head', '—')}</b> / "
+                f"<b>{brand.get('font_body', '—')}</b>. Your deck will use these.</div>",
+                unsafe_allow_html=True)
+        else:
+            hint("Couldn't read a theme from that file — the deck will use the default style.")
+    else:
+        st.session_state.pop("brand", None)
+        st.session_state.pop("_brand_sig", None)
+        hint("Optional — give the deck your brand. Without a template it uses the clean default style.")
+
     field_label("What report do you want?")
     prompt = st.text_area(
         "prompt", key="gen_prompt", label_visibility="collapsed",
@@ -323,10 +395,13 @@ with tab_gen:
              "period, and what to focus on (winning products, weak regions, channel shifts).",
     )
     if st.button("Generate report", type="primary", key="gen_btn"):
+        cid = _client_id()
         if not active:
             st.warning('Upload a data file or click "Use sample data" first.')
         elif not prompt.strip():
             st.warning("Describe the report you want (see the example in the box).")
+        elif remaining(cid, "report") <= 0:
+            st.warning(_limit_msg("report"))
         else:
             # Live, step-by-step progress so the wait is transparent and engaging.
             status = st.status("Generating your report… (usually 20–40 seconds)", expanded=True)
@@ -334,7 +409,8 @@ with tab_gen:
                 report = build_report(ReportRequest(intent=prompt, table=active),
                                       progress=lambda label: status.write(f"✓ {label}"))
                 status.write("✓ Rendering the slides and PDF")
-                paths = render_report(report)
+                paths = render_report(report, brand=st.session_state.get("brand"))
+                consume(cid, "report")  # only count a successful generation
                 status.update(label=f"Report ready for period {report.period}.",
                               state="complete", expanded=False)
                 st.session_state["gen_result"] = {
@@ -362,6 +438,7 @@ with tab_gen:
         if res["pdf"]:
             d2.download_button("⬇ Download PDF", Path(res["pdf"]).read_bytes(),
                                "report.pdf", "application/pdf")
+    _usage_caption("report")
     st.markdown(HERO_GENERATE, unsafe_allow_html=True)
 
 # --------------------------------------------------------------------------- #
@@ -373,21 +450,41 @@ with tab_chat:
     q = st.text_area("question", key="chat_q", label_visibility="collapsed", height=68,
                      placeholder="Example: Which region declined the most last month?")
     if st.button("Ask about your data", type="primary", key="ask_btn"):
+        cid = _client_id()
         if not active:
             st.warning('Upload a data file or click "Use sample data" first.')
         elif not q.strip():
             st.warning("Type a question (see the example in the box).")
+        elif remaining(cid, "question") <= 0:
+            st.warning(_limit_msg("question"))
         else:
             with st.spinner("Working it out…"):
                 res = answer_data_question(q, table=active)
             if res.error:
                 st.error(res.error)
-            elif res.rows:
-                st.dataframe(pd.DataFrame(res.rows, columns=res.columns), use_container_width=True)
-                with st.expander("View the SQL query"):
-                    st.code(res.sql, language="sql")
             else:
-                st.info("Query returned no rows.")
+                consume(cid, "question")  # count a completed answer (rows or a valid empty result)
+                if res.rows:
+                    st.dataframe(pd.DataFrame(res.rows, columns=res.columns), use_container_width=True)
+                else:
+                    st.info("Query returned no rows.")
                 with st.expander("View the SQL query"):
                     st.code(res.sql, language="sql")
+    _usage_caption("question")
     st.markdown(HERO_CHAT, unsafe_allow_html=True)
+
+# --------------------------------------------------------------------------- #
+# Footer — privacy & terms (page level, below the illustrations, with breathing room)
+# --------------------------------------------------------------------------- #
+st.markdown("<div style='height:4rem'></div>", unsafe_allow_html=True)
+st.divider()
+_f1, _f2 = st.columns(2)
+with _f1:
+    with st.expander("Privacy"):
+        st.markdown(PRIVACY_MD)
+with _f2:
+    with st.expander("Terms of use"):
+        st.markdown(TERMS_MD)
+st.markdown("<div class='hint' style='text-align:center; margin-top:1rem'>Free demo &middot; your "
+            "data is processed transiently and not stored &middot; please don't upload sensitive or "
+            f"regulated data &middot; {CONTACT_EMAIL}</div>", unsafe_allow_html=True)
