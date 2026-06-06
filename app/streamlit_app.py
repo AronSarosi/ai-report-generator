@@ -112,9 +112,9 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .bubble.user {background:#2E6DB4; color:#fff; margin-left:auto;}
 .bubble.ai {background:#fff; color:#1F2A44; border:1px solid #C0C5C9;}
 /* subtle footer links + the standalone privacy/terms pages */
-.footlink {color:#4E5666; text-decoration:none; font-size:.85rem; margin:0 .55rem;}
-.footlink:hover {color:#9AA4B4; text-decoration:underline;}
-.footsep {color:#333C49;}
+.footlink {color:#9AA4B4 !important; text-decoration:none !important; font-size:.85rem; margin:0 .55rem;}
+.footlink:hover {color:#C4CCD8 !important; text-decoration:none !important;}
+.footsep {color:#6B7480;}
 .policy-title {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:2rem; margin:.6rem 0 .3rem 0;}
 .policy-back {color:#9AA4B4; text-decoration:none; font-size:.95rem;}
 .policy-back:hover {color:#C9D2DE; text-decoration:underline;}
@@ -172,12 +172,6 @@ def _limit_msg(kind: str) -> str:
     return (f"You've used all {LIMITS[kind]} free {LABEL[kind]} this month. This is a free demo. "
             f"If you'd like to use it for real, or have a custom version built for your team, "
             f"get in touch: {CONTACT_EMAIL}.")
-
-
-def _usage_caption(kind: str) -> None:
-    left = remaining(_client_id(), kind)
-    st.markdown(f"<div class='hint'>{left} of {LIMITS[kind]} free {LABEL[kind]} left this month.</div>",
-                unsafe_allow_html=True)
 
 
 # --------------------------------------------------------------------------- #
@@ -462,7 +456,6 @@ with tab_gen:
         if res["pdf"]:
             d2.download_button("⬇ Download PDF", Path(res["pdf"]).read_bytes(),
                                "report.pdf", "application/pdf")
-    _usage_caption("report")
     st.markdown(HERO_GENERATE, unsafe_allow_html=True)
 
 # --------------------------------------------------------------------------- #
@@ -494,7 +487,6 @@ with tab_chat:
                     st.info("Query returned no rows.")
                 with st.expander("View the SQL query"):
                     st.code(res.sql, language="sql")
-    _usage_caption("question")
     st.markdown(HERO_CHAT, unsafe_allow_html=True)
 
 # --------------------------------------------------------------------------- #
