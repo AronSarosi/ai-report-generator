@@ -112,9 +112,9 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .bubble.user {background:#2E6DB4; color:#fff; margin-left:auto;}
 .bubble.ai {background:#fff; color:#1F2A44; border:1px solid #C0C5C9;}
 /* subtle footer links + the standalone privacy/terms pages */
-.footlink {color:#6E7889; text-decoration:none; font-size:.9rem; margin:0 .55rem;}
-.footlink:hover {color:#C9D2DE; text-decoration:underline;}
-.footsep {color:#3A4453;}
+.footlink {color:#4E5666; text-decoration:none; font-size:.85rem; margin:0 .55rem;}
+.footlink:hover {color:#9AA4B4; text-decoration:underline;}
+.footsep {color:#333C49;}
 .policy-title {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:2rem; margin:.6rem 0 .3rem 0;}
 .policy-back {color:#9AA4B4; text-decoration:none; font-size:.95rem;}
 .policy-back:hover {color:#C9D2DE; text-decoration:underline;}
@@ -501,7 +501,7 @@ with tab_chat:
 # Footer: subtle, centered Privacy / Terms links (each opens its own themed page)
 # --------------------------------------------------------------------------- #
 st.markdown(
-    "<div style='text-align:center; margin-top:3rem;'>"
+    "<div style='text-align:center; margin-top:7rem;'>"
     "<a class='footlink' href='?page=privacy' target='_blank'>Privacy</a>"
     "<span class='footsep'>&middot;</span>"
     "<a class='footlink' href='?page=terms' target='_blank'>Terms of Use</a>"
