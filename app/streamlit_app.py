@@ -50,7 +50,7 @@ header[data-testid="stHeader"] {background:transparent;}
 [data-testid="stAppViewContainer"] {background-color:#0E1420; background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px); background-size:88px 88px;}
 /* Symmetric breathing room: as much empty space below the content as above the title,
    so the page always scrolls a little past the illustration (never clips it). */
-.block-container {padding-top:1.6rem; padding-bottom:7rem; max-width:1320px;}
+.block-container {padding-top:1.6rem; padding-bottom:2.5rem; max-width:1320px;}
 
 .app-title {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:2.35rem; letter-spacing:-.01em; margin-bottom:.12rem;}
 .app-sub {text-align:center; color:#9AA4B4; font-size:1.0rem; max-width:880px; margin:0 auto 1.5rem auto; line-height:1.45;}
@@ -501,7 +501,7 @@ with tab_chat:
 # Footer: subtle, centered Privacy / Terms links (each opens its own themed page)
 # --------------------------------------------------------------------------- #
 st.markdown(
-    "<div style='text-align:center; margin-top:7rem;'>"
+    "<div style='text-align:center; margin-top:9rem;'>"
     "<a class='footlink' href='?page=privacy' target='_blank'>Privacy</a>"
     "<span class='footsep'>&middot;</span>"
     "<a class='footlink' href='?page=terms' target='_blank'>Terms of Use</a>"

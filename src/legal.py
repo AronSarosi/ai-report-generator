@@ -42,8 +42,6 @@ Please read how your data is handled before uploading anything.
   otherwise sensitive data.** Use the bundled sample data or non-sensitive data only.
 
 Questions about privacy: {CONTACT_EMAIL}
-
-_Provided for transparency; this is not legal advice._
 """
 
 TERMS_MD = f"""
@@ -74,6 +72,4 @@ By using this free demonstration application ("the Demo"), you agree to the foll
   your use of the Demo, including any loss arising from reliance on its output.
 
 Contact: {CONTACT_EMAIL}
-
-_Provided for transparency; this is not legal advice._
 """
