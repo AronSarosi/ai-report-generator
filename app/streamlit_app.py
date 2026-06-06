@@ -79,17 +79,18 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .st-key-gen_btn button, .st-key-ask_btn button {min-width:200px;}
 .stTextArea textarea::placeholder, .stTextInput input::placeholder {font-style:italic; color:#7C8696;}
 
-/* illustration: input  ->  arrow + prompt  ->  output */
-.hero {display:flex; align-items:center; justify-content:center; gap:1.1rem; flex-wrap:wrap; margin-top:1rem;}
-.hero-col {flex:1 1 300px; min-width:280px; max-width:360px; text-align:center;}
+/* illustration: input  ->  arrow + prompt  ->  output.
+   Fixed-width blocks + one uniform gap == identical space on BOTH sides of the middle. */
+.hero {display:flex; align-items:center; justify-content:center; gap:3rem; flex-wrap:wrap; margin-top:1rem;}
+.hero-col {flex:0 0 auto; width:340px; display:flex; flex-direction:column; align-items:center; text-align:center;}
 .hero-cap {letter-spacing:.08em; font-size:.9rem; color:#9AA4B4; font-weight:700; margin-bottom:.55rem;}
-.hero-mid {display:flex; flex-direction:column; align-items:center; gap:.7rem; flex:0 0 auto; min-width:180px; max-width:220px;}
+.hero-mid {display:flex; flex-direction:column; align-items:center; gap:.7rem; flex:0 0 auto; width:210px;}
 .hero-prompt {background:#1A2231; border:1px solid #3A4660; border-radius:11px; padding:.6rem .8rem; font-size:.92rem; color:#C4CCD8; text-align:left; line-height:1.42;}
 .straight-arrow {line-height:0;}
-.stack {position:relative; height:196px;}
+.stack {position:relative; width:300px; height:196px; margin:0 auto;}
 .filecard {position:absolute; left:50%; top:6px; width:288px; background:#fff; border:1px solid #C0C5C9; border-radius:9px; box-shadow:0 10px 26px rgba(0,0,0,.5); padding:.5rem .6rem .35rem .6rem;}
 .filecard.back {transform:translate(-66%,30px) rotate(-5deg);}
-.filecard.front {transform:translate(-34%,0);}
+.filecard.front {transform:translate(-50%,0);}
 .fc-tag {display:inline-block; font-size:.88rem; font-weight:700; color:#fff; border-radius:3px; padding:.06rem .45rem; margin-bottom:.45rem;}
 .tag-csv {background:#2E6DB4;} .tag-xlsx {background:transparent; color:#1F2A44; padding:0;}
 .minitbl {width:100%; border-collapse:collapse; font-size:.86rem;}
