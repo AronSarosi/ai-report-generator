@@ -111,10 +111,34 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .bubble {max-width:86%; padding:.55rem .75rem; border-radius:14px; font-size:.96rem; margin-bottom:.55rem; line-height:1.3;}
 .bubble.user {background:#2E6DB4; color:#fff; margin-left:auto;}
 .bubble.ai {background:#fff; color:#1F2A44; border:1px solid #C0C5C9;}
+/* subtle footer links + the standalone privacy/terms pages */
+.footlink {color:#6E7889; text-decoration:none; font-size:.9rem; margin:0 .55rem;}
+.footlink:hover {color:#C9D2DE; text-decoration:underline;}
+.footsep {color:#3A4453;}
+.policy-title {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:2rem; margin:.6rem 0 .3rem 0;}
+.policy-back {color:#9AA4B4; text-decoration:none; font-size:.95rem;}
+.policy-back:hover {color:#C9D2DE; text-decoration:underline;}
 </style>
 """
 
 st.markdown(CSS, unsafe_allow_html=True)
+
+# --------------------------------------------------------------------------- #
+# Routing: ?page=privacy and ?page=terms render as their own themed pages.
+# (Opened in a new tab from the footer; same background + brand as the main app.)
+# --------------------------------------------------------------------------- #
+_page = st.query_params.get("page")
+if _page in ("privacy", "terms"):
+    _title = "Privacy" if _page == "privacy" else "Terms of Use"
+    _body = PRIVACY_MD if _page == "privacy" else TERMS_MD
+    _lcol, _mcol, _rcol = st.columns([1, 3, 1])
+    with _mcol:
+        st.markdown(f"<div class='policy-title'>{_title}</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align:center; margin-bottom:1.4rem;'>"
+                    "<a class='policy-back' href='?'>&larr; Back to the app</a></div>",
+                    unsafe_allow_html=True)
+        st.markdown(_body)
+    st.stop()
 
 
 def field_label(text: str) -> None:
@@ -474,17 +498,11 @@ with tab_chat:
     st.markdown(HERO_CHAT, unsafe_allow_html=True)
 
 # --------------------------------------------------------------------------- #
-# Footer: privacy & terms (page level, below the illustrations, with breathing room)
+# Footer: subtle, centered Privacy / Terms links (each opens its own themed page)
 # --------------------------------------------------------------------------- #
-st.markdown("<div style='height:4rem'></div>", unsafe_allow_html=True)
-st.divider()
-_f1, _f2 = st.columns(2)
-with _f1:
-    with st.expander("Privacy"):
-        st.markdown(PRIVACY_MD)
-with _f2:
-    with st.expander("Terms of use"):
-        st.markdown(TERMS_MD)
-st.markdown("<div class='hint' style='text-align:center; margin-top:1rem'>Free demo &middot; your "
-            "data is processed transiently and not stored &middot; please don't upload sensitive or "
-            f"regulated data &middot; {CONTACT_EMAIL}</div>", unsafe_allow_html=True)
+st.markdown(
+    "<div style='text-align:center; margin-top:3rem;'>"
+    "<a class='footlink' href='?page=privacy' target='_blank'>Privacy</a>"
+    "<span class='footsep'>&middot;</span>"
+    "<a class='footlink' href='?page=terms' target='_blank'>Terms of Use</a>"
+    "</div>", unsafe_allow_html=True)
