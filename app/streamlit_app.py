@@ -53,7 +53,7 @@ header[data-testid="stHeader"] {background:transparent;}
 .block-container {padding-top:1.6rem; padding-bottom:7rem; max-width:1320px;}
 
 .app-title {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:2.35rem; letter-spacing:-.01em; margin-bottom:.12rem;}
-.app-sub {text-align:center; color:#9AA4B4; font-size:1.0rem; max-width:880px; margin:0 auto .8rem auto; line-height:1.45;}
+.app-sub {text-align:center; color:#9AA4B4; font-size:1.0rem; max-width:880px; margin:0 auto 1.5rem auto; line-height:1.45;}
 
 /* tabs: ONE joined full-width bar, split in half. Each box is fully colored
    (per-button background + border, so no uncolored strip at the bottom). */
