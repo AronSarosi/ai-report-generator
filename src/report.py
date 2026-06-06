@@ -72,6 +72,15 @@ def _fallback_title(table: Optional[str]) -> str:
     return smart_title(f"{name} Performance Review")
 
 
+def _no_dashes(s: str) -> str:
+    """Strip em/en dashes from model-written text (em-dashes are unwanted in the output)."""
+    if not s:
+        return s
+    for a, b in ((" — ", ", "), (" – ", ", "), ("—", ", "), ("–", "-")):
+        s = s.replace(a, b)
+    return s
+
+
 # --------------------------------------------------------------------------- #
 # Structured-output drafts (the LLM fills ONLY text fields)
 # --------------------------------------------------------------------------- #
@@ -250,8 +259,9 @@ def _draft(spec: dict, strict: str = "", config=None) -> Any:
 
 def _section_from_draft(spec: dict, draft: SectionDraft) -> ReportSection:
     return ReportSection(
-        kicker=spec["kicker"], action_title=draft.action_title, narrative=draft.narrative,
-        bullets=draft.bullets, so_what=draft.so_what, chart=spec.get("chart"),
+        kicker=spec["kicker"], action_title=_no_dashes(draft.action_title),
+        narrative=_no_dashes(draft.narrative), bullets=[_no_dashes(b) for b in draft.bullets],
+        so_what=_no_dashes(draft.so_what), chart=spec.get("chart"),
         citations=[f'{spec["id"]}: {spec["chart"].title}'] if spec.get("chart") else [],
     )
 
@@ -342,13 +352,14 @@ def node_assemble(state: GState) -> dict:
     if not title or len(title.split()) > 9:
         title = _fallback_title(b["table"])
     report = Report(
-        title=smart_title(title),
+        title=_no_dashes(smart_title(title)),
         subtitle=f"Period {b['period']}  |  source table: {b['table']}",
         period=b["period"],
-        governing_thought=ed.governing_thought if ed else "",
-        key_messages=ed.key_messages if ed else [],
+        governing_thought=_no_dashes(ed.governing_thought) if ed else "",
+        key_messages=[km.model_copy(update={"text": _no_dashes(km.text)})
+                      for km in ed.key_messages] if ed else [],
         sections=state["sections"],
-        recommendations=state.get("recs", []),
+        recommendations=[_no_dashes(r) for r in state.get("recs", [])],
         sources=[f"{b['table']} ({profile.n_rows:,} rows), measure: {b['primary_measure']}, "
                  f"period {b['period']} vs {b['prior']}; figures verified against the database."],
         generated_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),

@@ -155,7 +155,7 @@ def _exec_slide(prs, report: Report, t):
 
 
 def _insight_slide(prs, sec, chart_path: Optional[Path], t):
-    src = f"Source: {sec.citations[0] if sec.citations else 'database'} — verified against the data."
+    src = f"Source: {sec.citations[0] if sec.citations else 'database'}, verified against the data."
     s = _content_slide(prs, sec.kicker, sec.action_title, src, t)
     if chart_path:
         s.shapes.add_picture(str(chart_path), Inches(0.5), Inches(1.95), width=Inches(7.6))

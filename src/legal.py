@@ -3,7 +3,7 @@
 Kept honest and specific on purpose: the full dataset is never sent to the model (only the
 schema + aggregated figures + a few sample values), uploads are processed transiently, and the
 client IP plus usage counts are used only to enforce fair-use limits. This is a demo, not legal
-advice — but it accurately describes how the app actually handles data.
+advice, but it accurately describes how the app actually handles data.
 """
 
 # Shown to visitors who hit the monthly limit, and in the policies below. Change freely.
@@ -18,7 +18,7 @@ Please read how your data is handled before uploading anything.
 **What we process**
 - **Files you upload** (CSV / Excel / JSON, and an optional PowerPoint template). Used only to
   produce your report or answer your questions during your session.
-- **Minimal technical metadata** — your IP address and counts of reports/questions — used solely
+- **Minimal technical metadata** (your IP address and counts of reports/questions), used solely
   to apply fair-use limits.
 
 **How your data is used**

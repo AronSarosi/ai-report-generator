@@ -145,8 +145,8 @@ def _client_id() -> str:
 
 
 def _limit_msg(kind: str) -> str:
-    return (f"You've used all {LIMITS[kind]} free {LABEL[kind]} this month. This is a free demo — "
-            f"if you'd like to use it for real, or have a custom version built for your team, "
+    return (f"You've used all {LIMITS[kind]} free {LABEL[kind]} this month. This is a free demo. "
+            f"If you'd like to use it for real, or have a custom version built for your team, "
             f"get in touch: {CONTACT_EMAIL}.")
 
 
@@ -182,7 +182,7 @@ def _process_uploads(files) -> None:
         except Exception as e:  # noqa: BLE001
             st.error(f"Couldn't load {f.name}: {e}")
         finally:
-            # The raw upload isn't needed once it's in SQLite — delete it right away.
+            # The raw upload isn't needed once it's in SQLite, so delete it right away.
             try:
                 tmp.unlink()
             except OSError:
@@ -231,7 +231,7 @@ def data_panel(suffix: str) -> str | None:
         if c_btn.button("Use sample data", key=f"sample_{suffix}"):
             _load_sample()
             # Pre-fill this tab's prompt so the user can generate/ask right away. (Only the
-            # current tab's widget is set — it is created after this, so the write is safe.)
+            # current tab's widget is set (it is created after this, so the write is safe).
             if suffix == "gen" and not st.session_state.get("gen_prompt"):
                 st.session_state["gen_prompt"] = SAMPLE_GEN_PROMPT
             elif suffix == "chat" and not st.session_state.get("chat_q"):
@@ -321,7 +321,7 @@ HERO_CHAT = f"""
 <div class="hero">
   {_DATA_CARDS}
   <div class="hero-mid">
-    <div class="hero-prompt">Ask anything in plain English &mdash; the agent writes safe SQL and
+    <div class="hero-prompt">Ask anything in plain English, and the agent writes safe SQL and
     answers from your data.</div>
     {STRAIGHT_ARROW}
   </div>
@@ -355,7 +355,7 @@ tab_gen, tab_chat = st.tabs(["Generate Report", "Ask Your Data"])
 with tab_gen:
     active = data_panel("gen")
 
-    # Optional brand template — the deck adopts its colors + fonts.
+    # Optional brand template: the deck adopts its colors + fonts.
     field_label("Brand template (optional)")
     tmpl = st.file_uploader("template", type=["pptx", "potx"], key="tmpl_gen",
                             label_visibility="collapsed",
@@ -375,16 +375,16 @@ with tab_gen:
         brand = st.session_state.get("brand") or {}
         if brand:
             st.markdown(
-                f"<div class='datastatus'>&#10003; Brand picked up from <b>{tmpl.name}</b> — accent "
-                f"<b>{brand.get('accent', '—')}</b>, fonts <b>{brand.get('font_head', '—')}</b> / "
-                f"<b>{brand.get('font_body', '—')}</b>. Your deck will use these.</div>",
+                f"<div class='datastatus'>&#10003; Brand picked up from <b>{tmpl.name}</b>, accent "
+                f"<b>{brand.get('accent', 'n/a')}</b>, fonts <b>{brand.get('font_head', 'n/a')}</b> / "
+                f"<b>{brand.get('font_body', 'n/a')}</b>. Your deck will use these.</div>",
                 unsafe_allow_html=True)
         else:
-            hint("Couldn't read a theme from that file — the deck will use the default style.")
+            hint("Couldn't read a theme from that file, so the deck will use the default style.")
     else:
         st.session_state.pop("brand", None)
         st.session_state.pop("_brand_sig", None)
-        hint("Optional — give the deck your brand. Without a template it uses the clean default style.")
+        hint("Optional: give the deck your brand. Without a template it uses the clean default style.")
 
     field_label("What report do you want?")
     prompt = st.text_area(
@@ -404,7 +404,7 @@ with tab_gen:
             st.warning(_limit_msg("report"))
         else:
             # Live, step-by-step progress so the wait is transparent and engaging.
-            status = st.status("Generating your report… (usually 20–40 seconds)", expanded=True)
+            status = st.status("Generating your report… (usually 20-40 seconds)", expanded=True)
             try:
                 report = build_report(ReportRequest(intent=prompt, table=active),
                                       progress=lambda label: status.write(f"✓ {label}"))
@@ -431,7 +431,7 @@ with tab_gen:
     # triggers (otherwise downloading the PPTX would make the PDF button vanish).
     res = st.session_state.get("gen_result")
     if res:
-        st.success(f"Your report for period {res['period']} is ready — open it to view the full deck.")
+        st.success(f"Your report for period {res['period']} is ready. Open it to view the full deck.")
         d1, d2 = st.columns(2)
         d1.download_button("⬇ Download PPTX", Path(res["pptx"]).read_bytes(), "report.pptx",
                            "application/vnd.openxmlformats-officedocument.presentationml.presentation")
@@ -474,7 +474,7 @@ with tab_chat:
     st.markdown(HERO_CHAT, unsafe_allow_html=True)
 
 # --------------------------------------------------------------------------- #
-# Footer — privacy & terms (page level, below the illustrations, with breathing room)
+# Footer: privacy & terms (page level, below the illustrations, with breathing room)
 # --------------------------------------------------------------------------- #
 st.markdown("<div style='height:4rem'></div>", unsafe_allow_html=True)
 st.divider()
