@@ -160,7 +160,8 @@ resource ui 'Microsoft.App/containerApps@2024-03-01' = {
         external: true
         targetPort: 8501
         transport: 'auto' // Streamlit needs websockets
-        stickySessions: { affinity: 'sticky' } // session state lives in the replica
+        // no sticky sessions needed: maxReplicas is 1, so session state always
+        // lands on the same replica (and ACA rejects stickySessions here anyway)
       }
       registries: registries
       secrets: secrets
