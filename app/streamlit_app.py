@@ -110,6 +110,10 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .bubble {max-width:86%; padding:.55rem .75rem; border-radius:14px; font-size:.96rem; margin-bottom:.55rem; line-height:1.3;}
 .bubble.user {background:#2E6DB4; color:#fff; margin-left:auto;}
 .bubble.ai {background:#fff; color:#1F2A44; border:1px solid #C0C5C9;}
+/* longer "ask your data" thread, centered in a panel */
+.chatwrap {display:flex; justify-content:center; margin-top:1.1rem;}
+.chat2 {width:100%; max-width:660px; background:#0F1726; border:1px solid #2E3C52; border-radius:16px; padding:1.2rem 1.3rem; box-shadow:0 16px 44px rgba(0,0,0,.5); display:flex; flex-direction:column;}
+.chat2 .bubble {max-width:84%; margin-bottom:.7rem; padding:.6rem .85rem; clear:both;}
 /* subtle footer links + the standalone privacy/terms pages */
 .footlink {color:#9AA4B4 !important; text-decoration:none !important; font-size:.85rem; margin:0 .55rem;}
 .footlink:hover {color:#C4CCD8 !important; text-decoration:none !important;}
@@ -391,24 +395,22 @@ HERO_GENERATE = f"""
 </div>
 """
 
-HERO_CHAT = f"""
-<div class="hero">
-  {_DATA_CARDS}
-  <div class="hero-mid">
-    <div class="hero-prompt">Ask anything in plain English, and the agent writes safe SQL and
-    answers from your data.</div>
-    {STRAIGHT_ARROW}
-  </div>
-  <div class="hero-col">
-    <div class="hero-cap">LIVE CONVERSATION</div>
-    <div class="chat">
-      <div class="bubble user">Which region declined the most last month?</div>
-      <div class="bubble ai">LATAM, down 12% versus the prior month ($112k).</div>
-      <div class="bubble user">And the top product?</div>
-      <div class="bubble ai">Wireless Earbuds at $173k, up 8%.</div>
-    </div>
-  </div>
-</div>
+HERO_CHAT = """
+<div class="showcase-h">Just ask, in plain English</div>
+<div class="showcase-sub">The agent writes a safe, read-only SQL query, runs it on your data, and
+answers &mdash; with the exact SQL one click away. No formulas, no pivot tables.</div>
+<div class="chatwrap"><div class="chat2">
+  <div class="bubble user">What was total revenue last month?</div>
+  <div class="bubble ai">$998k in May 2026 &mdash; up 4.5% versus April.</div>
+  <div class="bubble user">Which region declined the most?</div>
+  <div class="bubble ai">LATAM, down $23k month-over-month &mdash; the only region to fall.</div>
+  <div class="bubble user">Top 3 products by gross profit?</div>
+  <div class="bubble ai">Wireless Earbuds ($49k), Vitamin C Serum ($44k), Electric Toothbrush ($43k).</div>
+  <div class="bubble user">How much of revenue comes from Online?</div>
+  <div class="bubble ai">53.8% &mdash; $537k of the $998k total.</div>
+  <div class="bubble user">What's the capital of France?</div>
+  <div class="bubble ai">I couldn't answer that from this dataset &mdash; try a question about its columns.</div>
+</div></div>
 """
 
 

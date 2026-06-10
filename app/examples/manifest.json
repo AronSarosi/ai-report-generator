@@ -20,7 +20,7 @@
       "cost",
       "gross_profit"
     ],
-    "title_text": "Revenue Growth and Channel Insights",
+    "title_text": "May 2026 Revenue Performance",
     "period": "2026-05",
     "n_sections": 5,
     "pdf": "app/examples/retail_sales/report.pdf",
@@ -53,7 +53,7 @@
       "actual",
       "variance"
     ],
-    "title_text": "May Financial Performance Analysis",
+    "title_text": "May Financial Performance Overview",
     "period": "2026-05",
     "n_sections": 3,
     "pdf": "app/examples/fpa_budget/report.pdf",
@@ -85,7 +85,7 @@
       "new_mrr",
       "churned_mrr"
     ],
-    "title_text": "Monthly MRR Performance Analysis",
+    "title_text": "Monthly MRR Performance Review",
     "period": "2026-05",
     "n_sections": 3,
     "pdf": "app/examples/saas_metrics/report.pdf",
@@ -116,7 +116,7 @@
       "revenue",
       "ad_spend"
     ],
-    "title_text": "May 2026 Revenue Performance",
+    "title_text": "May 2026 Revenue Insights",
     "period": "2026-05",
     "n_sections": 2,
     "pdf": "app/examples/marketing_analytics/report.pdf",

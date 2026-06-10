@@ -1,23 +1,23 @@
 {
-  "title": "May 2026 Revenue Performance",
+  "title": "May 2026 Revenue Insights",
   "subtitle": "Period 2026-05  |  source table: ex_marketing_analytics",
   "period": "2026-05",
-  "governing_thought": "Sustained growth in revenue highlights effective strategies and channel performance.",
+  "governing_thought": "Organic Search drives growth, while Social declines impact overall performance.",
   "key_messages": [
     {
-      "text": "Total revenue reached $303k in 2026-05, reflecting a positive trend.",
+      "text": "Total revenue increased to $303k, reflecting a positive trend.",
       "status": "positive"
     },
     {
-      "text": "Organic Search generated $103k, accounting for 33.9% of total revenue.",
+      "text": "Organic Search generated $103k, contributing 33.9% of total revenue.",
       "status": "positive"
     },
     {
-      "text": "Revenue increased by $13k compared to $290k in 2026-04, indicating growth.",
+      "text": "Total revenue grew by +4.7% compared to April 2026.",
       "status": "positive"
     },
     {
-      "text": "Social channel experienced a decline of -$6, signaling a need for strategic review.",
+      "text": "Social channel experienced a decline of -$6 compared to the prior month.",
       "status": "negative"
     }
   ],
@@ -25,15 +25,15 @@
     {
       "kicker": "FINANCIAL PERFORMANCE",
       "action_title": "Total revenue increased to $303k in 2026-05, up $13k from April.",
-      "narrative": "In May 2026, total revenue reached $303k, reflecting a 4.7% increase from April's $290k. This growth marks a positive trend following a period of fluctuation, with the peak month recorded at $413k in December 2025. Seasonal patterns suggest that revenue typically peaks in December, indicating potential for future growth during that period.",
+      "narrative": "In May 2026, total revenue reached $303k, reflecting a 4.7% increase from April's $290k. This growth marks a positive shift, although it remains below the peak month of $413k in December 2025. The recent trend shows fluctuations, with seasonal peaks typically occurring in late Q4.",
       "bullets": [
-        "May 2026 revenue of $303k is above the average of $253k over the last year.",
-        "December 2025 was the peak month with $413k in revenue.",
-        "Recent months show a recovery trend from lower figures earlier in 2026."
+        "May 2026 revenue of $303k shows consistent growth from April.",
+        "Revenue peaked at $413k in December 2025, indicating seasonal demand.",
+        "Recent months have shown variability, with April at $290k and May at $303k."
       ],
-      "so_what": "Sustained growth in revenue suggests improving market conditions and potential for future peaks.",
+      "so_what": "Sustained growth in revenue suggests potential for recovery, but seasonal peaks indicate volatility.",
       "chart": {
-        "kind": "line",
+        "kind": "trend",
         "title": "Monthly revenue",
         "x": [
           "2025-06",
@@ -74,14 +74,14 @@
     },
     {
       "kicker": "CHANNEL BREAKDOWN",
-      "action_title": "Organic Search leads with $103k, dominating 33.9% of total revenue.",
-      "narrative": "In May 2026, Organic Search generated $103k, representing 33.9% of total revenue, making it the leading channel. Email follows with $83k, showing significant growth of +$6k from the previous month. Paid Search also increased by +$4k, reaching $74k, while Social experienced a slight decline of -$6.",
+      "action_title": "Organic Search leads with $103k, accounting for 33.9% of total revenue.",
+      "narrative": "In May 2026, Organic Search generated $103k, making it the top channel and representing 33.9% of total revenue. Email follows closely with $83k, while Paid Search contributes $74k. The biggest mover is Email, increasing by $6k from the previous month, indicating strong growth in this channel.",
       "bullets": [
-        "Organic Search is the largest channel with $103k revenue.",
-        "Email is the biggest mover, increasing by +$6k to $83k.",
-        "Social is the only channel to decline, down by -$6."
+        "Organic Search dominates with $103k, leading all channels.",
+        "Email shows significant growth, up $6k from April.",
+        "Total revenue concentration remains high in top three channels."
       ],
-      "so_what": "Focusing on enhancing Email and Paid Search could further boost overall revenue.",
+      "so_what": "Focusing on Email's growth potential can enhance overall revenue performance.",
       "chart": {
         "kind": "bar",
         "title": "revenue by channel (2026-05)",
@@ -110,13 +110,13 @@
     }
   ],
   "recommendations": [
-    "Enhance investment in Organic Search to capitalize on its $103k contribution and 33.9% share.",
-    "Address the decline in Social by reallocating resources or optimizing content strategy to recover the -$6 loss.",
-    "Monitor revenue trends closely to sustain the growth momentum of +4.7% from $290k to $303k.",
-    "Implement targeted marketing campaigns to further boost underperforming channels and maximize overall revenue."
+    "Increase investment in Organic Search to capitalize on its $103k contribution and 33.9% share.",
+    "Analyze and address the decline in Social, which decreased by -$6, to prevent further losses.",
+    "Enhance marketing strategies to sustain the overall revenue growth of $303k, reflecting a +4.7% increase.",
+    "Conduct a channel performance review to identify opportunities for improvement across all revenue streams."
   ],
   "sources": [
     "ex_marketing_analytics (3,650 rows), measure: revenue, period 2026-05 vs 2026-04; figures verified against the database."
   ],
-  "generated_at": "2026-06-10 19:03 UTC"
+  "generated_at": "2026-06-10 22:35 UTC"
 }

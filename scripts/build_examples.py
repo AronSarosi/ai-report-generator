@@ -52,7 +52,7 @@ EXAMPLES = [
      "intent": "Monthly sales performance review highlighting the winning products, "
                "categories and regions, and any weak spots.",
      "gen": generate_sales,
-     "brand": {"accent": "#2E6DB4", "ink": "#11243F",
+     "brand": {"accent": "#2E6DB4", "ink": "#163E66",  # BLUE
                "font_head": "Georgia", "font_body": "Calibri", "cover": "dark"}},
     {"key": "fpa_budget", "title": "Budget vs Actuals (FP&A)",
      "domain": "Finance / FP&A",
@@ -61,7 +61,7 @@ EXAMPLES = [
      "intent": "Budget vs actuals review: where are we over and under budget, and which "
                "departments are drifting?",
      "gen": generate_budget,
-     "brand": {"accent": "#0E7C66", "ink": "#0C2E27",
+     "brand": {"accent": "#0E7C66", "ink": "#14503B",  # GREEN
                "font_head": "Cambria", "font_body": "Calibri", "cover": "light"}},
     {"key": "saas_metrics", "title": "SaaS Growth Metrics",
      "domain": "SaaS / Subscriptions",
@@ -70,8 +70,8 @@ EXAMPLES = [
      "intent": "Monthly SaaS growth review: MRR by plan and region, what is driving new "
                "revenue, and where churn is concentrated.",
      "gen": generate_saas,
-     "brand": {"accent": "#6C4BF0", "ink": "#211747",
-               "font_head": "Trebuchet MS", "font_body": "Trebuchet MS", "cover": "dark"}},
+     "brand": {"accent": "#2E6DB4", "ink": "#163E66",  # BLUE
+               "font_head": "Trebuchet MS", "font_body": "Trebuchet MS", "cover": "light"}},
     {"key": "marketing_analytics", "title": "Marketing Channel Performance",
      "domain": "Marketing / Web",
      "description": "Sessions, conversions, revenue and ad spend by channel. Shows the "
@@ -79,8 +79,8 @@ EXAMPLES = [
      "intent": "Monthly marketing performance review by channel: revenue, conversion and "
                "spend efficiency, and channel trends.",
      "gen": generate_marketing,
-     "brand": {"accent": "#A61E4D", "ink": "#2E0E1E",
-               "font_head": "Tahoma", "font_body": "Tahoma", "cover": "light"}},
+     "brand": {"accent": "#1E7D55", "ink": "#14503B",  # GREEN
+               "font_head": "Tahoma", "font_body": "Tahoma", "cover": "dark"}},
 ]
 
 

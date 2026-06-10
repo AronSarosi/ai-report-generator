@@ -1,43 +1,43 @@
 {
-  "title": "Monthly MRR Performance Analysis",
+  "title": "Monthly MRR Performance Review",
   "subtitle": "Period 2026-05  |  source table: ex_saas_metrics",
   "period": "2026-05",
-  "governing_thought": "Declines in MRR highlight critical areas for improvement.",
+  "governing_thought": "Declining MRR signals urgent need for strategic adjustments.",
   "key_messages": [
     {
-      "text": "Total MRR decreased to $3.82M, down -1.4%.",
+      "text": "Total MRR decreased to $3.82M, down -1.4% from $3.87M.",
       "status": "negative"
     },
     {
-      "text": "Enterprise remains the top plan at $1.99M, constituting 52.2% of total MRR.",
+      "text": "Enterprise remains the top plan at $1.99M, contributing 52.2% of total MRR.",
       "status": "positive"
     },
     {
-      "text": "Business plan saw the largest decline of -$30k compared to the prior month.",
+      "text": "Business plan experienced the largest decline at -$30k compared to the prior month.",
       "status": "negative"
     },
     {
-      "text": "The United States leads countries with $515k, making up 13.5% of total MRR.",
+      "text": "United States leads countries with $515k, accounting for 13.5% of total MRR.",
       "status": "positive"
     },
     {
-      "text": "The United States experienced a decline of -$43k from the previous month.",
+      "text": "United States saw a decline of -$43k from the previous month.",
       "status": "negative"
     }
   ],
   "sections": [
     {
       "kicker": "FINANCIAL PERFORMANCE",
-      "action_title": "Total MRR declined to $3.82M in May, down $53k from April.",
-      "narrative": "In May 2026, total MRR was $3.82M, reflecting a decrease of $53k or -1.4% from April's peak of $3.87M. This decline marks a slight downturn after reaching a high in April, which was the peak month for MRR. The trend over the past year shows fluctuations, with MRR generally increasing until April, indicating potential seasonal patterns.",
+      "action_title": "Total MRR decreased to $3.82M in May, down $53k from April.",
+      "narrative": "In May 2026, total MRR was $3.82M, reflecting a decrease of $53k or -1.4% compared to April's peak of $3.87M. This decline follows a trend where MRR peaked in April, indicating potential seasonal fluctuations. Over the past year, MRR has shown variability, with notable peaks and troughs.",
       "bullets": [
         "April 2026 was the peak month at $3.87M.",
-        "May 2026's MRR is lower than the previous month.",
-        "Recent trend shows MRR has been increasing since January 2026."
+        "May's MRR is lower than the previous month.",
+        "Recent trend shows fluctuations in MRR over the last 12 months."
       ],
-      "so_what": "The decline in MRR suggests a need for strategies to sustain growth beyond seasonal peaks.",
+      "so_what": "The decline in MRR suggests a need to investigate customer retention and acquisition strategies.",
       "chart": {
-        "kind": "line",
+        "kind": "trend",
         "title": "Monthly mrr",
         "x": [
           "2025-06",
@@ -78,14 +78,14 @@
     },
     {
       "kicker": "PLAN BREAKDOWN",
-      "action_title": "Enterprise leads with $1.99M, while Business declines by $30k.",
-      "narrative": "In May 2026, the Enterprise plan dominates the MRR breakdown with $1.99M, accounting for 52.2% of total MRR. The Business plan, however, experienced a notable decline of $30k from the previous month, dropping to $1.37M. The Starter plan also saw a decrease of $16k, indicating a trend of reduced performance across the lower-tier plans.",
+      "action_title": "Enterprise leads MRR at $1.99M, with Business declining by $30k.",
+      "narrative": "In May 2026, the Enterprise plan dominates with a total MRR of $1.99M, accounting for 52.2% of the overall MRR. The Business plan, while significant at $1.37M, experienced the largest decline of $30k compared to the previous month. The Starter plan also saw a decrease, falling to $455k from $471k, while the Free plan remains at $0.",
       "bullets": [
-        "Enterprise plan contributes $1.99M, leading MRR concentration.",
-        "Business plan declines by $30k, signaling potential market challenges.",
-        "Starter plan also decreases, reflecting broader issues in lower-tier offerings."
+        "Enterprise plan contributes $1.99M, leading overall MRR.",
+        "Business plan's MRR decreased by $30k, the largest drop.",
+        "Starter plan's MRR fell to $455k, showing a downward trend."
       ],
-      "so_what": "The decline in Business and Starter plans suggests a need for strategic intervention.",
+      "so_what": "The decline in Business and Starter plans signals potential challenges in customer retention.",
       "chart": {
         "kind": "bar",
         "title": "mrr by plan (2026-05)",
@@ -112,14 +112,14 @@
     },
     {
       "kicker": "COUNTRY BREAKDOWN",
-      "action_title": "The United States leads MRR with $515k, but shows a decline of -$43k.",
-      "narrative": "In May 2026, the United States remains the top country for Monthly Recurring Revenue (MRR) at $515k, followed by the United Kingdom at $377k and Germany at $360k. However, the U.S. experienced a significant decline of -$43k compared to the previous month. Notably, France was the biggest mover, increasing its MRR by +$16k, indicating a positive trend amidst overall declines in other major markets.",
+      "action_title": "The United States leads MRR at $515k, but decreased by -$43k this period.",
+      "narrative": "In May 2026, the United States remains the top contributor to MRR with $515k, followed by the United Kingdom at $377k and Germany at $360k. The overall MRR concentration is significant, with the top three countries accounting for a substantial portion of total MRR. Notably, France is the biggest mover this period, increasing its MRR by +$16k compared to April 2026.",
       "bullets": [
-        "Top three countries: United States ($515k), United Kingdom ($377k), Germany ($360k).",
-        "France increased MRR by +$16k, contrasting with declines in other markets.",
-        "Concentration remains high with the top three countries accounting for a significant share of MRR."
+        "Top three countries contribute significantly to overall MRR concentration.",
+        "France's MRR increased by +$16k, indicating positive growth.",
+        "The United States experienced the largest decline at -$43k."
       ],
-      "so_what": "This highlights the need for targeted strategies to stabilize and grow MRR in key markets.",
+      "so_what": "This shift highlights the need to address declining MRR in key markets while leveraging growth in others.",
       "chart": {
         "kind": "column",
         "title": "mrr by country (2026-05)",
@@ -162,13 +162,13 @@
     }
   ],
   "recommendations": [
-    "Analyze the decline in the Business plan and implement corrective strategies to recover the -$30k loss.",
-    "Enhance marketing efforts in the United States to address the -$43k decline and boost engagement.",
-    "Focus on upselling and cross-selling opportunities within the Enterprise plan, which accounts for $1.99M or 52.2% of total MRR.",
-    "Conduct a competitive analysis to identify market trends affecting MRR and adjust pricing strategies accordingly."
+    "Analyze and address the $30k decline in the Business plan to stabilize MRR.",
+    "Enhance marketing strategies in the United States to recover the $43k decline in revenue.",
+    "Focus on increasing the Enterprise plan, which currently represents $1.99M or 52.2% of total MRR.",
+    "Implement customer retention initiatives to prevent further declines in overall MRR, currently at $3.82M."
   ],
   "sources": [
     "ex_saas_metrics (1,152 rows), measure: mrr, period 2026-05 vs 2026-04; figures verified against the database."
   ],
-  "generated_at": "2026-06-10 19:03 UTC"
+  "generated_at": "2026-06-10 22:35 UTC"
 }

@@ -198,7 +198,7 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
         months = [_label(r[0]) for r in trend.rows]
         totals = [float(r[1] or 0) for r in trend.rows]
         peak_val = max(totals) if totals else 0
-        perf_chart = ChartSpec(kind="line", title=f"Monthly {m}", x=months,
+        perf_chart = ChartSpec(kind="trend", title=f"Monthly {m}", x=months,
                                series={m: totals}, highlight=months[-1] if months else None)
         specs.append({
             "id": "performance", "kind": "insight", "kicker": "FINANCIAL PERFORMANCE",

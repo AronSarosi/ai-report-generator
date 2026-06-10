@@ -1,8 +1,8 @@
 {
-  "title": "May Financial Performance Analysis",
+  "title": "May Financial Performance Overview",
   "subtitle": "Period 2026-05  |  source table: ex_fpa_budget",
   "period": "2026-05",
-  "governing_thought": "Stable total actual indicates consistent financial health despite minor declines.",
+  "governing_thought": "Stable total actuals indicate consistent financial health despite minor declines.",
   "key_messages": [
     {
       "text": "Total actual remains steady at $517k, reflecting stability.",
@@ -17,11 +17,11 @@
       "status": "negative"
     },
     {
-      "text": "Salaries & Wages dominate at $231k, making up 44.8% of total actual.",
+      "text": "Salaries & Wages is the top category at $231k, making up 44.8% of total.",
       "status": "positive"
     },
     {
-      "text": "Salaries & Wages decreased by -$2k from the previous month.",
+      "text": "Salaries & Wages declined by -$2k versus the prior month.",
       "status": "negative"
     }
   ],
@@ -29,15 +29,15 @@
     {
       "kicker": "FINANCIAL PERFORMANCE",
       "action_title": "Actual remained stable at $517k in 2026-05, matching April's performance.",
-      "narrative": "In May 2026, actual totaled $517k, consistent with April's figure of $517k, reflecting a slight decrease of -0.1%. The recent trend shows a peak month of $530k in February 2026, followed by a gradual decline to the current level. This stability indicates a potential seasonal pattern as we approach the mid-year mark.",
+      "narrative": "In May 2026, actual totaled $517k, consistent with April's figure of $517k, reflecting a slight decline of -0.1%. Over the past year, the highest peak occurred in February 2026 at $530k, indicating a seasonal trend that typically peaks early in the year. The monthly actual has shown fluctuations, but May's performance indicates resilience in maintaining revenue levels.",
       "bullets": [
-        "Actual in May 2026 is $517k, unchanged from April 2026.",
-        "The peak month was $530k in February 2026.",
-        "Monthly actuals show fluctuations but overall stability in recent months."
+        "Actual in May 2026 was $517k, identical to April 2026.",
+        "February 2026 marked the peak month at $530k.",
+        "Yearly trend shows variability with a peak early in the year."
       ],
-      "so_what": "Maintaining $517k suggests resilience in performance despite recent fluctuations.",
+      "so_what": "Stable performance in May suggests sustained demand, but attention is needed for future growth.",
       "chart": {
-        "kind": "line",
+        "kind": "trend",
         "title": "Monthly actual",
         "x": [
           "2025-06",
@@ -78,14 +78,14 @@
     },
     {
       "kicker": "DEPARTMENT BREAKDOWN",
-      "action_title": "Sales leads with $149k, while Customer Success grows by $3k versus last period.",
-      "narrative": "In May 2026, the Sales department leads with a total of $149k, representing 28.8% of the overall departmental spend. Customer Success shows the most significant growth, increasing by $3k compared to the previous month. Meanwhile, Operations maintains a stable position with a slight increase of $265, while R&D and Sales both experienced declines.",
+      "action_title": "Sales leads with $149k, but decreased by -$5k from last month.",
+      "narrative": "In May 2026, the Sales department leads with a total of $149k, representing a significant portion of the overall departmental spend. However, it experienced a decline of -$5k compared to April 2026. Customer Success is the biggest mover, increasing by +$2k to reach $65k, reflecting a positive trend in that area.",
       "bullets": [
-        "Sales: $149k, 28.8% of total spend",
-        "Customer Success: +$3k growth",
-        "R&D and Sales both declined from prior period"
+        "Sales at $149k, down -$5k from April.",
+        "Customer Success increased by +$2k to $65k.",
+        "Marketing also saw growth, up +$2k to $79k."
       ],
-      "so_what": "Focusing on Customer Success could enhance overall performance despite Sales' decline.",
+      "so_what": "The decline in Sales may require strategic focus to reverse the trend.",
       "chart": {
         "kind": "bar",
         "title": "actual by department (2026-05)",
@@ -116,14 +116,14 @@
     },
     {
       "kicker": "CATEGORY BREAKDOWN",
-      "action_title": "Salaries & Wages at $231k dominate, while Software & Cloud increased by $2k.",
-      "narrative": "In May 2026, Salaries & Wages lead with $231k, representing 44.8% of total spend. Software & Cloud saw the largest increase, rising by $2k to $94k, indicating a growing investment in technology. Other categories such as Contractors and Travel & Events remain significant but show less concentration compared to the top two categories.",
+      "action_title": "Salaries & Wages dominate at $231k, with Software & Cloud increasing by $2k.",
+      "narrative": "In May 2026, Salaries & Wages led all categories with a total of $231k, representing 44.8% of total spend. Software & Cloud saw the largest increase, rising by $2k to $94k, while Salaries & Wages experienced a decrease of $2k compared to the previous period. This indicates a shift in spending priorities towards technology investments.",
       "bullets": [
-        "Salaries & Wages account for nearly half of total spend at $231k.",
-        "Software & Cloud is the biggest mover, increasing by $2k to $94k.",
-        "Overall spend remains concentrated in a few key categories. "
+        "Salaries & Wages: $231k (44.8% of total)",
+        "Software & Cloud: $94k, up $2k",
+        "Travel & Events: $37k, up $224"
       ],
-      "so_what": "Focusing on Salaries & Wages and Software & Cloud will drive strategic resource allocation.",
+      "so_what": "The increase in Software & Cloud spending suggests a strategic focus on technology enhancements.",
       "chart": {
         "kind": "column",
         "title": "actual by category (2026-05)",
@@ -160,11 +160,11 @@
   "recommendations": [
     "Analyze Sales performance to identify drivers behind the $5k decline and implement corrective actions.",
     "Review Salaries & Wages expenditures to optimize costs and address the $2k decrease.",
-    "Enhance sales training programs to boost productivity and recover the $5k loss in Sales.",
-    "Reallocate resources from underperforming areas to support Sales and improve overall financial performance."
+    "Enhance forecasting methods to mitigate the -0.1% change in total actual and improve future projections.",
+    "Prioritize investment in Sales initiatives to regain momentum and boost the department's contribution."
   ],
   "sources": [
     "ex_fpa_budget (1,152 rows), measure: actual, period 2026-05 vs 2026-04; figures verified against the database."
   ],
-  "generated_at": "2026-06-10 19:02 UTC"
+  "generated_at": "2026-06-10 22:34 UTC"
 }

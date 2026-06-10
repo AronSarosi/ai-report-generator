@@ -86,20 +86,38 @@ def render_chart(spec: ChartSpec, path: Path, accent: str = ACCENT, wide: bool =
         ax.margins(x=0.02)
     elif spec.kind == "donut":
         # Share of total: top slices + an "Other" remainder; the leader is accented.
+        # Slices are sorted desc, so big slices get the dark colors and the % label
+        # (white, centred in the ring) is readable; tiny slices hide their label.
         pairs = list(zip(labels, ys))[:6]
         rest = sum(ys[6:])
         if rest > 0:
             pairs.append(("Other", rest))
         dlabels = [p[0] for p in pairs]
         dvals = [p[1] for p in pairs]
-        palette = [accent, INK, GRAY_500, GRAY_300, "#9AA8Bd", "#5B6B82", GRAY_100]
+        palette = [accent, INK, "#4E6E9E", GRAY_500, "#9AA8BD", GRAY_300, GRAY_100]
         colors = [accent if (spec.highlight and dlabels[i] == spec.highlight) else
                   palette[i % len(palette)] for i in range(len(dlabels))]
-        ax.pie(dvals, labels=dlabels, colors=colors, startangle=90, counterclock=False,
-               wedgeprops={"width": 0.42, "edgecolor": PAPER, "linewidth": 2},
-               textprops={"fontsize": 9, "color": GRAY_900},
-               autopct=lambda p: f"{p:.0f}%" if p >= 6 else "")
+        _, _, autotexts = ax.pie(
+            dvals, labels=dlabels, colors=colors, startangle=90, counterclock=False,
+            wedgeprops={"width": 0.46, "edgecolor": PAPER, "linewidth": 2},
+            textprops={"fontsize": 10, "color": GRAY_900},
+            pctdistance=0.78, autopct=lambda p: f"{p:.0f}%" if p >= 7 else "")
+        for at in autotexts:
+            at.set_color(PAPER)
+            at.set_fontsize(11)
+            at.set_fontweight("bold")
         ax.set(aspect="equal")
+    elif spec.kind == "trend":  # months as vertical columns, the latest one accented
+        xs = list(range(len(labels)))
+        last = len(labels) - 1
+        colors = [accent if i == last else GRAY_300 for i in xs]
+        ax.bar(xs, ys, color=colors)
+        ax.set_xticks(xs)
+        ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=8)
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda v, p: money(v)))
+        if ys:
+            ax.annotate(money(ys[-1]), (last, ys[-1]), textcoords="offset points",
+                        xytext=(0, 5), ha="center", fontsize=9, fontweight="bold", color=INK)
     elif spec.kind == "column":  # vertical bars
         xs = list(range(len(labels)))
         colors = [accent if (spec.highlight and labels[i] == spec.highlight) else GRAY_300
@@ -268,48 +286,52 @@ def _callout(slide, label, takeaway, bullets, t, left=8.5, top=1.95, width=4.3):
 
 
 def _kpis_from_chart(spec: ChartSpec) -> list[tuple[str, str]]:
-    """Up to three grounded headline numbers (value, label) drawn from the chart data.
-    Bars -> the top three; a trend line -> latest, peak, and change vs the start."""
+    """Grounded headline numbers as (value, description) pairs. A trend -> latest, peak,
+    lowest and change over the window; a categorical chart -> the top values with their
+    share of the total. The description is a phrase, not a bare label."""
     if not spec or not spec.series:
         return []
     _, ys = next(iter(spec.series.items()))
     xs = spec.x or []
     if not ys:
         return []
-    if spec.kind == "line":
-        out = [(money(ys[-1]), f"Latest ({xs[-1]})" if xs else "Latest")]
-        peak_i = max(range(len(ys)), key=lambda i: ys[i])
-        out.append((money(ys[peak_i]), f"Peak ({xs[peak_i]})" if xs else "Peak"))
-        out.append((signed_money(ys[-1] - ys[0]), "Change vs start"))
-        return out
-    pairs = sorted(zip(xs, ys), key=lambda p: p[1], reverse=True)[:3]
-    return [(money(v), str(lbl)) for lbl, v in pairs]
+    if spec.kind in ("trend", "line"):
+        amax = max(range(len(ys)), key=lambda i: ys[i])
+        amin = min(range(len(ys)), key=lambda i: ys[i])
+        return [
+            (money(ys[-1]), f"Latest month ({xs[-1]})" if xs else "Latest month"),
+            (money(ys[amax]), f"Peak month ({xs[amax]})" if xs else "Peak month"),
+            (money(ys[amin]), f"Lowest month ({xs[amin]})" if xs else "Lowest month"),
+            (signed_money(ys[-1] - ys[0]), f"Change since {xs[0]}" if xs else "Change over period"),
+        ]
+    total = sum(ys) or 1.0
+    pairs = sorted(zip(xs, ys), key=lambda p: p[1], reverse=True)[:4]
+    return [(money(v), f"{lbl} — {v / total * 100:.0f}% of the total") for lbl, v in pairs]
 
 
-def _kpi_band(slide, kpis: list[tuple[str, str]], descriptions: list[str], t, top: float = 5.2):
+def _kpi_band(slide, kpis: list[tuple[str, str]], t, top: float = 5.2):
     """A horizontal row of KPI cards: a big number, then a one-line insight beneath it
     (not just a label — the label is already on the chart above)."""
     n = len(kpis) or 1
-    gap = 0.5
+    gap = 0.45
     card_w = (CONTENT_W_IN - gap * (n - 1)) / n
-    for i, (val, label) in enumerate(kpis):
+    for i, (val, desc) in enumerate(kpis):
         x = MARGIN_IN + i * (card_w + gap)
-        desc = descriptions[i] if i < len(descriptions) else label
         if len(desc) > 120:
             desc = desc[:117] + "..."
         _rule(slide, x, top, card_w, 4, color=t.accent)
-        _set(_box(slide, x, top + 0.1, card_w, 0.7).paragraphs[0], val, 27, t.font_head, t.ink, bold=True)
+        _set(_box(slide, x, top + 0.1, card_w, 0.7).paragraphs[0], val, 26, t.font_head, t.ink, bold=True)
         _set(_box(slide, x, top + 0.78, card_w, 1.55).paragraphs[0], desc, 11, t.font_body, GRAY_500)
 
 
 def _insight_slide_kpi(prs, sec, chart_path: Optional[Path], t):
-    """Alternate layout: title on top, a wide chart, then key numbers each with a short
-    insight across the bottom — so the deck isn't every-slide chart-left/callout-right."""
+    """The opening insight layout: title on top, a wide chart, then key numbers each with
+    a short insight across the bottom (the variety the deck leads with)."""
     src = f"Source: {sec.citations[0] if sec.citations else 'database'}, verified against the data."
     s = _content_slide(prs, sec.kicker, sec.action_title, src, t)
     if chart_path:
         s.shapes.add_picture(str(chart_path), Inches(1.0), Inches(1.7), width=Inches(11.3))
-    _kpi_band(s, _kpis_from_chart(sec.chart), sec.bullets, t)
+    _kpi_band(s, _kpis_from_chart(sec.chart), t)
 
 
 def _reco_slide(prs, report: Report, t):
@@ -380,11 +402,11 @@ def render_report(report: Report, out_dir=None, charts_dir=None, brand=None) -> 
     cover_dark = (brand or {}).get("cover", "dark") != "light"
     _cover_slide(prs, report, t, dark=cover_dark)
     _exec_slide(prs, report, t)
-    # Mostly the classic chart-left/takeaway-right layout, with ONE KPI-band slide per
-    # deck (the second insight) so there's variety without it being repetitive.
+    # Lead with the KPI-band layout (title + wide chart + key numbers), then the classic
+    # chart-left/takeaway-right layout for the rest.
     insight_n = 0
     for i, sec in enumerate(report.sections):
-        use_kpi = insight_n == 1 and sec.chart is not None
+        use_kpi = insight_n == 0 and sec.chart is not None
         cpath = None
         if sec.chart:
             cpath = charts_dir / f"chart_{i}.png"
