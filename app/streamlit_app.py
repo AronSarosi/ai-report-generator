@@ -120,23 +120,19 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 /* Example-reports showcase (browse between reports, scroll within to see all slides) */
 .showcase-h {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:1.7rem; margin:2.4rem 0 .2rem 0;}
 .showcase-sub {text-align:center; color:#9AA4B4; font-size:1.0rem; max-width:760px; margin:0 auto 1.0rem auto; line-height:1.45;}
-.showcase-pick {text-align:center; color:#EAF1FB; font-size:1.05rem; padding-top:.35rem;}
-.showcase-pick b {color:#fff;}
-.pgdots {margin-top:.45rem;}
 .pgdot {display:inline-block; width:7px; height:7px; border-radius:50%; background:#3A4660; margin:0 3px;}
 .pgdot.on {background:#2E6DB4; width:18px; border-radius:4px;}
-.showcase-meta {background:#16202E; border:1px solid #2E3C52; color:#C4CCD8; padding:.55rem .85rem; border-radius:6px; font-size:.95rem; line-height:1.4; margin:.6rem 0 .7rem 0;}
-/* the deck "viewer" frame */
-.deckframe {background:#0B1018; border:1px solid #2E3C52; border-radius:10px; box-shadow:0 14px 40px rgba(0,0,0,.55); overflow:hidden; max-width:1000px; margin:0 auto;}
+/* the deck "viewer" frame — fills its (wide) centre column so the arrows sit beside it */
+.deckframe {background:#0B1018; border:1px solid #2E3C52; border-radius:10px; box-shadow:0 14px 40px rgba(0,0,0,.55); overflow:hidden; margin:0 auto;}
 .deckbar {background:#1A2231; border-bottom:1px solid #2E3C52; padding:.5rem .7rem;}
 .deckbar .dot {display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:6px;}
 .deckbar .dot.r {background:#ff5f57;} .deckbar .dot.y {background:#febc2e;} .deckbar .dot.g {background:#28c840;}
-.deckscroll {max-height:640px; overflow-y:auto; padding:14px; scroll-behavior:smooth;}
+.deckscroll {max-height:660px; overflow-y:auto; padding:14px; scroll-behavior:smooth;}
 .deckslide {display:block; width:100%; border:1px solid #E6E8EB; border-radius:4px; box-shadow:0 4px 14px rgba(0,0,0,.4); margin-bottom:14px;}
 .deckscroll::-webkit-scrollbar {width:10px;} .deckscroll::-webkit-scrollbar-thumb {background:#3A4660; border-radius:5px;}
-/* the arrow buttons: fixed circles, centered in their column */
+/* the arrow buttons: fixed circles, vertically centred beside the preview */
 .st-key-ex_prev, .st-key-ex_next {display:flex; justify-content:center; align-items:center; height:100%;}
-.st-key-ex_prev button, .st-key-ex_next button {width:48px !important; min-width:48px !important; height:48px !important; padding:0 !important; font-size:1.5rem; line-height:1; border-radius:50% !important; background:#1F2A44; border:1px solid #2E3C52;}
+.st-key-ex_prev button, .st-key-ex_next button {width:52px !important; min-width:52px !important; height:52px !important; padding:0 !important; font-size:1.7rem; line-height:1; border-radius:50% !important; background:#1F2A44; border:1px solid #2E3C52;}
 .st-key-ex_prev button:hover, .st-key-ex_next button:hover {background:#2E6DB4; border-color:#2E6DB4; color:#fff;}
 </style>
 """
@@ -205,19 +201,22 @@ def _deck_scroll_html(key: str, thumbs: tuple[str, ...]) -> str:
 
 
 def render_examples_showcase() -> None:
-    """Browseable showcase of the pre-built example reports: arrows to switch between the
-    four domains, scroll inside the frame to see every slide. Static (instant, no tokens)."""
+    """Browseable showcase of the pre-built example reports: arrows flank the preview,
+    scroll inside it to see every slide. Each report is styled like a different brand
+    template. Static (instant, no tokens)."""
     examples = _load_examples()
     if not examples:
         return
     st.markdown("<div class='showcase-h'>See what it produces</div>", unsafe_allow_html=True)
-    st.markdown("<div class='showcase-sub'>Real reports the engine generated from four different "
-                "datasets. Use the arrows to browse, and scroll inside the frame to see every "
-                "slide.</div>", unsafe_allow_html=True)
+    st.markdown("<div class='showcase-sub'>Real reports the engine generated from different "
+                "datasets, each styled like a different brand template. Use the arrows to browse, "
+                "and scroll inside the preview to see the full report.</div>",
+                unsafe_allow_html=True)
 
     n = len(examples)
     idx = st.session_state.get("ex_idx", 0) % n
-    left, mid, right = st.columns([1, 6, 1], vertical_alignment="center")
+    # Arrows sit right beside the preview (narrow side columns, wide centre).
+    left, mid, right = st.columns([1, 16, 1], vertical_alignment="center")
     if left.button("‹", key="ex_prev"):
         idx = (idx - 1) % n
     if right.button("›", key="ex_next"):
@@ -225,32 +224,11 @@ def render_examples_showcase() -> None:
     st.session_state["ex_idx"] = idx
     ex = examples[idx]
 
+    mid.markdown(_deck_scroll_html(ex["key"], tuple(ex["thumbs"])), unsafe_allow_html=True)
+
     dots = "".join(f"<span class='pgdot {'on' if i == idx else ''}'></span>" for i in range(n))
-    mid.markdown(f"<div class='showcase-pick'><b>{ex['title']}</b> · {ex['domain']}"
-                 f"<div class='pgdots'>{dots}</div></div>", unsafe_allow_html=True)
-
-    st.markdown(f"<div class='showcase-meta'>{ex['title_text']} &nbsp;|&nbsp; period "
-                f"{ex['period']} &nbsp;|&nbsp; {ex['rows']:,} rows &times; {ex['cols']} columns "
-                f"&nbsp;|&nbsp; {ex['n_sections']} insight slides &mdash; {ex['description']}</div>",
+    st.markdown(f"<div class='pgdots' style='text-align:center; margin-top:.7rem'>{dots}</div>",
                 unsafe_allow_html=True)
-
-    st.markdown(_deck_scroll_html(ex["key"], tuple(ex["thumbs"])), unsafe_allow_html=True)
-
-    d1, d2, d3 = st.columns(3)
-    pdf = _ROOT / ex["pdf"] if ex["pdf"] else None
-    pptx, csv = _ROOT / ex["pptx"], _ROOT / ex["csv"]
-    if pdf and pdf.exists():
-        d1.download_button("⬇ Full report (PDF)", pdf.read_bytes(), f"{ex['key']}_report.pdf",
-                           "application/pdf", use_container_width=True, key=f"dl_pdf_{ex['key']}")
-    if pptx.exists():
-        d2.download_button(
-            "⬇ Editable deck (PPTX)", pptx.read_bytes(), f"{ex['key']}_report.pptx",
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            use_container_width=True, key=f"dl_pptx_{ex['key']}")
-    if csv.exists():
-        lbl = "⬇ Source data (CSV sample)" if ex.get("csv_sampled") else "⬇ Source data (CSV)"
-        d3.download_button(lbl, csv.read_bytes(), f"{ex['key']}_data.csv", "text/csv",
-                           use_container_width=True, key=f"dl_csv_{ex['key']}")
 
 
 # --------------------------------------------------------------------------- #

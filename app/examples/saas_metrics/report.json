@@ -1,0 +1,158 @@
+{
+  "title": "Monthly MRR Performance Review",
+  "subtitle": "Period 2026-05  |  source table: ex_saas_metrics",
+  "period": "2026-05",
+  "governing_thought": "Sustained growth in MRR highlights resilience despite regional challenges.",
+  "key_messages": [
+    {
+      "text": "Total MRR reached $1.56M in 2026-05, up +1.2% from $1.54M in 2026-04.",
+      "status": "positive"
+    },
+    {
+      "text": "Enterprise plan leads at $805k, representing 51.6% of total MRR.",
+      "status": "positive"
+    },
+    {
+      "text": "Business plan experienced a decline of -$10k compared to the prior month.",
+      "status": "negative"
+    },
+    {
+      "text": "North America remains the top region at $532k, accounting for 34.1% of total MRR.",
+      "status": "positive"
+    },
+    {
+      "text": "North America saw a decline of -$14k versus the previous month.",
+      "status": "negative"
+    }
+  ],
+  "sections": [
+    {
+      "kicker": "FINANCIAL PERFORMANCE",
+      "action_title": "Total MRR reached $1.56M in May, marking a peak month performance.",
+      "narrative": "In May 2026, total MRR increased to $1.56M from $1.54M in April, reflecting a growth of +1.2% or +$18k. This performance represents a seasonal peak, matching the highest MRR recorded in the past year. The trend shows consistent growth over the last several months, indicating a strong upward trajectory in monthly recurring revenue.",
+      "bullets": [
+        "May 2026 MRR matches the peak of $1.56M.",
+        "April 2026 MRR was $1.54M, showing steady growth.",
+        "Recent months indicate a positive trend in MRR performance."
+      ],
+      "so_what": "Sustained growth in MRR highlights strong market demand and effective customer retention strategies.",
+      "chart": {
+        "kind": "line",
+        "title": "Monthly mrr",
+        "x": [
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05"
+        ],
+        "series": {
+          "mrr": [
+            1345208.32,
+            1307348.2,
+            1349841.59,
+            1368213.54,
+            1373100.95,
+            1403182.13,
+            1461432.74,
+            1450823.04,
+            1507250.59,
+            1557683.25,
+            1541038.43,
+            1558965.3
+          ]
+        },
+        "highlight": "2026-05",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "performance: Monthly mrr"
+      ]
+    },
+    {
+      "kicker": "PLAN BREAKDOWN",
+      "action_title": "Enterprise leads with $805k, showing a $20k increase from April.",
+      "narrative": "In May 2026, the Enterprise plan dominates with a total MRR of $805k, representing 51.6% of total MRR. The Business plan follows at $570k, experiencing a decline of $10k from the previous month. The Starter plan increased by $9k to reach $184k, marking it as the biggest mover among the plans.",
+      "bullets": [
+        "Enterprise plan contributes 51.6% of total MRR with $805k.",
+        "Business plan decreased by $10k to $570k.",
+        "Starter plan grew by $9k to $184k, the largest increase."
+      ],
+      "so_what": "Focusing on the Enterprise plan's growth can drive overall revenue stability.",
+      "chart": {
+        "kind": "bar",
+        "title": "mrr by plan (2026-05)",
+        "x": [
+          "Enterprise",
+          "Business",
+          "Starter",
+          "Free"
+        ],
+        "series": {
+          "mrr": [
+            804918.77,
+            569704.16,
+            184342.37,
+            0.0
+          ]
+        },
+        "highlight": "Enterprise",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "dim_plan: mrr by plan (2026-05)"
+      ]
+    },
+    {
+      "kicker": "REGION BREAKDOWN",
+      "action_title": "North America leads MRR at $532k, but LATAM grows by $21k.",
+      "narrative": "In May 2026, North America dominates with an MRR of $532k, representing 34.1% of total MRR across regions. LATAM shows the most significant growth, increasing by $21k to reach $270k, while EMEA and APAC also experience modest gains. However, North America declines by $14k compared to the previous month, indicating potential challenges in maintaining its lead.",
+      "bullets": [
+        "North America: $532k MRR, 34.1% of total MRR.",
+        "LATAM grows by $21k, the largest increase among regions.",
+        "EMEA and APAC see smaller gains of $7k and $3k, respectively."
+      ],
+      "so_what": "Focus on LATAM's growth potential while addressing North America's declining trend.",
+      "chart": {
+        "kind": "bar",
+        "title": "mrr by region (2026-05)",
+        "x": [
+          "North America",
+          "EMEA",
+          "APAC",
+          "LATAM"
+        ],
+        "series": {
+          "mrr": [
+            532176.97,
+            420089.42000000004,
+            336594.12,
+            270104.79000000004
+          ]
+        },
+        "highlight": "North America",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "dim_region: mrr by region (2026-05)"
+      ]
+    }
+  ],
+  "recommendations": [
+    "Increase focus on the Enterprise plan to sustain its $805k contribution to total mrr.",
+    "Implement targeted strategies to recover the $10k decline in the Business plan.",
+    "Enhance marketing efforts in North America to address the $14k decline in the region.",
+    "Analyze customer feedback to identify and resolve issues affecting mrr growth."
+  ],
+  "sources": [
+    "ex_saas_metrics (384 rows), measure: mrr, period 2026-05 vs 2026-04; figures verified against the database."
+  ],
+  "generated_at": "2026-06-10 17:37 UTC"
+}

@@ -1,0 +1,120 @@
+{
+  "title": "May Financial Performance Analysis",
+  "subtitle": "Period 2026-05  |  source table: ex_fpa_budget",
+  "period": "2026-05",
+  "governing_thought": "Sales remains a strong contributor despite overall decline.",
+  "key_messages": [
+    {
+      "text": "Total actual is $501k in 2026-05, reflecting a decline of -1.9%.",
+      "status": "negative"
+    },
+    {
+      "text": "Sales leads with $147k, representing 29.3% of total actual.",
+      "status": "positive"
+    },
+    {
+      "text": "Operations experienced the largest decline at -$8k compared to prior month.",
+      "status": "negative"
+    }
+  ],
+  "sections": [
+    {
+      "kicker": "FINANCIAL PERFORMANCE",
+      "action_title": "Actual decreased to $501k in May, down $10k from April's peak of $511k.",
+      "narrative": "In May 2026, actual totaled $501k, reflecting a decrease of $10k or -1.9% compared to April's peak of $511k. This decline marks a slight dip following a strong performance in April, which was the highest month recorded in the past year. The trend over the last 12 months shows fluctuations, with the highest monthly actual consistently around $511k.",
+      "bullets": [
+        "May's actual of $501k is below April's peak of $511k.",
+        "The last 12 months show a peak in April 2026.",
+        "Monthly actuals have fluctuated between $463k and $511k."
+      ],
+      "so_what": "Maintaining focus on sustaining performance is crucial as we navigate post-peak adjustments.",
+      "chart": {
+        "kind": "line",
+        "title": "Monthly actual",
+        "x": [
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05"
+        ],
+        "series": {
+          "actual": [
+            484305.0,
+            483715.0,
+            480165.0,
+            489947.0,
+            462871.0,
+            488952.0,
+            485529.0,
+            500278.0,
+            493796.0,
+            494123.0,
+            510746.0,
+            501141.0
+          ]
+        },
+        "highlight": "2026-05",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "performance: Monthly actual"
+      ]
+    },
+    {
+      "kicker": "DEPARTMENT BREAKDOWN",
+      "action_title": "Operations leads with $101k, but decreased by -$8k from last month.",
+      "narrative": "In May 2026, Operations is the leading department with an actual total of $101k, despite experiencing a decline of -$8k compared to April 2026. Sales follows closely with $147k, while Marketing shows a positive trend with an increase of +$2k, reaching $75k. The overall concentration of spending highlights a significant focus on Sales and Operations, which together account for a substantial portion of the total departmental spend.",
+      "bullets": [
+        "Sales at $147k remains the highest department spend.",
+        "Operations saw the largest decrease of -$8k this month.",
+        "Marketing is the only department with a positive change, increasing by +$2k."
+      ],
+      "so_what": "The decline in Operations spending signals potential operational challenges that need addressing.",
+      "chart": {
+        "kind": "bar",
+        "title": "actual by department (2026-05)",
+        "x": [
+          "Sales",
+          "Operations",
+          "R&D",
+          "Marketing",
+          "Customer Success",
+          "G&A"
+        ],
+        "series": {
+          "actual": [
+            146802.0,
+            101400.0,
+            79222.0,
+            74785.0,
+            57545.0,
+            41387.0
+          ]
+        },
+        "highlight": "Sales",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "dim_department: actual by department (2026-05)"
+      ]
+    }
+  ],
+  "recommendations": [
+    "Increase Sales initiatives to capitalize on $147k contribution, representing 29.3% of total actual.",
+    "Investigate Operations' decline of -$8k to identify root causes and implement corrective actions.",
+    "Reassess budget allocations to prioritize departments with positive performance trends and mitigate declines.",
+    "Enhance cross-department collaboration to leverage Sales strategies in Operations for improved performance."
+  ],
+  "sources": [
+    "ex_fpa_budget (144 rows), measure: actual, period 2026-05 vs 2026-04; figures verified against the database."
+  ],
+  "generated_at": "2026-06-10 17:37 UTC"
+}

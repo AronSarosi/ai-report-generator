@@ -20,12 +20,13 @@
       "cost",
       "gross_profit"
     ],
-    "title_text": "May 2026 Revenue Insights",
+    "title_text": "Revenue Growth and Channel Insights",
     "period": "2026-05",
     "n_sections": 5,
     "pdf": "app/examples/retail_sales/report.pdf",
     "pptx": "app/examples/retail_sales/report.pptx",
     "csv": "app/examples/retail_sales/data.csv",
+    "csv_sampled": true,
     "thumbs": [
       "app/examples/retail_sales/slide_1.png",
       "app/examples/retail_sales/slide_2.png",
@@ -35,8 +36,7 @@
       "app/examples/retail_sales/slide_6.png",
       "app/examples/retail_sales/slide_7.png",
       "app/examples/retail_sales/slide_8.png"
-    ],
-    "csv_sampled": true
+    ]
   },
   {
     "key": "fpa_budget",
@@ -52,20 +52,20 @@
       "actual",
       "variance"
     ],
-    "title_text": "May Financial Performance Overview",
+    "title_text": "May Financial Performance Analysis",
     "period": "2026-05",
     "n_sections": 2,
     "pdf": "app/examples/fpa_budget/report.pdf",
     "pptx": "app/examples/fpa_budget/report.pptx",
     "csv": "app/examples/fpa_budget/data.csv",
+    "csv_sampled": false,
     "thumbs": [
       "app/examples/fpa_budget/slide_1.png",
       "app/examples/fpa_budget/slide_2.png",
       "app/examples/fpa_budget/slide_3.png",
       "app/examples/fpa_budget/slide_4.png",
       "app/examples/fpa_budget/slide_5.png"
-    ],
-    "csv_sampled": false
+    ]
   },
   {
     "key": "saas_metrics",
@@ -83,12 +83,13 @@
       "new_mrr",
       "churned_mrr"
     ],
-    "title_text": "Monthly MRR Performance Analysis",
+    "title_text": "Monthly MRR Performance Review",
     "period": "2026-05",
     "n_sections": 3,
     "pdf": "app/examples/saas_metrics/report.pdf",
     "pptx": "app/examples/saas_metrics/report.pptx",
     "csv": "app/examples/saas_metrics/data.csv",
+    "csv_sampled": false,
     "thumbs": [
       "app/examples/saas_metrics/slide_1.png",
       "app/examples/saas_metrics/slide_2.png",
@@ -96,8 +97,7 @@
       "app/examples/saas_metrics/slide_4.png",
       "app/examples/saas_metrics/slide_5.png",
       "app/examples/saas_metrics/slide_6.png"
-    ],
-    "csv_sampled": false
+    ]
   },
   {
     "key": "marketing_analytics",
@@ -114,19 +114,19 @@
       "revenue",
       "ad_spend"
     ],
-    "title_text": "Revenue Growth and Channel Insights",
+    "title_text": "May 2026 Revenue Performance",
     "period": "2026-05",
     "n_sections": 2,
     "pdf": "app/examples/marketing_analytics/report.pdf",
     "pptx": "app/examples/marketing_analytics/report.pptx",
     "csv": "app/examples/marketing_analytics/data.csv",
+    "csv_sampled": false,
     "thumbs": [
       "app/examples/marketing_analytics/slide_1.png",
       "app/examples/marketing_analytics/slide_2.png",
       "app/examples/marketing_analytics/slide_3.png",
       "app/examples/marketing_analytics/slide_4.png",
       "app/examples/marketing_analytics/slide_5.png"
-    ],
-    "csv_sampled": false
+    ]
   }
 ]

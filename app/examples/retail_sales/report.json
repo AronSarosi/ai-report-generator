@@ -1,0 +1,248 @@
+{
+  "title": "Revenue Growth and Channel Insights",
+  "subtitle": "Period 2026-05  |  source table: ex_retail_sales",
+  "period": "2026-05",
+  "governing_thought": "Sustained revenue growth highlights key opportunities in online sales and electronics.",
+  "key_messages": [
+    {
+      "text": "Total revenue reached $998k in 2026-05, reflecting a positive growth of +4.5%.",
+      "status": "positive"
+    },
+    {
+      "text": "North America generated $262k, accounting for 26.2% of total revenue.",
+      "status": "positive"
+    },
+    {
+      "text": "Online sales led with $537k, representing 53.8% of total revenue.",
+      "status": "positive"
+    },
+    {
+      "text": "Electronics category generated $293k, making up 29.4% of total revenue.",
+      "status": "positive"
+    },
+    {
+      "text": "Coffee Grinder sales declined by -$2k compared to the prior month.",
+      "status": "negative"
+    }
+  ],
+  "sections": [
+    {
+      "kicker": "FINANCIAL PERFORMANCE",
+      "action_title": "Total revenue increased to $998k in 2026-05, up $43k from April.",
+      "narrative": "In May 2026, total revenue reached $998k, reflecting a 4.5% increase from April's $955k. This growth continues the upward trend observed in recent months, with May's performance nearing the peak month of $1.41M. The recent trend indicates a recovery from lower revenue months earlier in the year, particularly February's low of $753k.",
+      "bullets": [
+        "Revenue growth of $43k from April to May",
+        "Recent trend shows recovery from February's low",
+        "May revenue approaches peak of $1.41M"
+      ],
+      "so_what": "Sustained revenue growth signals positive momentum heading into the next quarter.",
+      "chart": {
+        "kind": "line",
+        "title": "Monthly revenue",
+        "x": [
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05"
+        ],
+        "series": {
+          "revenue": [
+            901981.71,
+            856116.84,
+            890412.26,
+            942861.32,
+            1079060.6,
+            1255891.45,
+            1405753.92,
+            909899.34,
+            753001.45,
+            937365.22,
+            955481.24,
+            998087.75
+          ]
+        },
+        "highlight": "2026-05",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "performance: Monthly revenue"
+      ]
+    },
+    {
+      "kicker": "REGION BREAKDOWN",
+      "action_title": "North America leads with $262k, while EMEA grows by +$14k.",
+      "narrative": "In the revenue breakdown for 2026-05, North America stands out with total revenue of $262k, making it the leading region. EMEA follows with $219k, showing a significant increase of +$14k from the previous period. The concentration of revenue indicates a strong performance in North America, while EMEA's growth highlights its emerging strength.",
+      "bullets": [
+        "North America: $262k, 26.2% of total revenue",
+        "EMEA: $219k, largest growth at +$14k",
+        "UK & Ireland: $200k, also shows strong growth of +$13k"
+      ],
+      "so_what": "Focusing on EMEA's growth could enhance overall revenue performance.",
+      "chart": {
+        "kind": "bar",
+        "title": "revenue by region (2026-05)",
+        "x": [
+          "North America",
+          "EMEA",
+          "APAC",
+          "UK & Ireland",
+          "LATAM"
+        ],
+        "series": {
+          "revenue": [
+            261552.57,
+            219002.07,
+            201804.24,
+            199645.78,
+            116083.09
+          ]
+        },
+        "highlight": "North America",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "dim_region: revenue by region (2026-05)"
+      ]
+    },
+    {
+      "kicker": "CHANNEL BREAKDOWN",
+      "action_title": "Online leads with $537k, driving a $35k increase from April to May.",
+      "narrative": "In May 2026, Online channel revenue reached $537k, representing 53.8% of total revenue. In-store revenue followed at $461k, showing a smaller increase of $8k from the previous month. The Online channel not only leads in total revenue but also demonstrates significant growth compared to the prior period, highlighting a strong shift towards digital sales.",
+      "bullets": [
+        "Online revenue increased by $35k from April to May.",
+        "In-store revenue rose by $8k in the same period.",
+        "Online accounts for over half of total revenue."
+      ],
+      "so_what": "The strong growth in Online revenue indicates a successful digital strategy that should be prioritized.",
+      "chart": {
+        "kind": "bar",
+        "title": "revenue by channel (2026-05)",
+        "x": [
+          "Online",
+          "In-store"
+        ],
+        "series": {
+          "revenue": [
+            537454.6,
+            460633.15
+          ]
+        },
+        "highlight": "Online",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "dim_channel: revenue by channel (2026-05)"
+      ]
+    },
+    {
+      "kicker": "CATEGORY BREAKDOWN",
+      "action_title": "Electronics leads with $293k, while Home & Kitchen grows by +$24k.",
+      "narrative": "In May 2026, Electronics dominates the revenue breakdown with $293k, accounting for 29.4% of total revenue. Home & Kitchen follows closely with $279k, experiencing the largest increase of +$24k from the previous month. Beauty & Wellness also shows a strong performance, growing by +$10k to reach $248k, indicating a healthy concentration in these top categories.",
+      "bullets": [
+        "Electronics contributes $293k, leading all categories.",
+        "Home & Kitchen increases by +$24k, the largest mover.",
+        "Beauty & Wellness grows by +$10k, reflecting strong demand."
+      ],
+      "so_what": "Focusing on Electronics and Home & Kitchen can drive future growth.",
+      "chart": {
+        "kind": "bar",
+        "title": "revenue by category (2026-05)",
+        "x": [
+          "Electronics",
+          "Home & Kitchen",
+          "Beauty & Wellness",
+          "Apparel",
+          "Media & Entertainment"
+        ],
+        "series": {
+          "revenue": [
+            293261.32,
+            279388.27,
+            247989.81,
+            114522.67,
+            62925.68
+          ]
+        },
+        "highlight": "Electronics",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "dim_category: revenue by category (2026-05)"
+      ]
+    },
+    {
+      "kicker": "PRODUCT BREAKDOWN",
+      "action_title": "Wireless Earbuds lead with $163k, driving 16.4% of total revenue.",
+      "narrative": "In May 2026, Wireless Earbuds generated $163k, establishing itself as the top product and contributing 16.4% of total revenue. The Air Fryer follows closely with $133k, showing significant growth of +$15k from the previous month. The Cookware Set also performed well, increasing by +$12k to reach $106k, indicating strong demand in the kitchen appliance segment.",
+      "bullets": [
+        "Wireless Earbuds dominate with $163k in revenue.",
+        "Air Fryer shows the largest increase of +$15k.",
+        "Cookware Set maintains strong performance at $106k."
+      ],
+      "so_what": "Focusing on high-performing products like Wireless Earbuds and Air Fryer can enhance growth.",
+      "chart": {
+        "kind": "bar",
+        "title": "revenue by product (2026-05)",
+        "x": [
+          "Wireless Earbuds",
+          "Air Fryer",
+          "Cookware Set",
+          "Electric Toothbrush",
+          "Smart Speaker",
+          "Collagen Powder",
+          "Vitamin C Serum",
+          "Denim Jacket",
+          "USB-C Charger",
+          "Coffee Grinder",
+          "Running Tee",
+          "Blu-ray Box Set",
+          "Board Game",
+          "Wool Socks 3-pack",
+          "Vinyl Record"
+        ],
+        "series": {
+          "revenue": [
+            163383.49,
+            132564.18,
+            106078.3,
+            105834.31999999999,
+            75959.79,
+            72110.93000000001,
+            70044.56,
+            54511.57,
+            53918.04,
+            40745.79,
+            39406.62,
+            24137.86,
+            24020.5,
+            20604.48,
+            14767.32
+          ]
+        },
+        "highlight": "Wireless Earbuds",
+        "value_format": ",.0f"
+      },
+      "citations": [
+        "dim_product: revenue by product (2026-05)"
+      ]
+    }
+  ],
+  "recommendations": [
+    "Increase marketing investments in the Online channel to capitalize on $537k in sales.",
+    "Enhance product offerings in the Electronics category, which generated $293k, to drive growth.",
+    "Address the decline of the Coffee Grinder product by evaluating pricing and promotional strategies.",
+    "Focus on expanding the North America region, contributing $262k, to maximize regional performance."
+  ],
+  "sources": [
+    "ex_retail_sales (104,567 rows), measure: revenue, period 2026-05 vs 2026-04; figures verified against the database."
+  ],
+  "generated_at": "2026-06-10 17:36 UTC"
+}

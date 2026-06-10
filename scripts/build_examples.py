@@ -13,6 +13,7 @@ PyMuPDF is only needed here (build time), not at runtime.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -26,15 +27,22 @@ from scripts.example_datasets import generate_marketing, generate_saas  # noqa: 
 from scripts.gen_budget_data import generate as generate_budget  # noqa: E402
 from scripts.gen_sales_data import generate as generate_sales  # noqa: E402
 from src.data_tool import drop_table, load_file_to_sqlite  # noqa: E402
-from src.render import render_report  # noqa: E402
+from src.render import load_report, render_report  # noqa: E402
 from src.report import build_report  # noqa: E402
 from src.schemas import ReportRequest  # noqa: E402
+
+# Reuse a previously-built report.json (skips the LLM) so styling can be re-rendered cheaply.
+REUSE = os.environ.get("REUSE_EXAMPLES") == "1"
 
 OUT = ROOT / "app" / "examples"
 # The downloadable source CSV is sampled above this many rows (the report is still built
 # on the full data); keeps bundled assets small without weakening the flagship report.
 CSV_DOWNLOAD_LIMIT = 10_000
 
+# Each example gets a distinct brand identity (accent + ink + fonts) so the gallery shows
+# the SAME engine producing differently-styled decks — exactly what uploading a different
+# brand template does. Fonts are standard on the (Windows) build machine and bake into the
+# rendered images, so they show regardless of the deployment host's fonts.
 EXAMPLES = [
     {"key": "retail_sales", "title": "Retail Sales Review",
      "domain": "Retail / Commerce",
@@ -43,28 +51,36 @@ EXAMPLES = [
                     "and the channel shift.",
      "intent": "Monthly sales performance review highlighting the winning products, "
                "categories and regions, and any weak spots.",
-     "gen": generate_sales},
+     "gen": generate_sales,
+     "brand": {"accent": "#2E6DB4", "ink": "#11243F",
+               "font_head": "Georgia", "font_body": "Calibri"}},
     {"key": "fpa_budget", "title": "Budget vs Actuals (FP&A)",
      "domain": "Finance / FP&A",
      "description": "Monthly budget-vs-actuals by department. A completely different shape "
                     "from the sales data (no products/regions) — same engine, FP&A report.",
      "intent": "Budget vs actuals review: where are we over and under budget, and which "
                "departments are drifting?",
-     "gen": generate_budget},
+     "gen": generate_budget,
+     "brand": {"accent": "#0E7C66", "ink": "#0C2E27",
+               "font_head": "Cambria", "font_body": "Calibri"}},
     {"key": "saas_metrics", "title": "SaaS Growth Metrics",
      "domain": "SaaS / Subscriptions",
      "description": "MRR, new and churned revenue, and active customers by plan and region. "
                     "Surfaces the plan driving growth and where churn concentrates.",
      "intent": "Monthly SaaS growth review: MRR by plan and region, what is driving new "
                "revenue, and where churn is concentrated.",
-     "gen": generate_saas},
+     "gen": generate_saas,
+     "brand": {"accent": "#6C4BF0", "ink": "#211747",
+               "font_head": "Trebuchet MS", "font_body": "Trebuchet MS"}},
     {"key": "marketing_analytics", "title": "Marketing Channel Performance",
      "domain": "Marketing / Web",
      "description": "Sessions, conversions, revenue and ad spend by channel. Shows the "
                     "efficient channels, the expensive ones, and what is declining.",
      "intent": "Monthly marketing performance review by channel: revenue, conversion and "
                "spend efficiency, and channel trends.",
-     "gen": generate_marketing},
+     "gen": generate_marketing,
+     "brand": {"accent": "#E8590C", "ink": "#3A2008",
+               "font_head": "Verdana", "font_body": "Verdana"}},
 ]
 
 
@@ -85,24 +101,38 @@ def _slides_to_png(pdf_path: Path, dest: Path, dpi: int = 110) -> list[str]:
 def build_one(ex: dict) -> dict:
     key = ex["key"]
     dest = OUT / key
+    # Preserve a prior report.json across the wipe so REUSE can re-render styling cheaply.
+    cached = (dest / "report.json")
+    cached_text = cached.read_text(encoding="utf-8") if (REUSE and cached.exists()) else None
     if dest.exists():
         shutil.rmtree(dest)
     dest.mkdir(parents=True, exist_ok=True)
 
     df = ex["gen"]()
+    report_json = dest / "report.json"
 
-    # Build the report on the FULL dataset (best quality). Load via the real ingest path
-    # (cleaning/coercion) into a uniquely-named table in the default DB, then drop it.
-    full_csv = dest / "_full.csv"
-    df.to_csv(full_csv, index=False)
-    table = f"ex_{key}"
-    n = load_file_to_sqlite(full_csv, table=table)
-    try:
-        report = build_report(ReportRequest(intent=ex["intent"], table=table))
-        paths = render_report(report, out_dir=dest, charts_dir=dest / "charts")
-    finally:
-        drop_table(table)
-        full_csv.unlink(missing_ok=True)
+    # Build the report on the FULL dataset (best quality), or reuse a saved report.json so
+    # styling can be re-rendered without another LLM call. The narrative does not change
+    # with branding, only the visual theme passed to render_report.
+    if cached_text is not None:
+        report_json.write_text(cached_text, encoding="utf-8")
+        report = load_report(report_json)
+        paths = render_report(report, out_dir=dest, charts_dir=dest / "charts",
+                              brand=ex.get("brand"))
+    else:
+        full_csv = dest / "_full.csv"
+        df.to_csv(full_csv, index=False)
+        table = f"ex_{key}"
+        load_file_to_sqlite(full_csv, table=table)
+        try:
+            report = build_report(ReportRequest(intent=ex["intent"], table=table))
+            report_json.write_text(report.model_dump_json(indent=2), encoding="utf-8")
+            paths = render_report(report, out_dir=dest, charts_dir=dest / "charts",
+                                  brand=ex.get("brand"))
+        finally:
+            drop_table(table)
+            full_csv.unlink(missing_ok=True)
+    n = len(df)
     shutil.rmtree(dest / "charts", ignore_errors=True)
 
     # Downloadable source CSV: sample large datasets so bundled assets stay small.
