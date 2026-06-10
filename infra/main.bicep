@@ -31,7 +31,7 @@ param langfusePublicKey string = ''
 param langfuseSecretKey string = ''
 param langfuseHost string = 'https://cloud.langfuse.com'
 
-param budgetAmount int = 25
+param budgetAmount int = 60
 param budgetEmail string
 param budgetStartDate string = utcNow('yyyy-MM-01')
 
@@ -178,7 +178,10 @@ resource ui 'Microsoft.App/containerApps@2024-03-01' = {
           ])
         }
       ]
-      scale: { minReplicas: 0, maxReplicas: 1 } // scale-to-zero: ~free when idle
+      // Keep one replica warm so the shared demo link has no cold-start wait. This is
+      // Azure compute (off the Azure credits), not OpenAI spend. Only the UI is warmed;
+      // the API below stays scale-to-zero.
+      scale: { minReplicas: 1, maxReplicas: 1 }
     }
   }
 }

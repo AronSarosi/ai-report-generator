@@ -272,6 +272,19 @@ that answers it. Rules:
 - Use the exact column names, wrapped in double quotes.
 - Dates are ISO text 'YYYY-MM-DD'; use substr("<date_col>",1,7) to group by month.
 - Aggregate with SUM/COUNT/AVG and GROUP BY as needed; add ORDER BY and LIMIT for "top N".
+- COMPARISONS / CHANGE OVER TIME: when the question asks which category grew/declined/
+  changed the most, or about a rise/drop/mover "vs last month" or "between month A and B",
+  compute the change between the two periods and order by it. Use a CTE so you can reference
+  the computed columns (SQLite forbids using a SELECT alias inside the same SELECT list):
+    WITH t AS (
+      SELECT "<dim>" AS k,
+             SUM(CASE WHEN substr("<date>",1,7)='<current>' THEN "<measure>" ELSE 0 END) AS cur,
+             SUM(CASE WHEN substr("<date>",1,7)='<prior>'   THEN "<measure>" ELSE 0 END) AS prev
+      FROM "<table>" GROUP BY "<dim>")
+    SELECT k, cur, prev, cur - prev AS change FROM t ORDER BY change ASC LIMIT 1
+  Use ORDER BY change ASC for "declined the most", DESC for "grew the most". Do NOT answer a
+  "declined/grew the most" question with just the lowest/highest total — it is the change
+  between the two periods.
 - Never modify data.
 - If the question cannot be answered from THIS schema (it is off-topic, general
   knowledge, or asks about a column/entity that does not exist), output exactly
