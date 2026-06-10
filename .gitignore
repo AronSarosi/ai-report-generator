@@ -3,5 +3,6 @@
 data/db/
 data/out/
 data/charts/
+data/torture/
 __pycache__/
 *.pyc

@@ -66,9 +66,15 @@ def get_settings() -> Settings:
     return Settings()
 
 
+# Cap output tokens per call: the report's structured sections are small, so this bounds
+# worst-case cost without truncating legitimate output. Overridable via kwargs.
+_MAX_OUTPUT_TOKENS = 2000
+
+
 def get_chat_model(temperature: float = 0.2, **kwargs):
     """Return a LangChain chat model for the configured provider."""
     s = get_settings()
+    kwargs.setdefault("max_tokens", _MAX_OUTPUT_TOKENS)
     if s.is_azure:
         from langchain_openai import AzureChatOpenAI
 

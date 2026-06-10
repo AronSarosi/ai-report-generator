@@ -15,5 +15,6 @@ toolbarMode = "minimal"
 gatherUsageStats = false
 
 [server]
-# Cap uploads (the default is 200MB). Visitors get a generous trial; see src/limits.py.
-maxUploadSize = 100
+# Cap uploads (the default is 200MB) to bound memory/cost. Matches the API's 25MB
+# limit (app/main.py). Visitors get a generous trial; see src/limits.py.
+maxUploadSize = 25

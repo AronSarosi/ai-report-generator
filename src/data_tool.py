@@ -28,13 +28,67 @@ import pandas as pd
 from src.config import get_chat_model, get_settings
 from src.schemas import ColumnProfile, ColumnRole, DatasetProfile, SQLResult
 
-
 # --------------------------------------------------------------------------- #
 # Loading + profiling
 # --------------------------------------------------------------------------- #
+# Bound the work a single upload can create (cost + memory + readability).
+MAX_ROWS = 200_000
+_NUMERIC_JUNK = re.compile(r"[,$€£%\s]")
+_NULL_TOKENS = {"", "na", "n/a", "nan", "none", "null", "-", "—", "."}
+
+
+def _clean_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Make column names safe SQL identifiers and chart labels: strip whitespace and
+    double-quotes (which would break the quoted-identifier SQL), fill blanks, dedupe.
+    A double-quote in a header is the SQL-injection vector, so it is removed here."""
+    seen: dict[str, int] = {}
+    names: list[str] = []
+    for i, raw in enumerate(df.columns):
+        name = re.sub(r"\s+", " ", str(raw).replace('"', "")).strip()
+        if not name:
+            name = f"col_{i + 1}"
+        if name in seen:
+            seen[name] += 1
+            name = f"{name}_{seen[name]}"
+        else:
+            seen[name] = 1
+        names.append(name)
+    df = df.copy()
+    df.columns = names
+    return df
+
+
+def _coerce_numeric(df: pd.DataFrame) -> pd.DataFrame:
+    """Real-world exports store numbers as text: '$1,234', '12%', '1,000'. If a text
+    column is overwhelmingly numeric once $/,/%/space are stripped, convert it so it
+    can be used as a measure instead of being silently ignored."""
+    for col in df.columns:
+        ser = df[col]
+        if not (ser.dtype == object):
+            continue
+        s = ser.dropna().astype(str).str.strip()
+        if s.empty:
+            continue
+        non_null = s[~s.str.lower().isin(_NULL_TOKENS)]
+        if non_null.empty:
+            continue
+        cleaned = non_null.str.replace(_NUMERIC_JUNK, "", regex=True)
+        parsed = pd.to_numeric(cleaned, errors="coerce")
+        if parsed.notna().mean() >= 0.95:  # almost all values are numeric-looking
+            full = pd.to_numeric(
+                ser.astype(str).str.strip()
+                   .mask(ser.astype(str).str.strip().str.lower().isin(_NULL_TOKENS))
+                   .str.replace(_NUMERIC_JUNK, "", regex=True),
+                errors="coerce")
+            df[col] = full
+    return df
+
+
 def load_file_to_sqlite(path, table: str = "data", db_path=None) -> int:
     """Load a CSV / TSV / Excel / JSON file into a SQLite table (replacing it).
 
+    Cleans the data first (safe column names, numeric coercion, row cap) so messy
+    real-world exports don't crash the loader or silently lose their metric columns.
     Returns the row count. Excel needs the openpyxl engine (in requirements).
     """
     s = get_settings()
@@ -50,6 +104,13 @@ def load_file_to_sqlite(path, table: str = "data", db_path=None) -> int:
         df = pd.read_json(path)
     else:
         df = pd.read_csv(path)
+
+    if df.shape[1] == 0:
+        raise ValueError("The file has no columns to read.")
+    if len(df) > MAX_ROWS:
+        df = df.head(MAX_ROWS)
+    df = _coerce_numeric(_clean_columns(df))
+
     with sqlite3.connect(db_path) as conn:
         df.to_sql(table, conn, if_exists="replace", index=False)
     return len(df)
@@ -58,6 +119,17 @@ def load_file_to_sqlite(path, table: str = "data", db_path=None) -> int:
 def load_csv_to_sqlite(csv_path, table: str = "sales", db_path=None) -> int:
     """Back-compat wrapper around load_file_to_sqlite."""
     return load_file_to_sqlite(csv_path, table=table, db_path=db_path)
+
+
+def drop_table(table: str, db_path=None) -> None:
+    """Drop a per-request table once its report is built (keeps the shared DB tidy and
+    stops one request's upload lingering for the next). Table name is double-quoted."""
+    db_path = Path(db_path or get_settings().db_path)
+    if not db_path.exists():
+        return
+    safe = '"' + str(table).replace('"', "") + '"'
+    with sqlite3.connect(db_path) as conn:
+        conn.execute(f"DROP TABLE IF EXISTS {safe}")
 
 
 _DATE_NAME = re.compile(r"(date|month|day|period|time|year|week|quarter|_at$)", re.I)
@@ -124,7 +196,10 @@ def profile_dataset(db_path=None, table: str = "sales") -> DatasetProfile:
                 role = ColumnRole.MEASURE
                 cmin, cmax = _fmt(ser.min()), _fmt(ser.max())
         else:
-            role = ColumnRole.DIMENSION if n_unique <= max(50, n_rows // 2) else ColumnRole.OTHER
+            # A categorical to group by — but a near-unique text column (free-text notes,
+            # ids) makes a useless 1000-bar breakdown, so cap the absolute cardinality too.
+            is_dim = n_unique <= max(50, n_rows // 2) and n_unique <= 1000
+            role = ColumnRole.DIMENSION if is_dim else ColumnRole.OTHER
 
         examples = [str(v) for v in ser.dropna().unique()[:5]]
         cols.append(ColumnProfile(name=name, dtype=dtype, role=role,

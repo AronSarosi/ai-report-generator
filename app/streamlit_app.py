@@ -25,7 +25,7 @@ from src.branding import extract_brand  # noqa: E402
 from src.config import get_settings  # noqa: E402
 from src.data_tool import answer_data_question, load_file_to_sqlite, profile_dataset  # noqa: E402
 from src.legal import CONTACT_EMAIL, PRIVACY_MD, TERMS_MD  # noqa: E402
-from src.limits import LABEL, LIMITS, consume, remaining  # noqa: E402
+from src.limits import check, consume  # noqa: E402
 from src.render import render_report  # noqa: E402
 from src.report import build_report  # noqa: E402
 from src.schemas import ReportRequest  # noqa: E402
@@ -168,10 +168,9 @@ def _client_id() -> str:
     return st.session_state["_cid"]
 
 
-def _limit_msg(kind: str) -> str:
-    return (f"You've used all {LIMITS[kind]} free {LABEL[kind]} this month. This is a free demo. "
-            f"If you'd like to use it for real, or have a custom version built for your team, "
-            f"get in touch: {CONTACT_EMAIL}.")
+def _limit_msg(reason: str) -> str:
+    return (f"{reason} This is a free demo. If you'd like to use it for real, or have a custom "
+            f"version built for your team, get in touch: {CONTACT_EMAIL}.")
 
 
 # --------------------------------------------------------------------------- #
@@ -414,12 +413,13 @@ with tab_gen:
     )
     if st.button("Generate report", type="primary", key="gen_btn"):
         cid = _client_id()
+        allowed, reason = check(cid, "report")
         if not active:
             st.warning('Upload a data file or click "Use sample data" first.')
         elif not prompt.strip():
             st.warning("Describe the report you want (see the example in the box).")
-        elif remaining(cid, "report") <= 0:
-            st.warning(_limit_msg("report"))
+        elif not allowed:
+            st.warning(_limit_msg(reason))
         else:
             # Live, step-by-step progress so the wait is transparent and engaging.
             status = st.status("Generating your report… (usually 20-40 seconds)", expanded=True)
@@ -468,12 +468,13 @@ with tab_chat:
                      placeholder="Example: Which region declined the most last month?")
     if st.button("Ask about your data", type="primary", key="ask_btn"):
         cid = _client_id()
+        allowed, reason = check(cid, "question")
         if not active:
             st.warning('Upload a data file or click "Use sample data" first.')
         elif not q.strip():
             st.warning("Type a question (see the example in the box).")
-        elif remaining(cid, "question") <= 0:
-            st.warning(_limit_msg("question"))
+        elif not allowed:
+            st.warning(_limit_msg(reason))
         else:
             with st.spinner("Working it out…"):
                 res = answer_data_question(q, table=active)

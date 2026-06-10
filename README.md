@@ -2,9 +2,13 @@
 
 **Turn a data file into a finished, board-ready report — charts and narrative grounded in the real numbers — and ask questions of the same data in plain English.**
 
+### ▶ Live demo: https://srg-ui.purplehill-0c48c800.swedencentral.azurecontainerapps.io
+
+(Hosted on Azure Container Apps with scale-to-zero, so the first request after an idle period takes ~30–90 s to cold-start — then it's quick. There is also a programmatic API at [`/docs`](https://srg-api.purplehill-0c48c800.swedencentral.azurecontainerapps.io/docs).)
+
 Upload a CSV or Excel file, describe the report you want ("monthly sales review highlighting the winning products and regions"), and the app generates a consulting-grade PowerPoint + PDF: action-title slides, charts, and a written narrative where **every quoted number is pulled from the data and re-checked against it**. The same engine works on any tabular dataset — sales, budget-vs-actuals, inventory — because it discovers the schema at runtime instead of hardcoding it.
 
-> Status: working local app (Phase A). Built for a finance-team use case; data-agnostic by design.
+> Status: live on Azure (Phase B). Built for a finance-team use case; data-agnostic by design.
 
 ---
 

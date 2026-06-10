@@ -17,6 +17,9 @@ def test_money():
     assert money(45_200) == "$45k"
     assert money(950) == "$950"
     assert money(None) == "n/a"
+    assert money(2_500_000_000) == "$2.50B"
+    assert money(3_100_000_000_000) == "$3.10T"
+    assert money(float("nan")) == "n/a"
 
 
 def test_signed_money():

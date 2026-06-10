@@ -33,7 +33,13 @@ def money(x) -> str:
     if x is None:
         return "n/a"
     x = float(x)
+    if x != x:  # NaN (NaN is the only value not equal to itself)
+        return "n/a"
     ax = abs(x)
+    if ax >= 1e12:
+        return f"${x / 1e12:.2f}T"
+    if ax >= 1e9:
+        return f"${x / 1e9:.2f}B"
     if ax >= 1e6:
         return f"${x / 1e6:.2f}M"
     if ax >= 1e3:
@@ -115,18 +121,37 @@ def _table_md(columns: list[str], rows: list[list], limit: int = 12) -> str:
     return "\n".join([head, sep, *body])
 
 
+# A dataset can have many dimensions; one LLM-written section per dimension is the main
+# cost driver (a 50-column upload would mean ~50 sections). Cap the report's breadth.
+_MAX_DIMS = 6
+# Bars per breakdown chart: more than this is unreadable on a slide (and the leader/
+# concentration story lives in the top values anyway).
+_MAX_BARS = 15
+
+
+def _label(v) -> str:
+    """Human label for a dimension value, mapping SQL NULL / blanks to a clear token
+    instead of the literal 'None'."""
+    if v is None:
+        return "(blank)"
+    s = str(v).strip()
+    return s or "(blank)"
+
+
 def _dim_facts(battery: dict, dim: str) -> dict:
     """Pull the notable facts for one dimension: leader, its share, biggest +/- movers."""
     bd = battery["dimensions"][dim]["breakdown"].rows      # [value, total] desc
     mv = battery["dimensions"][dim]["movers"].rows          # [value, cur, prev, delta] by |delta|
-    total = battery["period_total"] or 1.0
+    total = battery["period_total"] or 0.0
     leader = bd[0] if bd else [None, 0]
+    # Share is only meaningful with a positive total (avoid 5,000,000% when total<=0).
+    leader_share = (leader[1] or 0) / total if total > 0 else None
     risers = [r for r in mv if (r[3] or 0) > 0]
     fallers = [r for r in mv if (r[3] or 0) < 0]
     top_riser = max(risers, key=lambda r: r[3]) if risers else None
     top_faller = min(fallers, key=lambda r: r[3]) if fallers else None
     return {
-        "leader": leader, "leader_share": (leader[1] or 0) / total,
+        "leader": leader, "leader_share": leader_share,
         "top_riser": top_riser, "top_faller": top_faller,
     }
 
@@ -146,15 +171,16 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
     else:
         exec_lines = [f"Total {m}: {money(battery['period_total'])} across {period}."]
         approved = [money(battery["period_total"])]
-    for dim in profile.dimensions:
+    dims = profile.dimensions[:_MAX_DIMS]
+    for dim in dims:
         f = _dim_facts(battery, dim)
         if f["leader"][0] is not None:
-            exec_lines.append(f"Top {dim}: {f['leader'][0]} at {money(f['leader'][1])} "
-                              f"({pct(f['leader_share'], signed=False)} of total).")
+            share = f"({pct(f['leader_share'], signed=False)} of total)" if f["leader_share"] is not None else ""
+            exec_lines.append(f"Top {dim}: {_label(f['leader'][0])} at {money(f['leader'][1])} {share}.")
             approved += [money(f["leader"][1]), pct(f["leader_share"], signed=False)]
         if f["top_faller"]:
             r = f["top_faller"]
-            exec_lines.append(f"Biggest {dim} decline: {r[0]} {signed_money(r[3])} vs prior.")
+            exec_lines.append(f"Biggest {dim} decline: {_label(r[0])} {signed_money(r[3])} vs prior.")
             approved.append(signed_money(r[3]))
     specs.append({
         "id": "exec", "kind": "exec", "kicker": "EXECUTIVE SUMMARY",
@@ -188,13 +214,14 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
             "chart": perf_chart,
         })
 
-    # --- One insight slide per dimension (bar) ---
-    for dim in profile.dimensions:
+    # --- One insight slide per dimension (bar). Cap both the number of dimensions
+    # (cost) and the bars per chart (readability — a 1000-value dimension is unreadable). ---
+    for dim in dims:
         bd = battery["dimensions"][dim]["breakdown"]
         mv = battery["dimensions"][dim]["movers"]
         f = _dim_facts(battery, dim)
-        x = [str(r[0]) for r in bd.rows]
-        vals = [float(r[1] or 0) for r in bd.rows]
+        x = [_label(r[0]) for r in bd.rows[:_MAX_BARS]]
+        vals = [float(r[1] or 0) for r in bd.rows[:_MAX_BARS]]
         chart = ChartSpec(kind="bar", title=f"{m} by {dim} ({period})", x=x,
                           series={m: vals}, highlight=x[0] if x else None)
         approved = [money(f["leader"][1]), pct(f["leader_share"], signed=False)]
