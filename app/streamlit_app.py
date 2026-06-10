@@ -398,18 +398,18 @@ HERO_GENERATE = f"""
 HERO_CHAT = """
 <div class="showcase-h">Just ask, in plain English</div>
 <div class="showcase-sub">The agent writes a safe, read-only SQL query, runs it on your data, and
-answers &mdash; with the exact SQL one click away. No formulas, no pivot tables.</div>
+answers, with the exact SQL one click away. No formulas, no pivot tables.</div>
 <div class="chatwrap"><div class="chat2">
   <div class="bubble user">What was total revenue last month?</div>
-  <div class="bubble ai">$998k in May 2026 &mdash; up 4.5% versus April.</div>
+  <div class="bubble ai">$998k in May 2026, up 4.5% versus April.</div>
   <div class="bubble user">Which region declined the most?</div>
-  <div class="bubble ai">LATAM, down $23k month-over-month &mdash; the only region to fall.</div>
+  <div class="bubble ai">LATAM, down $23k month-over-month, the only region to fall.</div>
   <div class="bubble user">Top 3 products by gross profit?</div>
   <div class="bubble ai">Wireless Earbuds ($49k), Vitamin C Serum ($44k), Electric Toothbrush ($43k).</div>
   <div class="bubble user">How much of revenue comes from Online?</div>
-  <div class="bubble ai">53.8% &mdash; $537k of the $998k total.</div>
+  <div class="bubble ai">53.8%, or $537k of the $998k total.</div>
   <div class="bubble user">What's the capital of France?</div>
-  <div class="bubble ai">I couldn't answer that from this dataset &mdash; try a question about its columns.</div>
+  <div class="bubble ai">I couldn't answer that from this dataset. Try a question about its columns.</div>
 </div></div>
 """
 

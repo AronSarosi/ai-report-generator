@@ -29,8 +29,8 @@ Please read how your data is handled before uploading anything.
 - The provider processes this under its own API data policy. OpenAI does **not** train its models
   on data submitted via the API and retains it only briefly for abuse monitoring. When configured
   for **Azure OpenAI**, this processing stays inside a private Azure tenant.
-- When tracing is enabled, an **observability tool (Langfuse)** records the model calls — the same
-  schema, aggregated figures and sample values described above, plus the generated text — so the
+- When tracing is enabled, an **observability tool (Langfuse)** records the model calls (the same
+  schema, aggregated figures and sample values described above, plus the generated text) so the
   system can be debugged and quality-checked. It is not used for advertising or profiling.
 
 **Retention**

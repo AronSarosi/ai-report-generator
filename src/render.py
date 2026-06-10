@@ -205,20 +205,22 @@ def _full_bg(slide, color: str):
 
 
 def _cover_slide(prs, report: Report, t, dark: bool = True):
-    """The cover: title at the very top with nothing above it, an accent rule, then the
-    subtitle. Dark = full-bleed brand-ink panel with a white title; light = clean white
-    cover with an ink title (varied across decks)."""
+    """The cover: the title (with the subtitle beneath it) vertically centred on the
+    slide, no rule. Dark = full-bleed brand-ink panel with a white title; light = a
+    clean white cover with an ink title (varied across decks)."""
     s = prs.slides.add_slide(prs.slide_layouts[6])
     if dark:
         _full_bg(s, t.ink)
         title_color, sub_color = PAPER, GRAY_300
     else:
         title_color, sub_color = t.ink, GRAY_500
-    _set(_box(s, 0.85, 0.85, 11.6, 2.0).paragraphs[0], report.title, SZ_DECK_TITLE,
-         t.font_head, title_color, bold=True)
-    _rule(s, 0.9, 3.0, 1.7, 6, color=t.accent)
-    _set(_box(s, 0.85, 3.25, 11.6, 0.6).paragraphs[0], report.subtitle, SZ_SUB,
-         t.font_body, sub_color)
+    # One text frame spanning the slide, vertically centred, so the title sits in the
+    # middle and the subtitle stays just beneath it regardless of title length.
+    tf = _box(s, 0.85, 1.0, 11.6, 5.5)
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    _set(tf.paragraphs[0], report.title, SZ_DECK_TITLE, t.font_head, title_color, bold=True)
+    tf.paragraphs[0].space_after = Pt(14)
+    _set(tf.add_paragraph(), report.subtitle, SZ_SUB, t.font_body, sub_color)
 
 
 def _exec_slide(prs, report: Report, t):
@@ -306,7 +308,7 @@ def _kpis_from_chart(spec: ChartSpec) -> list[tuple[str, str]]:
         ]
     total = sum(ys) or 1.0
     pairs = sorted(zip(xs, ys), key=lambda p: p[1], reverse=True)[:4]
-    return [(money(v), f"{lbl} — {v / total * 100:.0f}% of the total") for lbl, v in pairs]
+    return [(money(v), f"{lbl}, {v / total * 100:.0f}% of the total") for lbl, v in pairs]
 
 
 def _kpi_band(slide, kpis: list[tuple[str, str]], t, top: float = 5.2):
