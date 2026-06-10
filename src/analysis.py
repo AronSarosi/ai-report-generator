@@ -87,9 +87,13 @@ def compute_battery(profile: DatasetProfile, period: Optional[str] = None,
             f'SELECT SUM("{measure}") FROM "{table}" WHERE {_month_filter(tcol, prior)}', db_path)
         trend_res = run_select(
             f'SELECT substr("{tcol}",1,7) AS month, SUM("{measure}") AS total '
-            f'FROM "{table}" GROUP BY month ORDER BY month', db_path=db_path, limit=1000)
+            f'FROM "{table}" WHERE "{tcol}" IS NOT NULL GROUP BY month ORDER BY month',
+            db_path=db_path, limit=1000)
+        # Drop any null-key group defensively (e.g. dates that didn't parse) so the
+        # downstream trend chart never gets a None x-axis label.
+        trend_rows = [r for r in trend_res.rows if r[0] is not None][-12:]
         trend = AnalysisResult(key="trend", title=f"Monthly {measure} (last 12 months)",
-                               sql=trend_res.sql, columns=trend_res.columns, rows=trend_res.rows[-12:])
+                               sql=trend_res.sql, columns=trend_res.columns, rows=trend_rows)
     else:
         period, prior, cur_filter = "the full dataset", None, "1=1"
         period_total = _scalar(f'SELECT SUM("{measure}") FROM "{table}"', db_path)

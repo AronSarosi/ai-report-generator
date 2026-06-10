@@ -175,7 +175,8 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
     for dim in dims:
         f = _dim_facts(battery, dim)
         if f["leader"][0] is not None:
-            share = f"({pct(f['leader_share'], signed=False)} of total)" if f["leader_share"] is not None else ""
+            share = (f"({pct(f['leader_share'], signed=False)} of total)"
+                     if f["leader_share"] is not None else "")
             exec_lines.append(f"Top {dim}: {_label(f['leader'][0])} at {money(f['leader'][1])} {share}.")
             approved += [money(f["leader"][1]), pct(f["leader_share"], signed=False)]
         if f["top_faller"]:
@@ -194,7 +195,7 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
     # --- Performance vs prior (trend line) — only when the data has a time axis ---
     trend = battery["trend"]
     if trend is not None and trend.rows:
-        months = [r[0] for r in trend.rows]
+        months = [_label(r[0]) for r in trend.rows]
         totals = [float(r[1] or 0) for r in trend.rows]
         peak_val = max(totals) if totals else 0
         perf_chart = ChartSpec(kind="line", title=f"Monthly {m}", x=months,

@@ -86,6 +86,22 @@ def test_movers_delta_is_cur_minus_prev(sales_battery):
     assert deltas == sorted(deltas, reverse=True)
 
 
+def test_trend_excludes_null_date_groups(make_db):
+    # rows with a NULL/unparseable date must not create a None-keyed trend month
+    # (that would crash the trend chart's string x-axis)
+    df = pd.DataFrame({
+        "date": ["2026-04-10", "2026-05-10", None, "2026-05-20"],
+        "region": ["EMEA", "EMEA", "APAC", "APAC"],
+        "revenue": [100.0, 200.0, 50.0, 300.0],
+    })
+    db = make_db(df)
+    p = profile_dataset(db_path=db, table="data")
+    b = compute_battery(p, db_path=db)
+    months = [r[0] for r in b["trend"].rows]
+    assert None not in months
+    assert all(isinstance(mth, str) for mth in months)
+
+
 def test_no_time_column_degrades_gracefully(make_db):
     df = pd.DataFrame({"dept": ["ops", "it", "hr", "ops"],
                        "spend": [100.0, 250.0, 75.0, 25.0]})
