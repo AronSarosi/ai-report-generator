@@ -263,14 +263,19 @@ def run_select(sql: str, db_path=None, limit: int = 1000, timeout_s: float = 5.0
 # --------------------------------------------------------------------------- #
 # Text-to-SQL
 # --------------------------------------------------------------------------- #
-_SQL_SYS = """You are a meticulous data analyst who writes SQLite SQL.
+_NOT_ANSWERABLE = "NOT_ANSWERABLE"
+
+_SQL_SYS = f"""You are a meticulous data analyst who writes SQLite SQL.
 Given a table schema and a question, write ONE read-only SELECT (or WITH ... SELECT)
 that answers it. Rules:
 - Output ONLY the SQL. No prose, no explanation, no markdown code fences.
 - Use the exact column names, wrapped in double quotes.
 - Dates are ISO text 'YYYY-MM-DD'; use substr("<date_col>",1,7) to group by month.
 - Aggregate with SUM/COUNT/AVG and GROUP BY as needed; add ORDER BY and LIMIT for "top N".
-- Never modify data."""
+- Never modify data.
+- If the question cannot be answered from THIS schema (it is off-topic, general
+  knowledge, or asks about a column/entity that does not exist), output exactly
+  {_NOT_ANSWERABLE} and nothing else. Do NOT invent a substitute query."""
 
 
 def _extract_sql(text: str) -> str:
@@ -306,6 +311,13 @@ def answer_data_question(question: str, db_path=None, table: str = "sales",
     db_path = Path(db_path or s.db_path)
     profile = profile or profile_dataset(db_path, table)
     sql = generate_sql(question, profile)
+    # The model flags questions it cannot answer from this schema (off-topic / missing
+    # column) instead of fabricating a plausible-but-wrong query.
+    if sql.strip().upper().startswith(_NOT_ANSWERABLE):
+        return SQLResult(
+            sql="", columns=[],
+            error="I couldn't answer that from this dataset. Try asking about its columns, "
+                  "such as totals, breakdowns by a category, or trends over time.")
     return run_select(sql, db_path=db_path, limit=limit)
 
 
