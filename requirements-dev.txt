@@ -1,0 +1,5 @@
+# Dev/CI-only tools. Install alongside requirements.txt:
+#   pip install -r requirements.txt -r requirements-dev.txt
+# Kept separate so the Docker image never ships dev dependencies.
+pytest==8.3.5
+ruff==0.11.8

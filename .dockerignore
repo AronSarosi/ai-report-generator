@@ -20,3 +20,7 @@ data/charts/
 design/
 docs/
 *.md
+tests/
+eval/
+infra/
+.github/

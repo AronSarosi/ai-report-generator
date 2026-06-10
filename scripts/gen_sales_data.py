@@ -163,7 +163,8 @@ def main() -> None:
         df.to_sql("sales", conn, if_exists="replace", index=False)
 
     # ----- summary so you can sanity-check the story -------------------------
-    money = lambda x: f"${x:,.0f}"
+    def money(x):
+        return f"${x:,.0f}"
     print(f"Rows: {len(df):,}   Date range: {df['date'].min()} -> {df['date'].max()}")
     print(f"Total revenue: {money(df['revenue'].sum())}   "
           f"Gross profit: {money(df['gross_profit'].sum())}   "

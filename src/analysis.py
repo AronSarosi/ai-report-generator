@@ -15,7 +15,6 @@ so the report narrative can be grounded in — and later verified against — th
 
 from __future__ import annotations
 
-import re
 from typing import Optional
 
 from src.data_tool import run_select

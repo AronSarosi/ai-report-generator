@@ -24,12 +24,29 @@ from pptx.util import Inches, Pt
 from src.config import get_settings
 from src.report import money
 from src.schemas import ChartSpec, Report
-from src.style import (ACCENT, BODY_BOX, CONTENT_W_IN, FONT_BODY, FONT_HEAD, GRAY_100,
-                       GRAY_300, GRAY_500, GRAY_900, INK, KICKER_BOX, MARGIN_IN, NEGATIVE,
-                       PAPER, POSITIVE, RULE_Y_IN, SLIDE_H_IN, SLIDE_W_IN, SOURCE_BOX,
-                       SZ_BODY, SZ_DECK_TITLE, SZ_KICKER, SZ_SOURCE, SZ_SUB, SZ_TITLE,
-                       TITLE_BOX, apply_mpl_style)
-
+from src.style import (
+    ACCENT,
+    CONTENT_W_IN,
+    FONT_BODY,
+    FONT_HEAD,
+    GRAY_100,
+    GRAY_300,
+    GRAY_500,
+    GRAY_900,
+    INK,
+    KICKER_BOX,
+    PAPER,
+    SLIDE_H_IN,
+    SLIDE_W_IN,
+    SOURCE_BOX,
+    SZ_DECK_TITLE,
+    SZ_KICKER,
+    SZ_SOURCE,
+    SZ_SUB,
+    SZ_TITLE,
+    TITLE_BOX,
+    apply_mpl_style,
+)
 
 # --------------------------------------------------------------------------- #
 # Brand theme (defaults to the house style; an uploaded template overrides it)
@@ -134,7 +151,8 @@ def _title_slide(prs, report: Report, t):
     s = prs.slides.add_slide(prs.slide_layouts[6])
     # Title can wrap to two lines, so give it a tall box and let whitespace (not an
     # underline) separate it from the subtitle — accent rules read as AI-generated.
-    _set(_box(s, 0.7, 2.25, 11.9, 1.7).paragraphs[0], report.title, SZ_DECK_TITLE, t.font_head, t.ink, bold=True)
+    _set(_box(s, 0.7, 2.25, 11.9, 1.7).paragraphs[0], report.title, SZ_DECK_TITLE,
+         t.font_head, t.ink, bold=True)
     _set(_box(s, 0.7, 4.05, 11.9, 0.6).paragraphs[0], report.subtitle, SZ_SUB, t.font_body, GRAY_500)
     _set(_box(s, 0.7, 4.6, 11.9, 0.5).paragraphs[0],
          f"Generated {report.generated_at}   |   CONFIDENTIAL", 11, t.font_body, GRAY_500)
@@ -148,8 +166,11 @@ def _exec_slide(prs, report: Report, t):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
         # One universal bullet color (the brand accent) regardless of sentiment — colored
         # red/green dots read like a status alert rather than a finished report.
-        chip = p.add_run(); chip.text = "●  "
-        chip.font.color.rgb = _rgb(t.accent); chip.font.size = Pt(16); chip.font.bold = True
+        chip = p.add_run()
+        chip.text = "●  "
+        chip.font.color.rgb = _rgb(t.accent)
+        chip.font.size = Pt(16)
+        chip.font.bold = True
         _set(p, km.text, 16, t.font_body, GRAY_900)
         p.space_after = Pt(16)
 
@@ -167,24 +188,38 @@ def _insight_slide(prs, sec, chart_path: Optional[Path], t):
 def _callout(slide, label, takeaway, bullets, t, left=8.5, top=1.95, width=4.3):
     """A brand-colored header band over a light card — the insight callout."""
     hdr = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(left), Inches(top), Inches(width), Inches(0.5))
-    hdr.fill.solid(); hdr.fill.fore_color.rgb = _rgb(t.ink); hdr.line.fill.background()
+    hdr.fill.solid()
+    hdr.fill.fore_color.rgb = _rgb(t.ink)
+    hdr.line.fill.background()
     hdr.shadow.inherit = False
-    htf = hdr.text_frame; htf.vertical_anchor = MSO_ANCHOR.MIDDLE
-    htf.margin_left = Inches(0.22); htf.margin_top = Inches(0.02); htf.margin_bottom = Inches(0.02)
+    htf = hdr.text_frame
+    htf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    htf.margin_left = Inches(0.22)
+    htf.margin_top = Inches(0.02)
+    htf.margin_bottom = Inches(0.02)
     _set(htf.paragraphs[0], label, 12, t.font_body, PAPER, bold=True)
 
-    body = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(left), Inches(top + 0.5), Inches(width), Inches(3.5))
-    body.fill.solid(); body.fill.fore_color.rgb = _rgb(GRAY_100)
-    body.line.color.rgb = _rgb(GRAY_300); body.line.width = Pt(0.75)
+    body = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(left), Inches(top + 0.5),
+                                  Inches(width), Inches(3.5))
+    body.fill.solid()
+    body.fill.fore_color.rgb = _rgb(GRAY_100)
+    body.line.color.rgb = _rgb(GRAY_300)
+    body.line.width = Pt(0.75)
     body.shadow.inherit = False
-    tf = body.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.TOP
-    tf.margin_left = Inches(0.24); tf.margin_right = Inches(0.24); tf.margin_top = Inches(0.26)
+    tf = body.text_frame
+    tf.word_wrap = True
+    tf.vertical_anchor = MSO_ANCHOR.TOP
+    tf.margin_left = Inches(0.24)
+    tf.margin_right = Inches(0.24)
+    tf.margin_top = Inches(0.26)
     _set(tf.paragraphs[0], takeaway, 13, t.font_body, GRAY_900)
     tf.paragraphs[0].alignment = PP_ALIGN.LEFT
     tf.paragraphs[0].space_after = Pt(16)
     for b in bullets:
-        p = tf.add_paragraph(); _set(p, "•  " + b, 11, t.font_body, GRAY_900)
-        p.alignment = PP_ALIGN.LEFT; p.space_after = Pt(7)
+        p = tf.add_paragraph()
+        _set(p, "•  " + b, 11, t.font_body, GRAY_900)
+        p.alignment = PP_ALIGN.LEFT
+        p.space_after = Pt(7)
 
 
 def _reco_slide(prs, report: Report, t):

@@ -1,0 +1,14 @@
+line-length = 110
+target-version = "py312"
+
+[lint]
+# E/F = pycodestyle errors + pyflakes; I = import sorting.
+select = ["E", "F", "I"]
+
+[lint.isort]
+known-first-party = ["src", "app", "scripts"]
+
+[lint.per-file-ignores]
+# The embedded CSS block is one long string; wrapping its lines would break nothing
+# but help nothing either.
+"app/streamlit_app.py" = ["E501"]
