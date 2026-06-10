@@ -85,22 +85,41 @@ copy .env.example .env          # then add your OPENAI_API_KEY
 
 `.env` keys: `OPENAI_API_KEY` (required), `OPENAI_CHAT_MODEL`, `OPENAI_EMBED_MODEL`, optional `LANGFUSE_*`, and `AZURE_*` for Phase B. `.env` is gitignored and never committed.
 
+## Tests and evals
+
+```powershell
+pip install -r requirements-dev.txt
+pytest -q                            # deterministic suite, no LLM calls (also runs in CI)
+python eval\run_all.py               # LLM evals (costs API money) -> eval/REPORT.md:
+                                     #   Talk2Data golden-QA accuracy + full report-pipeline
+                                     #   figure-grounding and structure checks
+```
+
+## Deploy to Azure
+
+One command: `.\infra\deploy.ps1` — Bicep-defined Container Apps (UI + API from one image,
+scale-to-zero), Azure OpenAI, Log Analytics, and a cost budget. Pushes to `main` redeploy
+automatically via GitHub Actions (OIDC). Details in `docs/azure_deploy.md`.
+
 ## Project layout
 
 ```
-app/      Streamlit UI (streamlit_app.py) + FastAPI entrypoint (main.py, Phase B)
+app/      Streamlit UI (streamlit_app.py) + FastAPI service (main.py)
 src/      config · schemas · style · data_tool (profile + Talk2Data) · analysis
           (battery) · report (LangGraph) · render (PPTX/PDF) · rag · obs
+tests/    deterministic pytest suite (SQL guardrails, profiler, battery math, verifier)
+eval/     LLM evals: Talk2Data golden QA + report-pipeline grounding -> REPORT.md
+infra/    main.bicep (Container Apps, Azure OpenAI, budget) + deploy.ps1
+docker/   entrypoint (APP_MODE=ui|api) + healthcheck
 scripts/  synthetic data generators + favicon
 data/     db/ docs/ charts/ out/   (runtime; gitignored)
-docs/     report_design_spec.md (the MBB/Big-4 design system)
+docs/     report_design_spec.md · azure_deploy.md
 ```
 
 ## Roadmap
 
-- **Evaluation harness** — automated check that every quoted number matches the source
 - **Talk2Document (RAG)** — answer questions from uploaded reference docs/templates
-- **Phase B (Azure)** — Azure OpenAI + Azure AI Search, FastAPI, Docker, Container Apps (scale-to-zero)
+- **Azure AI Search** — swap Chroma for the managed vector store once RAG lands
 
 ## Notes
 

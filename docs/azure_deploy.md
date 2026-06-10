@@ -1,114 +1,122 @@
-# Deploying to Azure (Container Apps + Azure OpenAI)
+# Deploying to Azure (Container Apps + Azure OpenAI, via Bicep)
 
-This deploys the Streamlit app to **Azure Container Apps** (scale-to-zero, so it costs
-~$0 when idle) running on **Azure OpenAI**. The image is built **in the cloud** with
-`az acr build`, so you do not even need Docker installed locally.
+The whole stack is **infrastructure-as-code**: `infra/main.bicep` declares everything,
+`infra/deploy.ps1` is the one-command wrapper. One Docker image serves two **Azure
+Container Apps** (scale-to-zero → ~$0 when idle):
 
-Secrets (API keys) are passed as Container Apps **secrets** and never baked into the image.
+| App | What | Port |
+|---|---|---|
+| `srg-ui` | Streamlit demo (`APP_MODE=ui`) | 8501 |
+| `srg-api` | FastAPI service: `/generate`, `/chat`, `/health` (`APP_MODE=api`) | 8000 |
 
-## 0. Prerequisites
+Plus: Log Analytics, an Azure OpenAI account with `gpt-4o-mini` + `text-embedding-3-small`
+deployments, and a monthly cost budget with email alerts. The image is built **in the
+cloud** with `az acr build` — local Docker is not required. Secrets (LLM keys, Langfuse)
+travel as Container Apps **secrets**, never baked into the image.
 
-- An Azure subscription (the free trial is fine).
-- The Azure CLI: `winget install Microsoft.AzureCLI`, then `az login`.
-- An Azure OpenAI resource with `gpt-4o-mini` and `text-embedding-3-small` deployed
-  (see the main setup checklist). You will need its **endpoint** and a **key**.
-
-## 1. Set variables (PowerShell)
+## Deploy
 
 ```powershell
-$RG       = "srg-rg"                       # resource group
-$LOC      = "swedencentral"                # a region with Container Apps + your AOAI
-$ACR      = "srgacr$(Get-Random -Max 9999)"   # registry name (globally unique, lowercase)
-$APP      = "ai-report-generator"
-$ENVNAME  = "srg-env"
-
-# From your Azure OpenAI resource (fill these in):
-$AOAI_ENDPOINT   = "https://<your-resource>.openai.azure.com/"
-$AOAI_KEY        = "<your-azure-openai-key>"
-$AOAI_APIVER     = "2024-10-21"
-$AOAI_CHAT       = "gpt-4o-mini"
-$AOAI_EMBED      = "text-embedding-3-small"
+az login                  # once
+.\infra\deploy.ps1        # full deploy (providers -> RG -> ACR -> image -> Bicep)
 ```
 
-## 2. Resource group + registry, then build the image in the cloud
+The script reads optional `LANGFUSE_*` keys from your local `.env` to enable tracing.
+First image build takes ~10–20 min (the LibreOffice layer); rebuilds are minutes.
+
+### Free-trial fallback: no Azure OpenAI quota
+
+Free-trial subscriptions often have **zero Azure OpenAI quota**. If the deployment fails
+on the `Microsoft.CognitiveServices` account or a model deployment, fall back to
+api.openai.com — pure config, no code change (the `PROVIDER` switch in `src/config.py`):
 
 ```powershell
+.\infra\deploy.ps1 -SkipBuild -UseAzureOpenAI:$false   # key read from .env or -OpenAIApiKey
+```
+
+Region note: pick a region with both Container Apps and AOAI model availability
+(`swedencentral` and `eastus2` are safe bets); override with `-Location`.
+
+## Redeploy after code changes
+
+- **Automatic**: push to `main` → the `Deploy` GitHub Actions workflow builds a
+  sha-tagged image in ACR and updates both apps (see `.github/workflows/deploy.yml`).
+- **Manual**: `.\infra\deploy.ps1` again (rebuilds `latest` and re-applies the Bicep).
+
+## Verification checklist
+
+```powershell
+# 1. API (first hit after idle cold-starts in 30-90s)
+curl.exe --max-time 180 https://<api-fqdn>/health          # {"status":"ok"}
+curl.exe -X POST https://<api-fqdn>/generate -F "intent=Monthly sales review" `
+         -o report.pptx --max-time 300                      # opens as a valid deck
+curl.exe -X POST https://<api-fqdn>/chat -F "question=top region by revenue last month"
+
+# 2. UI: open https://<ui-fqdn>, click "Use sample data", generate a report, download PDF
+# 3. Langfuse: cloud.langfuse.com shows the analyze->plan->write->verify trace per report
+# 4. Evals (local, costs API money): python eval/run_all.py  -> eval/REPORT.md
+# 5. CI/CD: push to main -> Deploy workflow green -> new revision:
+az containerapp revision list -n srg-api -g srg-rg -o table
+```
+
+## Cost guardrails (trial credits)
+
+- **Scale-to-zero** (`minReplicas: 0`, in Bicep) — no compute cost while idle; the
+  trade-off is a 30–90 s cold start on the first request. Warm it up before live demos,
+  or temporarily set `minReplicas: 1`.
+- **Budget**: `Microsoft.Consumption/budgets` ($25/month, email at 80% and 100%) is part
+  of the template. If your subscription offer rejects the budgets API, add it manually:
+  portal → Cost Management → Budgets.
+- **ACR Basic** includes 10 GB; sha-tagged images add up. Clean old tags occasionally:
+
+```powershell
+az acr repository show-tags -n <acr> --repository ai-report-generator -o table
+az acr repository untag -n <acr> --image ai-report-generator:<old-sha>
+```
+
+## Teardown
+
+```powershell
+az group delete -n srg-rg --yes --no-wait
+```
+
+The repo still documents the full deployment (Bicep + workflows) after teardown.
+
+## CI/CD wiring (GitHub OIDC — one-time manual setup)
+
+The `Deploy` workflow logs into Azure with **OIDC federated credentials** (no stored
+service-principal secret):
+
+1. **Entra ID → App registrations → New registration** — name `gh-ai-report-generator`,
+   defaults, Register. Note the **Application (client) ID** and **Directory (tenant) ID**.
+2. In the registration → **Certificates & secrets → Federated credentials → Add** →
+   scenario *GitHub Actions deploying Azure resources* → org `AronSarosi`, repo
+   `ai-report-generator`, entity **Branch**, branch `main`.
+3. **Resource group `srg-rg` → Access control (IAM) → Add role assignment** →
+   **Contributor** → the `gh-ai-report-generator` app. (RG-scoped: the workflow only
+   needs `az acr build` + `az containerapp update`.)
+4. GitHub repo → **Settings → Secrets and variables → Actions** → add
+   `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`.
+5. Validate: Actions → Deploy → **Run workflow**.
+
+## Appendix: manual CLI walkthrough (what the script automates)
+
+<details>
+<summary>Step-by-step az commands (the original Phase B walkthrough)</summary>
+
+```powershell
+$RG = "srg-rg"; $LOC = "swedencentral"; $ACR = "<unique-acr-name>"; $APP = "ai-report-generator"
+
 az group create -n $RG -l $LOC
-
 az acr create -n $ACR -g $RG --sku Basic --admin-enabled true
-
-# Builds the Dockerfile in ACR (no local Docker needed) and pushes it:
 az acr build -r $ACR -t "$APP:latest" .
-```
 
-## 3. Create the Container Apps environment + the app
-
-```powershell
 az extension add --name containerapp --upgrade
-az provider register --namespace Microsoft.App
-az provider register --namespace Microsoft.OperationalInsights
+az containerapp env create -n srg-env -g $RG -l $LOC
 
-az containerapp env create -n $ENVNAME -g $RG -l $LOC
-
-$ACR_SERVER = az acr show -n $ACR --query loginServer -o tsv
-$ACR_USER   = az acr credential show -n $ACR --query username -o tsv
-$ACR_PASS   = az acr credential show -n $ACR --query "passwords[0].value" -o tsv
-
-az containerapp create `
-  -n $APP -g $RG --environment $ENVNAME `
-  --image "$ACR_SERVER/$APP:latest" `
-  --registry-server $ACR_SERVER --registry-username $ACR_USER --registry-password $ACR_PASS `
-  --target-port 8501 --ingress external `
-  --min-replicas 0 --max-replicas 2 `
-  --secrets aoai-key=$AOAI_KEY `
-  --env-vars `
-     PROVIDER=azure `
-     AZURE_OPENAI_ENDPOINT=$AOAI_ENDPOINT `
-     AZURE_OPENAI_API_KEY=secretref:aoai-key `
-     AZURE_OPENAI_API_VERSION=$AOAI_APIVER `
-     AZURE_OPENAI_CHAT_DEPLOYMENT=$AOAI_CHAT `
-     AZURE_OPENAI_EMBED_DEPLOYMENT=$AOAI_EMBED
+# ... then one `az containerapp create` per app with --env-vars APP_MODE=ui|api,
+# PROVIDER/AZURE_OPENAI_* (or OPENAI_API_KEY) passed via --secrets + secretref.
+# infra/main.bicep is the source of truth for the full wiring.
 ```
 
-`--min-replicas 0` is the key cost lever: when no one is using the app, Azure shuts every
-replica down and you pay nothing for compute. The first request after idle takes a few
-seconds to cold-start. `AZURE_OPENAI_API_KEY=secretref:aoai-key` injects the key from the
-secret, so it never appears in the image or in `az` history as plain text in the container.
-
-## 4. Get the public URL
-
-```powershell
-az containerapp show -n $APP -g $RG --query "properties.configuration.ingress.fqdn" -o tsv
-# Open https://<that-fqdn>  ->  the app should load (after a short cold start).
-```
-
-## 5. Redeploy after code changes
-
-```powershell
-az acr build -r $ACR -t "$APP:latest" .
-az containerapp update -n $APP -g $RG --image "$ACR_SERVER/$APP:latest"
-```
-
-## 6. Cost control + teardown
-
-- Scale-to-zero (`--min-replicas 0`) + `gpt-4o-mini` keeps idle cost near zero.
-- Set an OpenAI/Azure budget alert as a backstop.
-- When you are done demoing, delete everything in one command:
-
-```powershell
-az group delete -n $RG --yes --no-wait
-```
-
-The Azure resources are gone, but this repo still documents the full deployment — proof of
-the Azure / Docker / Container Apps skills even after teardown.
-
-## Optional: run the FastAPI surface instead of the UI
-
-The same engine is exposed as an API in `app/main.py`. To deploy that instead of the UI,
-change the Dockerfile `CMD` to:
-
-```dockerfile
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
-```
-
-and set `--target-port` to match. Locally: `uvicorn app.main:app --reload` then open `/docs`.
+</details>

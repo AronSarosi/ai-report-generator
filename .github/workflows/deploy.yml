@@ -1,0 +1,59 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # OIDC federated login to Azure — no stored credentials
+  contents: read
+
+concurrency: deploy-prod
+
+env:
+  RESOURCE_GROUP: srg-rg
+  UI_APP: srg-ui
+  API_APP: srg-api
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: ruff check .
+      - run: python scripts/gen_sales_data.py
+      - run: pytest -q
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Resolve ACR name
+        run: |
+          ACR=$(az acr list -g "$RESOURCE_GROUP" --query "[0].name" -o tsv)
+          echo "ACR=$ACR" >> "$GITHUB_ENV"
+
+      # Build in the cloud (no Docker setup in the runner); sha tag for revision
+      # traceability, latest kept for infra/deploy.ps1 re-runs.
+      - name: Build image in ACR
+        run: az acr build -r "$ACR" -t "ai-report-generator:${{ github.sha }}" -t "ai-report-generator:latest" .
+
+      - name: Update container apps
+        run: |
+          IMAGE="$ACR.azurecr.io/ai-report-generator:${{ github.sha }}"
+          az containerapp update -n "$UI_APP"  -g "$RESOURCE_GROUP" --image "$IMAGE"
+          az containerapp update -n "$API_APP" -g "$RESOURCE_GROUP" --image "$IMAGE"
