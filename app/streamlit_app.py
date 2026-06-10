@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import pandas as pd  # noqa: E402
 import streamlit as st  # noqa: E402
+import streamlit.components.v1 as components  # noqa: E402
 
 from src.branding import extract_brand  # noqa: E402
 from src.config import get_settings  # noqa: E402
@@ -132,7 +133,8 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .deckscroll::-webkit-scrollbar {width:10px;} .deckscroll::-webkit-scrollbar-thumb {background:#3A4660; border-radius:5px;}
 /* the arrow buttons: fixed circles, vertically centred beside the preview */
 .st-key-ex_prev, .st-key-ex_next {display:flex; justify-content:center; align-items:center; height:100%;}
-.st-key-ex_prev button, .st-key-ex_next button {width:52px !important; min-width:52px !important; height:52px !important; padding:0 !important; font-size:1.7rem; line-height:1; border-radius:50% !important; background:#1F2A44; border:1px solid #2E3C52;}
+.st-key-ex_prev button, .st-key-ex_next button {width:52px !important; min-width:52px !important; height:52px !important; padding:0 !important; font-size:2.5rem !important; font-weight:700; line-height:1; border-radius:50% !important; background:#1F2A44; border:1px solid #2E3C52;}
+.st-key-ex_prev button p, .st-key-ex_next button p {font-size:2.5rem !important; line-height:1; margin-top:-6px;}
 .st-key-ex_prev button:hover, .st-key-ex_next button:hover {background:#2E6DB4; border-color:#2E6DB4; color:#fff;}
 </style>
 """
@@ -182,21 +184,30 @@ def _load_examples() -> list[dict]:
         return []
 
 
+_DECK_H = 700  # px height of the scrollable preview
+
+
 @st.cache_data(show_spinner=False)
-def _deck_scroll_html(key: str, thumbs: tuple[str, ...]) -> str:
-    """A scrollable 'deck viewer' frame: the report's slides stacked vertically inside a
-    fixed-height, scrollable card. Slides are inlined as base64 so no static server is
-    needed. Scroll within the frame to flip through all the slides."""
+def _deck_iframe_html(key: str, thumbs: tuple[str, ...]) -> str:
+    """A self-contained scrollable deck preview (rendered in its own iframe so switching
+    reports starts a fresh frame, always scrolled to the top). No app-like top banner —
+    just the slides, so it reads as a finished presentation."""
     imgs = []
     for t in thumbs:
         p = _ROOT / t
         if p.exists():
             b64 = base64.b64encode(p.read_bytes()).decode("ascii")
-            imgs.append(f"<img class='deckslide' src='data:image/png;base64,{b64}'/>")
+            imgs.append(f"<img src='data:image/png;base64,{b64}'/>")
     return (
-        "<div class='deckframe'><div class='deckbar'>"
-        "<span class='dot r'></span><span class='dot y'></span><span class='dot g'></span>"
-        "</div><div class='deckscroll'>" + "".join(imgs) + "</div></div>"
+        "<!doctype html><html><head><meta charset='utf-8'><style>"
+        "*{box-sizing:border-box;} html,body{margin:0;}"
+        f".wrap{{height:{_DECK_H}px;overflow-y:auto;padding:6px;background:transparent;"
+        "scroll-behavior:smooth;}"
+        "img{display:block;width:100%;border:1px solid #E6E8EB;border-radius:6px;"
+        "box-shadow:0 6px 22px rgba(0,0,0,.45);margin-bottom:16px;}"
+        ".wrap::-webkit-scrollbar{width:10px;} "
+        ".wrap::-webkit-scrollbar-thumb{background:#3A4660;border-radius:5px;}"
+        "</style></head><body><div class='wrap'>" + "".join(imgs) + "</div></body></html>"
     )
 
 
@@ -224,10 +235,12 @@ def render_examples_showcase() -> None:
     st.session_state["ex_idx"] = idx
     ex = examples[idx]
 
-    mid.markdown(_deck_scroll_html(ex["key"], tuple(ex["thumbs"])), unsafe_allow_html=True)
+    with mid:
+        components.html(_deck_iframe_html(ex["key"], tuple(ex["thumbs"])),
+                        height=_DECK_H, scrolling=False)
 
     dots = "".join(f"<span class='pgdot {'on' if i == idx else ''}'></span>" for i in range(n))
-    st.markdown(f"<div class='pgdots' style='text-align:center; margin-top:.7rem'>{dots}</div>",
+    st.markdown(f"<div class='pgdots' style='text-align:center; margin-top:.4rem'>{dots}</div>",
                 unsafe_allow_html=True)
 
 

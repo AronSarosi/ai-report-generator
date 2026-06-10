@@ -22,7 +22,7 @@ from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Inches, Pt
 
 from src.config import get_settings
-from src.report import money
+from src.report import money, signed_money
 from src.schemas import ChartSpec, Report
 from src.style import (
     ACCENT,
@@ -35,6 +35,7 @@ from src.style import (
     GRAY_900,
     INK,
     KICKER_BOX,
+    MARGIN_IN,
     PAPER,
     SLIDE_H_IN,
     SLIDE_W_IN,
@@ -147,15 +148,29 @@ def _content_slide(prs, kicker, title, source, t):
     return s
 
 
-def _title_slide(prs, report: Report, t):
+def _full_bg(slide, color: str):
+    """A full-bleed background rectangle (a 'cover' panel)."""
+    bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0), Inches(0),
+                                Inches(SLIDE_W_IN), Inches(SLIDE_H_IN))
+    bg.fill.solid()
+    bg.fill.fore_color.rgb = _rgb(color)
+    bg.line.fill.background()
+    bg.shadow.inherit = False
+    return bg
+
+
+def _cover_slide(prs, report: Report, t):
+    """A striking dark, full-bleed cover: brand-ink background, an accent rule, and the
+    title set large in white — the kind of cover an image-rich template would give."""
     s = prs.slides.add_slide(prs.slide_layouts[6])
-    # Title can wrap to two lines, so give it a tall box and let whitespace (not an
-    # underline) separate it from the subtitle — accent rules read as AI-generated.
-    _set(_box(s, 0.7, 2.25, 11.9, 1.7).paragraphs[0], report.title, SZ_DECK_TITLE,
-         t.font_head, t.ink, bold=True)
-    _set(_box(s, 0.7, 4.05, 11.9, 0.6).paragraphs[0], report.subtitle, SZ_SUB, t.font_body, GRAY_500)
-    _set(_box(s, 0.7, 4.6, 11.9, 0.5).paragraphs[0],
-         f"Generated {report.generated_at}   |   CONFIDENTIAL", 11, t.font_body, GRAY_500)
+    _full_bg(s, t.ink)
+    kicker = (report.period and f"PERFORMANCE REVIEW  ·  {report.period}") or "PERFORMANCE REVIEW"
+    _set(_box(s, 0.85, 2.35, 11.6, 0.4).paragraphs[0], kicker, 14, t.font_body, t.accent, bold=True)
+    _rule(s, 0.9, 2.95, 1.7, 6, color=t.accent)
+    _set(_box(s, 0.8, 3.2, 11.7, 2.0).paragraphs[0], report.title, SZ_DECK_TITLE,
+         t.font_head, PAPER, bold=True)
+    _set(_box(s, 0.85, 5.5, 11.7, 0.6).paragraphs[0], report.subtitle, SZ_SUB,
+         t.font_body, GRAY_300)
 
 
 def _exec_slide(prs, report: Report, t):
@@ -220,6 +235,52 @@ def _callout(slide, label, takeaway, bullets, t, left=8.5, top=1.95, width=4.3):
         _set(p, "•  " + b, 11, t.font_body, GRAY_900)
         p.alignment = PP_ALIGN.LEFT
         p.space_after = Pt(7)
+
+
+def _kpis_from_chart(spec: ChartSpec) -> list[tuple[str, str]]:
+    """Up to three grounded headline numbers (value, label) drawn from the chart data.
+    Bars -> the top three; a trend line -> latest, peak, and change vs the start."""
+    if not spec or not spec.series:
+        return []
+    _, ys = next(iter(spec.series.items()))
+    xs = spec.x or []
+    if not ys:
+        return []
+    if spec.kind == "line":
+        out = [(money(ys[-1]), f"Latest ({xs[-1]})" if xs else "Latest")]
+        peak_i = max(range(len(ys)), key=lambda i: ys[i])
+        out.append((money(ys[peak_i]), f"Peak ({xs[peak_i]})" if xs else "Peak"))
+        out.append((signed_money(ys[-1] - ys[0]), "Change vs start"))
+        return out
+    pairs = sorted(zip(xs, ys), key=lambda p: p[1], reverse=True)[:3]
+    return [(money(v), str(lbl)) for lbl, v in pairs]
+
+
+def _kpi_band(slide, kpis: list[tuple[str, str]], t, top: float = 5.55):
+    """A horizontal row of KPI cards: a big number over a label, accent rule on top."""
+    n = len(kpis) or 1
+    gap = 0.5
+    card_w = (CONTENT_W_IN - gap * (n - 1)) / n
+    for i, (val, label) in enumerate(kpis):
+        x = MARGIN_IN + i * (card_w + gap)
+        _rule(slide, x, top, card_w, 4, color=t.accent)
+        _set(_box(slide, x, top + 0.12, card_w, 0.85).paragraphs[0], val, 30, t.font_head, t.ink, bold=True)
+        _set(_box(slide, x, top + 0.95, card_w, 0.55).paragraphs[0], label, 12, t.font_body, GRAY_500)
+
+
+def _insight_slide_kpi(prs, sec, chart_path: Optional[Path], t):
+    """Alternate layout: title on top, a centred chart, then three key numbers across the
+    bottom — so the deck isn't every-slide-the-same chart-left/callout-right."""
+    src = f"Source: {sec.citations[0] if sec.citations else 'database'}, verified against the data."
+    s = _content_slide(prs, sec.kicker, sec.action_title, src, t)
+    if chart_path:
+        s.shapes.add_picture(str(chart_path), Inches(3.57), Inches(1.8), width=Inches(6.2))
+    if sec.so_what:
+        tf = _box(s, 0.5, 5.0, CONTENT_W_IN, 0.45)
+        p = tf.paragraphs[0]
+        p.alignment = PP_ALIGN.CENTER
+        _set(p, sec.so_what, 13, t.font_body, t.ink, bold=True)
+    _kpi_band(s, _kpis_from_chart(sec.chart), t)
 
 
 def _reco_slide(prs, report: Report, t):
@@ -287,14 +348,21 @@ def render_report(report: Report, out_dir=None, charts_dir=None, brand=None) -> 
     prs.slide_width = Inches(SLIDE_W_IN)
     prs.slide_height = Inches(SLIDE_H_IN)
 
-    _title_slide(prs, report, t)
+    _cover_slide(prs, report, t)
     _exec_slide(prs, report, t)
+    # Alternate insight layouts so the deck varies slide to slide: the classic
+    # chart-left/takeaway-right, then the centred-chart + KPI-band layout.
+    insight_n = 0
     for i, sec in enumerate(report.sections):
         cpath = None
         if sec.chart:
             cpath = charts_dir / f"chart_{i}.png"
             render_chart(sec.chart, cpath, accent=t.accent)
-        _insight_slide(prs, sec, cpath, t)
+        if insight_n % 2 == 1 and sec.chart:
+            _insight_slide_kpi(prs, sec, cpath, t)
+        else:
+            _insight_slide(prs, sec, cpath, t)
+        insight_n += 1
     _reco_slide(prs, report, t)
     # No standalone "Sources & methodology" slide — a single-line appendix reads as an
     # unfinished slide. Provenance lives in each slide's source footer and in report.json.

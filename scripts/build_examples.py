@@ -79,8 +79,8 @@ EXAMPLES = [
      "intent": "Monthly marketing performance review by channel: revenue, conversion and "
                "spend efficiency, and channel trends.",
      "gen": generate_marketing,
-     "brand": {"accent": "#E8590C", "ink": "#3A2008",
-               "font_head": "Verdana", "font_body": "Verdana"}},
+     "brand": {"accent": "#A61E4D", "ink": "#2E0E1E",
+               "font_head": "Tahoma", "font_body": "Tahoma"}},
 ]
 
 
@@ -117,8 +117,6 @@ def build_one(ex: dict) -> dict:
     if cached_text is not None:
         report_json.write_text(cached_text, encoding="utf-8")
         report = load_report(report_json)
-        paths = render_report(report, out_dir=dest, charts_dir=dest / "charts",
-                              brand=ex.get("brand"))
     else:
         full_csv = dest / "_full.csv"
         df.to_csv(full_csv, index=False)
@@ -127,12 +125,14 @@ def build_one(ex: dict) -> dict:
         try:
             report = build_report(ReportRequest(intent=ex["intent"], table=table))
             report_json.write_text(report.model_dump_json(indent=2), encoding="utf-8")
-            paths = render_report(report, out_dir=dest, charts_dir=dest / "charts",
-                                  brand=ex.get("brand"))
         finally:
             drop_table(table)
             full_csv.unlink(missing_ok=True)
+
     n = len(df)
+    # Clean cover subtitle (the default exposes the internal table name).
+    report.subtitle = f"{ex['domain']} dataset  ·  {n:,} rows"
+    paths = render_report(report, out_dir=dest, charts_dir=dest / "charts", brand=ex.get("brand"))
     shutil.rmtree(dest / "charts", ignore_errors=True)
 
     # Downloadable source CSV: sample large datasets so bundled assets stay small.
