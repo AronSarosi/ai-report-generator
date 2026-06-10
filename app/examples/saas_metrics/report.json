@@ -1,41 +1,41 @@
 {
-  "title": "Monthly MRR Performance Review",
+  "title": "Monthly MRR Performance Analysis",
   "subtitle": "Period 2026-05  |  source table: ex_saas_metrics",
   "period": "2026-05",
-  "governing_thought": "Sustained growth in MRR highlights resilience despite regional challenges.",
+  "governing_thought": "Declines in MRR highlight critical areas for improvement.",
   "key_messages": [
     {
-      "text": "Total MRR reached $1.56M in 2026-05, up +1.2% from $1.54M in 2026-04.",
-      "status": "positive"
-    },
-    {
-      "text": "Enterprise plan leads at $805k, representing 51.6% of total MRR.",
-      "status": "positive"
-    },
-    {
-      "text": "Business plan experienced a decline of -$10k compared to the prior month.",
+      "text": "Total MRR decreased to $3.82M, down -1.4%.",
       "status": "negative"
     },
     {
-      "text": "North America remains the top region at $532k, accounting for 34.1% of total MRR.",
+      "text": "Enterprise remains the top plan at $1.99M, constituting 52.2% of total MRR.",
       "status": "positive"
     },
     {
-      "text": "North America saw a decline of -$14k versus the previous month.",
+      "text": "Business plan saw the largest decline of -$30k compared to the prior month.",
+      "status": "negative"
+    },
+    {
+      "text": "The United States leads countries with $515k, making up 13.5% of total MRR.",
+      "status": "positive"
+    },
+    {
+      "text": "The United States experienced a decline of -$43k from the previous month.",
       "status": "negative"
     }
   ],
   "sections": [
     {
       "kicker": "FINANCIAL PERFORMANCE",
-      "action_title": "Total MRR reached $1.56M in May, marking a peak month performance.",
-      "narrative": "In May 2026, total MRR increased to $1.56M from $1.54M in April, reflecting a growth of +1.2% or +$18k. This performance represents a seasonal peak, matching the highest MRR recorded in the past year. The trend shows consistent growth over the last several months, indicating a strong upward trajectory in monthly recurring revenue.",
+      "action_title": "Total MRR declined to $3.82M in May, down $53k from April.",
+      "narrative": "In May 2026, total MRR was $3.82M, reflecting a decrease of $53k or -1.4% from April's peak of $3.87M. This decline marks a slight downturn after reaching a high in April, which was the peak month for MRR. The trend over the past year shows fluctuations, with MRR generally increasing until April, indicating potential seasonal patterns.",
       "bullets": [
-        "May 2026 MRR matches the peak of $1.56M.",
-        "April 2026 MRR was $1.54M, showing steady growth.",
-        "Recent months indicate a positive trend in MRR performance."
+        "April 2026 was the peak month at $3.87M.",
+        "May 2026's MRR is lower than the previous month.",
+        "Recent trend shows MRR has been increasing since January 2026."
       ],
-      "so_what": "Sustained growth in MRR highlights strong market demand and effective customer retention strategies.",
+      "so_what": "The decline in MRR suggests a need for strategies to sustain growth beyond seasonal peaks.",
       "chart": {
         "kind": "line",
         "title": "Monthly mrr",
@@ -55,18 +55,18 @@
         ],
         "series": {
           "mrr": [
-            1345208.32,
-            1307348.2,
-            1349841.59,
-            1368213.54,
-            1373100.95,
-            1403182.13,
-            1461432.74,
-            1450823.04,
-            1507250.59,
-            1557683.25,
-            1541038.43,
-            1558965.3
+            3305468.28,
+            3278623.12,
+            3475497.67,
+            3518938.28,
+            3474593.42,
+            3573221.35,
+            3559950.96,
+            3709508.46,
+            3726899.35,
+            3831763.18,
+            3870859.7800000003,
+            3817569.33
           ]
         },
         "highlight": "2026-05",
@@ -78,14 +78,14 @@
     },
     {
       "kicker": "PLAN BREAKDOWN",
-      "action_title": "Enterprise leads with $805k, showing a $20k increase from April.",
-      "narrative": "In May 2026, the Enterprise plan dominates with a total MRR of $805k, representing 51.6% of total MRR. The Business plan follows at $570k, experiencing a decline of $10k from the previous month. The Starter plan increased by $9k to reach $184k, marking it as the biggest mover among the plans.",
+      "action_title": "Enterprise leads with $1.99M, while Business declines by $30k.",
+      "narrative": "In May 2026, the Enterprise plan dominates the MRR breakdown with $1.99M, accounting for 52.2% of total MRR. The Business plan, however, experienced a notable decline of $30k from the previous month, dropping to $1.37M. The Starter plan also saw a decrease of $16k, indicating a trend of reduced performance across the lower-tier plans.",
       "bullets": [
-        "Enterprise plan contributes 51.6% of total MRR with $805k.",
-        "Business plan decreased by $10k to $570k.",
-        "Starter plan grew by $9k to $184k, the largest increase."
+        "Enterprise plan contributes $1.99M, leading MRR concentration.",
+        "Business plan declines by $30k, signaling potential market challenges.",
+        "Starter plan also decreases, reflecting broader issues in lower-tier offerings."
       ],
-      "so_what": "Focusing on the Enterprise plan's growth can drive overall revenue stability.",
+      "so_what": "The decline in Business and Starter plans suggests a need for strategic intervention.",
       "chart": {
         "kind": "bar",
         "title": "mrr by plan (2026-05)",
@@ -97,9 +97,9 @@
         ],
         "series": {
           "mrr": [
-            804918.77,
-            569704.16,
-            184342.37,
+            1993503.16,
+            1369112.63,
+            454953.54,
             0.0
           ]
         },
@@ -111,48 +111,64 @@
       ]
     },
     {
-      "kicker": "REGION BREAKDOWN",
-      "action_title": "North America leads MRR at $532k, but LATAM grows by $21k.",
-      "narrative": "In May 2026, North America dominates with an MRR of $532k, representing 34.1% of total MRR across regions. LATAM shows the most significant growth, increasing by $21k to reach $270k, while EMEA and APAC also experience modest gains. However, North America declines by $14k compared to the previous month, indicating potential challenges in maintaining its lead.",
+      "kicker": "COUNTRY BREAKDOWN",
+      "action_title": "The United States leads MRR with $515k, but shows a decline of -$43k.",
+      "narrative": "In May 2026, the United States remains the top country for Monthly Recurring Revenue (MRR) at $515k, followed by the United Kingdom at $377k and Germany at $360k. However, the U.S. experienced a significant decline of -$43k compared to the previous month. Notably, France was the biggest mover, increasing its MRR by +$16k, indicating a positive trend amidst overall declines in other major markets.",
       "bullets": [
-        "North America: $532k MRR, 34.1% of total MRR.",
-        "LATAM grows by $21k, the largest increase among regions.",
-        "EMEA and APAC see smaller gains of $7k and $3k, respectively."
+        "Top three countries: United States ($515k), United Kingdom ($377k), Germany ($360k).",
+        "France increased MRR by +$16k, contrasting with declines in other markets.",
+        "Concentration remains high with the top three countries accounting for a significant share of MRR."
       ],
-      "so_what": "Focus on LATAM's growth potential while addressing North America's declining trend.",
+      "so_what": "This highlights the need for targeted strategies to stabilize and grow MRR in key markets.",
       "chart": {
-        "kind": "bar",
-        "title": "mrr by region (2026-05)",
+        "kind": "column",
+        "title": "mrr by country (2026-05)",
         "x": [
-          "North America",
-          "EMEA",
-          "APAC",
-          "LATAM"
+          "United States",
+          "United Kingdom",
+          "Germany",
+          "India",
+          "France",
+          "Canada",
+          "Australia",
+          "Japan",
+          "Netherlands",
+          "Brazil",
+          "Singapore",
+          "Mexico"
         ],
         "series": {
           "mrr": [
-            532176.97,
-            420089.42000000004,
-            336594.12,
-            270104.79000000004
+            515224.88,
+            377033.01,
+            359512.93,
+            346591.77,
+            330990.33,
+            316675.9,
+            300646.79,
+            291407.09,
+            271324.47000000003,
+            248516.63999999998,
+            238745.05,
+            220900.47
           ]
         },
-        "highlight": "North America",
+        "highlight": "United States",
         "value_format": ",.0f"
       },
       "citations": [
-        "dim_region: mrr by region (2026-05)"
+        "dim_country: mrr by country (2026-05)"
       ]
     }
   ],
   "recommendations": [
-    "Increase focus on the Enterprise plan to sustain its $805k contribution to total mrr.",
-    "Implement targeted strategies to recover the $10k decline in the Business plan.",
-    "Enhance marketing efforts in North America to address the $14k decline in the region.",
-    "Analyze customer feedback to identify and resolve issues affecting mrr growth."
+    "Analyze the decline in the Business plan and implement corrective strategies to recover the -$30k loss.",
+    "Enhance marketing efforts in the United States to address the -$43k decline and boost engagement.",
+    "Focus on upselling and cross-selling opportunities within the Enterprise plan, which accounts for $1.99M or 52.2% of total MRR.",
+    "Conduct a competitive analysis to identify market trends affecting MRR and adjust pricing strategies accordingly."
   ],
   "sources": [
-    "ex_saas_metrics (384 rows), measure: mrr, period 2026-05 vs 2026-04; figures verified against the database."
+    "ex_saas_metrics (1,152 rows), measure: mrr, period 2026-05 vs 2026-04; figures verified against the database."
   ],
-  "generated_at": "2026-06-10 17:37 UTC"
+  "generated_at": "2026-06-10 19:03 UTC"
 }

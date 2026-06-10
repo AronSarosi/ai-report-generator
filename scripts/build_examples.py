@@ -53,7 +53,7 @@ EXAMPLES = [
                "categories and regions, and any weak spots.",
      "gen": generate_sales,
      "brand": {"accent": "#2E6DB4", "ink": "#11243F",
-               "font_head": "Georgia", "font_body": "Calibri"}},
+               "font_head": "Georgia", "font_body": "Calibri", "cover": "dark"}},
     {"key": "fpa_budget", "title": "Budget vs Actuals (FP&A)",
      "domain": "Finance / FP&A",
      "description": "Monthly budget-vs-actuals by department. A completely different shape "
@@ -62,7 +62,7 @@ EXAMPLES = [
                "departments are drifting?",
      "gen": generate_budget,
      "brand": {"accent": "#0E7C66", "ink": "#0C2E27",
-               "font_head": "Cambria", "font_body": "Calibri"}},
+               "font_head": "Cambria", "font_body": "Calibri", "cover": "light"}},
     {"key": "saas_metrics", "title": "SaaS Growth Metrics",
      "domain": "SaaS / Subscriptions",
      "description": "MRR, new and churned revenue, and active customers by plan and region. "
@@ -71,7 +71,7 @@ EXAMPLES = [
                "revenue, and where churn is concentrated.",
      "gen": generate_saas,
      "brand": {"accent": "#6C4BF0", "ink": "#211747",
-               "font_head": "Trebuchet MS", "font_body": "Trebuchet MS"}},
+               "font_head": "Trebuchet MS", "font_body": "Trebuchet MS", "cover": "dark"}},
     {"key": "marketing_analytics", "title": "Marketing Channel Performance",
      "domain": "Marketing / Web",
      "description": "Sessions, conversions, revenue and ad spend by channel. Shows the "
@@ -80,7 +80,7 @@ EXAMPLES = [
                "spend efficiency, and channel trends.",
      "gen": generate_marketing,
      "brand": {"accent": "#A61E4D", "ink": "#2E0E1E",
-               "font_head": "Tahoma", "font_body": "Tahoma"}},
+               "font_head": "Tahoma", "font_body": "Tahoma", "cover": "light"}},
 ]
 
 

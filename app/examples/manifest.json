@@ -43,18 +43,19 @@
     "title": "Budget vs Actuals (FP&A)",
     "domain": "Finance / FP&A",
     "description": "Monthly budget-vs-actuals by department. A completely different shape from the sales data (no products/regions) \u2014 same engine, FP&A report.",
-    "rows": 144,
-    "cols": 5,
+    "rows": 1152,
+    "cols": 6,
     "columns": [
       "month",
       "department",
+      "category",
       "budget",
       "actual",
       "variance"
     ],
     "title_text": "May Financial Performance Analysis",
     "period": "2026-05",
-    "n_sections": 2,
+    "n_sections": 3,
     "pdf": "app/examples/fpa_budget/report.pdf",
     "pptx": "app/examples/fpa_budget/report.pptx",
     "csv": "app/examples/fpa_budget/data.csv",
@@ -64,7 +65,8 @@
       "app/examples/fpa_budget/slide_2.png",
       "app/examples/fpa_budget/slide_3.png",
       "app/examples/fpa_budget/slide_4.png",
-      "app/examples/fpa_budget/slide_5.png"
+      "app/examples/fpa_budget/slide_5.png",
+      "app/examples/fpa_budget/slide_6.png"
     ]
   },
   {
@@ -72,18 +74,18 @@
     "title": "SaaS Growth Metrics",
     "domain": "SaaS / Subscriptions",
     "description": "MRR, new and churned revenue, and active customers by plan and region. Surfaces the plan driving growth and where churn concentrates.",
-    "rows": 384,
+    "rows": 1152,
     "cols": 7,
     "columns": [
       "month",
       "plan",
-      "region",
+      "country",
       "active_customers",
       "mrr",
       "new_mrr",
       "churned_mrr"
     ],
-    "title_text": "Monthly MRR Performance Review",
+    "title_text": "Monthly MRR Performance Analysis",
     "period": "2026-05",
     "n_sections": 3,
     "pdf": "app/examples/saas_metrics/report.pdf",
@@ -104,10 +106,10 @@
     "title": "Marketing Channel Performance",
     "domain": "Marketing / Web",
     "description": "Sessions, conversions, revenue and ad spend by channel. Shows the efficient channels, the expensive ones, and what is declining.",
-    "rows": 120,
+    "rows": 3650,
     "cols": 6,
     "columns": [
-      "month",
+      "date",
       "channel",
       "sessions",
       "conversions",

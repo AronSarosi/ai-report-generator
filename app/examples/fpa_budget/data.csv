@@ -1,145 +1,1153 @@
-month,department,budget,actual,variance
-2024-06-01,Sales,120000,129606,9606
-2024-06-01,Marketing,80000,74485,-5515
-2024-06-01,R&D,60000,66467,6467
-2024-06-01,Operations,95000,92592,-2408
-2024-06-01,G&A,40000,38101,-1899
-2024-06-01,Customer Success,50000,50939,939
-2024-07-01,Sales,120000,130226,10226
-2024-07-01,Marketing,80000,77580,-2420
-2024-07-01,R&D,60000,66018,6018
-2024-07-01,Operations,95000,93598,-1402
-2024-07-01,G&A,40000,39550,-450
-2024-07-01,Customer Success,50000,53850,3850
-2024-08-01,Sales,120000,130776,10776
-2024-08-01,Marketing,80000,70777,-9223
-2024-08-01,R&D,60000,67382,7382
-2024-08-01,Operations,95000,98656,3656
-2024-08-01,G&A,40000,36736,-3264
-2024-08-01,Customer Success,50000,52209,2209
-2024-09-01,Sales,120000,120980,980
-2024-09-01,Marketing,80000,69702,-10298
-2024-09-01,R&D,60000,62791,2791
-2024-09-01,Operations,95000,95052,52
-2024-09-01,G&A,40000,36832,-3168
-2024-09-01,Customer Success,50000,53842,3842
-2024-10-01,Sales,120000,131675,11675
-2024-10-01,Marketing,80000,72776,-7224
-2024-10-01,R&D,60000,61236,1236
-2024-10-01,Operations,95000,93905,-1095
-2024-10-01,G&A,40000,38655,-1345
-2024-10-01,Customer Success,50000,53590,3590
-2024-11-01,Sales,120000,123378,3378
-2024-11-01,Marketing,80000,71866,-8134
-2024-11-01,R&D,60000,65248,5248
-2024-11-01,Operations,95000,92895,-2105
-2024-11-01,G&A,40000,40391,391
-2024-11-01,Customer Success,50000,51736,1736
-2024-12-01,Sales,120000,131307,11307
-2024-12-01,Marketing,80000,75818,-4182
-2024-12-01,R&D,60000,66414,6414
-2024-12-01,Operations,95000,95522,522
-2024-12-01,G&A,40000,38867,-1133
-2024-12-01,Customer Success,50000,53658,3658
-2025-01-01,Sales,124800,130508,5708
-2025-01-01,Marketing,83200,76269,-6931
-2025-01-01,R&D,62400,74794,12394
-2025-01-01,Operations,98800,93800,-5000
-2025-01-01,G&A,41600,41632,32
-2025-01-01,Customer Success,52000,56020,4020
-2025-02-01,Sales,124800,133908,9108
-2025-02-01,Marketing,83200,82294,-906
-2025-02-01,R&D,62400,73171,10771
-2025-02-01,Operations,98800,95114,-3686
-2025-02-01,G&A,41600,40327,-1273
-2025-02-01,Customer Success,52000,57147,5147
-2025-03-01,Sales,124800,136678,11878
-2025-03-01,Marketing,83200,77995,-5205
-2025-03-01,R&D,62400,70920,8520
-2025-03-01,Operations,98800,102487,3687
-2025-03-01,G&A,41600,42570,970
-2025-03-01,Customer Success,52000,54442,2442
-2025-04-01,Sales,124800,139166,14366
-2025-04-01,Marketing,83200,74428,-8772
-2025-04-01,R&D,62400,71608,9208
-2025-04-01,Operations,98800,95160,-3640
-2025-04-01,G&A,41600,39251,-2349
-2025-04-01,Customer Success,52000,55586,3586
-2025-05-01,Sales,124800,143430,18630
-2025-05-01,Marketing,83200,79299,-3901
-2025-05-01,R&D,62400,67700,5300
-2025-05-01,Operations,98800,96666,-2134
-2025-05-01,G&A,41600,41206,-394
-2025-05-01,Customer Success,52000,51816,-184
-2025-06-01,Sales,124800,136145,11345
-2025-06-01,Marketing,83200,75382,-7818
-2025-06-01,R&D,62400,75204,12804
-2025-06-01,Operations,98800,102578,3778
-2025-06-01,G&A,41600,39613,-1987
-2025-06-01,Customer Success,52000,55383,3383
-2025-07-01,Sales,124800,137632,12832
-2025-07-01,Marketing,83200,80354,-2846
-2025-07-01,R&D,62400,70435,8035
-2025-07-01,Operations,98800,98583,-217
-2025-07-01,G&A,41600,40687,-913
-2025-07-01,Customer Success,52000,56024,4024
-2025-08-01,Sales,124800,138247,13447
-2025-08-01,Marketing,83200,72239,-10961
-2025-08-01,R&D,62400,71754,9354
-2025-08-01,Operations,98800,98033,-767
-2025-08-01,G&A,41600,42014,414
-2025-08-01,Customer Success,52000,57878,5878
-2025-09-01,Sales,124800,139533,14733
-2025-09-01,Marketing,83200,77503,-5697
-2025-09-01,R&D,62400,70952,8552
-2025-09-01,Operations,98800,104077,5277
-2025-09-01,G&A,41600,40072,-1528
-2025-09-01,Customer Success,52000,57810,5810
-2025-10-01,Sales,124800,132948,8148
-2025-10-01,Marketing,83200,76439,-6761
-2025-10-01,R&D,62400,67353,4953
-2025-10-01,Operations,98800,91986,-6814
-2025-10-01,G&A,41600,39578,-2022
-2025-10-01,Customer Success,52000,54567,2567
-2025-11-01,Sales,124800,141242,16442
-2025-11-01,Marketing,83200,82389,-811
-2025-11-01,R&D,62400,69832,7432
-2025-11-01,Operations,98800,97328,-1472
-2025-11-01,G&A,41600,40375,-1225
-2025-11-01,Customer Success,52000,57786,5786
-2025-12-01,Sales,124800,139655,14855
-2025-12-01,Marketing,83200,74625,-8575
-2025-12-01,R&D,62400,74391,11991
-2025-12-01,Operations,98800,101885,3085
-2025-12-01,G&A,41600,38405,-3195
-2025-12-01,Customer Success,52000,56568,4568
-2026-01-01,Sales,129600,146598,16998
-2026-01-01,Marketing,86400,74836,-11564
-2026-01-01,R&D,64800,76039,11239
-2026-01-01,Operations,102600,100130,-2470
-2026-01-01,G&A,43200,43194,-6
-2026-01-01,Customer Success,54000,59481,5481
-2026-02-01,Sales,129600,147255,17655
-2026-02-01,Marketing,86400,76163,-10237
-2026-02-01,R&D,64800,75037,10237
-2026-02-01,Operations,102600,95667,-6933
-2026-02-01,G&A,43200,39691,-3509
-2026-02-01,Customer Success,54000,59983,5983
-2026-03-01,Sales,129600,135064,5464
-2026-03-01,Marketing,86400,80594,-5806
-2026-03-01,R&D,64800,70439,5639
-2026-03-01,Operations,102600,106811,4211
-2026-03-01,G&A,43200,40129,-3071
-2026-03-01,Customer Success,54000,61086,7086
-2026-04-01,Sales,129600,148180,18580
-2026-04-01,Marketing,86400,73194,-13206
-2026-04-01,R&D,64800,79552,14752
-2026-04-01,Operations,102600,109778,7178
-2026-04-01,G&A,43200,41382,-1818
-2026-04-01,Customer Success,54000,58660,4660
-2026-05-01,Sales,129600,146802,17202
-2026-05-01,Marketing,86400,74785,-11615
-2026-05-01,R&D,64800,79222,14422
-2026-05-01,Operations,102600,101400,-1200
-2026-05-01,G&A,43200,41387,-1813
-2026-05-01,Customer Success,54000,57545,3545
+month,department,category,budget,actual,variance
+2024-06-01,Sales,Salaries & Wages,55200,59620,4420
+2024-06-01,Sales,Software & Cloud,19200,24278,5078
+2024-06-01,Sales,Contractors,14400,16522,2122
+2024-06-01,Sales,Travel & Events,9600,9042,-558
+2024-06-01,Sales,Marketing Programs,8400,8563,163
+2024-06-01,Sales,Facilities,7200,7327,127
+2024-06-01,Sales,Training,3600,3707,107
+2024-06-01,Sales,Other,2400,2809,409
+2024-06-01,Marketing,Salaries & Wages,36800,32871,-3929
+2024-06-01,Marketing,Software & Cloud,12800,13048,248
+2024-06-01,Marketing,Contractors,9600,9823,223
+2024-06-01,Marketing,Travel & Events,6400,5534,-866
+2024-06-01,Marketing,Marketing Programs,5600,5029,-571
+2024-06-01,Marketing,Facilities,4800,4176,-624
+2024-06-01,Marketing,Training,2400,2094,-306
+2024-06-01,Marketing,Other,1600,1535,-65
+2024-06-01,R&D,Salaries & Wages,27600,28517,917
+2024-06-01,R&D,Software & Cloud,9600,12030,2430
+2024-06-01,R&D,Contractors,7200,7770,570
+2024-06-01,R&D,Travel & Events,4800,4578,-222
+2024-06-01,R&D,Marketing Programs,4200,4086,-114
+2024-06-01,R&D,Facilities,3600,3976,376
+2024-06-01,R&D,Training,1800,1775,-25
+2024-06-01,R&D,Other,1200,1366,166
+2024-06-01,Operations,Salaries & Wages,43700,44554,854
+2024-06-01,Operations,Software & Cloud,15200,17458,2258
+2024-06-01,Operations,Contractors,11400,10692,-708
+2024-06-01,Operations,Travel & Events,7600,6837,-763
+2024-06-01,Operations,Marketing Programs,6650,6496,-154
+2024-06-01,Operations,Facilities,5700,5796,96
+2024-06-01,Operations,Training,2850,2495,-355
+2024-06-01,Operations,Other,1900,1865,-35
+2024-06-01,G&A,Salaries & Wages,18400,16830,-1570
+2024-06-01,G&A,Software & Cloud,6400,6801,401
+2024-06-01,G&A,Contractors,4800,5359,559
+2024-06-01,G&A,Travel & Events,3200,2721,-479
+2024-06-01,G&A,Marketing Programs,2800,2629,-171
+2024-06-01,G&A,Facilities,2400,2455,55
+2024-06-01,G&A,Training,1200,1068,-132
+2024-06-01,G&A,Other,800,771,-29
+2024-06-01,Customer Success,Salaries & Wages,23000,24542,1542
+2024-06-01,Customer Success,Software & Cloud,8000,9789,1789
+2024-06-01,Customer Success,Contractors,6000,6382,382
+2024-06-01,Customer Success,Travel & Events,4000,3919,-81
+2024-06-01,Customer Success,Marketing Programs,3500,3904,404
+2024-06-01,Customer Success,Facilities,3000,2898,-102
+2024-06-01,Customer Success,Training,1500,1590,90
+2024-06-01,Customer Success,Other,1000,1068,68
+2024-07-01,Sales,Salaries & Wages,55200,57504,2304
+2024-07-01,Sales,Software & Cloud,19200,26952,7752
+2024-07-01,Sales,Contractors,14400,17625,3225
+2024-07-01,Sales,Travel & Events,9600,8898,-702
+2024-07-01,Sales,Marketing Programs,8400,8861,461
+2024-07-01,Sales,Facilities,7200,8069,869
+2024-07-01,Sales,Training,3600,3661,61
+2024-07-01,Sales,Other,2400,2707,307
+2024-07-01,Marketing,Salaries & Wages,36800,33689,-3111
+2024-07-01,Marketing,Software & Cloud,12800,14082,1282
+2024-07-01,Marketing,Contractors,9600,10389,789
+2024-07-01,Marketing,Travel & Events,6400,5197,-1203
+2024-07-01,Marketing,Marketing Programs,5600,5054,-546
+2024-07-01,Marketing,Facilities,4800,4291,-509
+2024-07-01,Marketing,Training,2400,2112,-288
+2024-07-01,Marketing,Other,1600,1369,-231
+2024-07-01,R&D,Salaries & Wages,27600,29914,2314
+2024-07-01,R&D,Software & Cloud,9600,12244,2644
+2024-07-01,R&D,Contractors,7200,9210,2010
+2024-07-01,R&D,Travel & Events,4800,5308,508
+2024-07-01,R&D,Marketing Programs,4200,4223,23
+2024-07-01,R&D,Facilities,3600,3852,252
+2024-07-01,R&D,Training,1800,1995,195
+2024-07-01,R&D,Other,1200,1195,-5
+2024-07-01,Operations,Salaries & Wages,43700,42927,-773
+2024-07-01,Operations,Software & Cloud,15200,17552,2352
+2024-07-01,Operations,Contractors,11400,13409,2009
+2024-07-01,Operations,Travel & Events,7600,7360,-240
+2024-07-01,Operations,Marketing Programs,6650,6388,-262
+2024-07-01,Operations,Facilities,5700,5631,-69
+2024-07-01,Operations,Training,2850,2694,-156
+2024-07-01,Operations,Other,1900,2103,203
+2024-07-01,G&A,Salaries & Wages,18400,17388,-1012
+2024-07-01,G&A,Software & Cloud,6400,7007,607
+2024-07-01,G&A,Contractors,4800,5134,334
+2024-07-01,G&A,Travel & Events,3200,2834,-366
+2024-07-01,G&A,Marketing Programs,2800,2602,-198
+2024-07-01,G&A,Facilities,2400,2176,-224
+2024-07-01,G&A,Training,1200,1105,-95
+2024-07-01,G&A,Other,800,755,-45
+2024-07-01,Customer Success,Salaries & Wages,23000,26190,3190
+2024-07-01,Customer Success,Software & Cloud,8000,10158,2158
+2024-07-01,Customer Success,Contractors,6000,6870,870
+2024-07-01,Customer Success,Travel & Events,4000,4067,67
+2024-07-01,Customer Success,Marketing Programs,3500,3532,32
+2024-07-01,Customer Success,Facilities,3000,3393,393
+2024-07-01,Customer Success,Training,1500,1512,12
+2024-07-01,Customer Success,Other,1000,1100,100
+2024-08-01,Sales,Salaries & Wages,55200,55439,239
+2024-08-01,Sales,Software & Cloud,19200,24465,5265
+2024-08-01,Sales,Contractors,14400,15251,851
+2024-08-01,Sales,Travel & Events,9600,8483,-1117
+2024-08-01,Sales,Marketing Programs,8400,8682,282
+2024-08-01,Sales,Facilities,7200,7403,203
+2024-08-01,Sales,Training,3600,3748,148
+2024-08-01,Sales,Other,2400,2980,580
+2024-08-01,Marketing,Salaries & Wages,36800,32147,-4653
+2024-08-01,Marketing,Software & Cloud,12800,13020,220
+2024-08-01,Marketing,Contractors,9600,9639,39
+2024-08-01,Marketing,Travel & Events,6400,5569,-831
+2024-08-01,Marketing,Marketing Programs,5600,4935,-665
+2024-08-01,Marketing,Facilities,4800,4354,-446
+2024-08-01,Marketing,Training,2400,2184,-216
+2024-08-01,Marketing,Other,1600,1516,-84
+2024-08-01,R&D,Salaries & Wages,27600,29166,1566
+2024-08-01,R&D,Software & Cloud,9600,12354,2754
+2024-08-01,R&D,Contractors,7200,8761,1561
+2024-08-01,R&D,Travel & Events,4800,4661,-139
+2024-08-01,R&D,Marketing Programs,4200,4653,453
+2024-08-01,R&D,Facilities,3600,3845,245
+2024-08-01,R&D,Training,1800,2038,238
+2024-08-01,R&D,Other,1200,1365,165
+2024-08-01,Operations,Salaries & Wages,43700,44374,674
+2024-08-01,Operations,Software & Cloud,15200,17040,1840
+2024-08-01,Operations,Contractors,11400,12347,947
+2024-08-01,Operations,Travel & Events,7600,6264,-1336
+2024-08-01,Operations,Marketing Programs,6650,6087,-563
+2024-08-01,Operations,Facilities,5700,5884,184
+2024-08-01,Operations,Training,2850,2407,-443
+2024-08-01,Operations,Other,1900,2019,119
+2024-08-01,G&A,Salaries & Wages,18400,16058,-2342
+2024-08-01,G&A,Software & Cloud,6400,7464,1064
+2024-08-01,G&A,Contractors,4800,4775,-25
+2024-08-01,G&A,Travel & Events,3200,2990,-210
+2024-08-01,G&A,Marketing Programs,2800,2653,-147
+2024-08-01,G&A,Facilities,2400,2121,-279
+2024-08-01,G&A,Training,1200,1191,-9
+2024-08-01,G&A,Other,800,845,45
+2024-08-01,Customer Success,Salaries & Wages,23000,24364,1364
+2024-08-01,Customer Success,Software & Cloud,8000,9625,1625
+2024-08-01,Customer Success,Contractors,6000,6826,826
+2024-08-01,Customer Success,Travel & Events,4000,3691,-309
+2024-08-01,Customer Success,Marketing Programs,3500,3857,357
+2024-08-01,Customer Success,Facilities,3000,3088,88
+2024-08-01,Customer Success,Training,1500,1511,11
+2024-08-01,Customer Success,Other,1000,1014,14
+2024-09-01,Sales,Salaries & Wages,55200,57834,2634
+2024-09-01,Sales,Software & Cloud,19200,22247,3047
+2024-09-01,Sales,Contractors,14400,18243,3843
+2024-09-01,Sales,Travel & Events,9600,9519,-81
+2024-09-01,Sales,Marketing Programs,8400,9392,992
+2024-09-01,Sales,Facilities,7200,7839,639
+2024-09-01,Sales,Training,3600,3569,-31
+2024-09-01,Sales,Other,2400,2560,160
+2024-09-01,Marketing,Salaries & Wages,36800,32644,-4156
+2024-09-01,Marketing,Software & Cloud,12800,13510,710
+2024-09-01,Marketing,Contractors,9600,9300,-300
+2024-09-01,Marketing,Travel & Events,6400,5305,-1095
+2024-09-01,Marketing,Marketing Programs,5600,4588,-1012
+2024-09-01,Marketing,Facilities,4800,4195,-605
+2024-09-01,Marketing,Training,2400,2310,-90
+2024-09-01,Marketing,Other,1600,1410,-190
+2024-09-01,R&D,Salaries & Wages,27600,29186,1586
+2024-09-01,R&D,Software & Cloud,9600,12691,3091
+2024-09-01,R&D,Contractors,7200,9532,2332
+2024-09-01,R&D,Travel & Events,4800,4559,-241
+2024-09-01,R&D,Marketing Programs,4200,4532,332
+2024-09-01,R&D,Facilities,3600,3905,305
+2024-09-01,R&D,Training,1800,1733,-67
+2024-09-01,R&D,Other,1200,1413,213
+2024-09-01,Operations,Salaries & Wages,43700,44075,375
+2024-09-01,Operations,Software & Cloud,15200,17731,2531
+2024-09-01,Operations,Contractors,11400,11886,486
+2024-09-01,Operations,Travel & Events,7600,7257,-343
+2024-09-01,Operations,Marketing Programs,6650,6308,-342
+2024-09-01,Operations,Facilities,5700,5708,8
+2024-09-01,Operations,Training,2850,2559,-291
+2024-09-01,Operations,Other,1900,1784,-116
+2024-09-01,G&A,Salaries & Wages,18400,19311,911
+2024-09-01,G&A,Software & Cloud,6400,6916,516
+2024-09-01,G&A,Contractors,4800,5110,310
+2024-09-01,G&A,Travel & Events,3200,2846,-354
+2024-09-01,G&A,Marketing Programs,2800,2562,-238
+2024-09-01,G&A,Facilities,2400,2255,-145
+2024-09-01,G&A,Training,1200,1147,-53
+2024-09-01,G&A,Other,800,761,-39
+2024-09-01,Customer Success,Salaries & Wages,23000,24278,1278
+2024-09-01,Customer Success,Software & Cloud,8000,9813,1813
+2024-09-01,Customer Success,Contractors,6000,7407,1407
+2024-09-01,Customer Success,Travel & Events,4000,4083,83
+2024-09-01,Customer Success,Marketing Programs,3500,3700,200
+2024-09-01,Customer Success,Facilities,3000,3089,89
+2024-09-01,Customer Success,Training,1500,1397,-103
+2024-09-01,Customer Success,Other,1000,1128,128
+2024-10-01,Sales,Salaries & Wages,55200,63786,8586
+2024-10-01,Sales,Software & Cloud,19200,23874,4674
+2024-10-01,Sales,Contractors,14400,17519,3119
+2024-10-01,Sales,Travel & Events,9600,10093,493
+2024-10-01,Sales,Marketing Programs,8400,9339,939
+2024-10-01,Sales,Facilities,7200,8297,1097
+2024-10-01,Sales,Training,3600,3629,29
+2024-10-01,Sales,Other,2400,2866,466
+2024-10-01,Marketing,Salaries & Wages,36800,31297,-5503
+2024-10-01,Marketing,Software & Cloud,12800,14207,1407
+2024-10-01,Marketing,Contractors,9600,9788,188
+2024-10-01,Marketing,Travel & Events,6400,5687,-713
+2024-10-01,Marketing,Marketing Programs,5600,5573,-27
+2024-10-01,Marketing,Facilities,4800,4809,9
+2024-10-01,Marketing,Training,2400,1951,-449
+2024-10-01,Marketing,Other,1600,1325,-275
+2024-10-01,R&D,Salaries & Wages,27600,32717,5117
+2024-10-01,R&D,Software & Cloud,9600,11725,2125
+2024-10-01,R&D,Contractors,7200,8770,1570
+2024-10-01,R&D,Travel & Events,4800,5242,442
+2024-10-01,R&D,Marketing Programs,4200,4166,-34
+2024-10-01,R&D,Facilities,3600,3580,-20
+2024-10-01,R&D,Training,1800,1960,160
+2024-10-01,R&D,Other,1200,1358,158
+2024-10-01,Operations,Salaries & Wages,43700,43491,-209
+2024-10-01,Operations,Software & Cloud,15200,17696,2496
+2024-10-01,Operations,Contractors,11400,11809,409
+2024-10-01,Operations,Travel & Events,7600,6449,-1151
+2024-10-01,Operations,Marketing Programs,6650,6450,-200
+2024-10-01,Operations,Facilities,5700,5431,-269
+2024-10-01,Operations,Training,2850,2478,-372
+2024-10-01,Operations,Other,1900,1978,78
+2024-10-01,G&A,Salaries & Wages,18400,17750,-650
+2024-10-01,G&A,Software & Cloud,6400,7302,902
+2024-10-01,G&A,Contractors,4800,4730,-70
+2024-10-01,G&A,Travel & Events,3200,2740,-460
+2024-10-01,G&A,Marketing Programs,2800,2477,-323
+2024-10-01,G&A,Facilities,2400,2203,-197
+2024-10-01,G&A,Training,1200,1117,-83
+2024-10-01,G&A,Other,800,739,-61
+2024-10-01,Customer Success,Salaries & Wages,23000,25070,2070
+2024-10-01,Customer Success,Software & Cloud,8000,10018,2018
+2024-10-01,Customer Success,Contractors,6000,7807,1807
+2024-10-01,Customer Success,Travel & Events,4000,3612,-388
+2024-10-01,Customer Success,Marketing Programs,3500,3821,321
+2024-10-01,Customer Success,Facilities,3000,3184,184
+2024-10-01,Customer Success,Training,1500,1519,19
+2024-10-01,Customer Success,Other,1000,978,-22
+2024-11-01,Sales,Salaries & Wages,55200,58693,3493
+2024-11-01,Sales,Software & Cloud,19200,25235,6035
+2024-11-01,Sales,Contractors,14400,16915,2515
+2024-11-01,Sales,Travel & Events,9600,9701,101
+2024-11-01,Sales,Marketing Programs,8400,8752,352
+2024-11-01,Sales,Facilities,7200,8434,1234
+2024-11-01,Sales,Training,3600,3733,133
+2024-11-01,Sales,Other,2400,2299,-101
+2024-11-01,Marketing,Salaries & Wages,36800,32325,-4475
+2024-11-01,Marketing,Software & Cloud,12800,11977,-823
+2024-11-01,Marketing,Contractors,9600,7811,-1789
+2024-11-01,Marketing,Travel & Events,6400,5223,-1177
+2024-11-01,Marketing,Marketing Programs,5600,5388,-212
+2024-11-01,Marketing,Facilities,4800,4408,-392
+2024-11-01,Marketing,Training,2400,1946,-454
+2024-11-01,Marketing,Other,1600,1385,-215
+2024-11-01,R&D,Salaries & Wages,27600,33403,5803
+2024-11-01,R&D,Software & Cloud,9600,12603,3003
+2024-11-01,R&D,Contractors,7200,8819,1619
+2024-11-01,R&D,Travel & Events,4800,4978,178
+2024-11-01,R&D,Marketing Programs,4200,4618,418
+2024-11-01,R&D,Facilities,3600,4273,673
+2024-11-01,R&D,Training,1800,1999,199
+2024-11-01,R&D,Other,1200,1375,175
+2024-11-01,Operations,Salaries & Wages,43700,41460,-2240
+2024-11-01,Operations,Software & Cloud,15200,18205,3005
+2024-11-01,Operations,Contractors,11400,11935,535
+2024-11-01,Operations,Travel & Events,7600,7541,-59
+2024-11-01,Operations,Marketing Programs,6650,6037,-613
+2024-11-01,Operations,Facilities,5700,5710,10
+2024-11-01,Operations,Training,2850,2733,-117
+2024-11-01,Operations,Other,1900,1772,-128
+2024-11-01,G&A,Salaries & Wages,18400,19746,1346
+2024-11-01,G&A,Software & Cloud,6400,7776,1376
+2024-11-01,G&A,Contractors,4800,4880,80
+2024-11-01,G&A,Travel & Events,3200,2984,-216
+2024-11-01,G&A,Marketing Programs,2800,2689,-111
+2024-11-01,G&A,Facilities,2400,1986,-414
+2024-11-01,G&A,Training,1200,1120,-80
+2024-11-01,G&A,Other,800,771,-29
+2024-11-01,Customer Success,Salaries & Wages,23000,24703,1703
+2024-11-01,Customer Success,Software & Cloud,8000,9217,1217
+2024-11-01,Customer Success,Contractors,6000,6814,814
+2024-11-01,Customer Success,Travel & Events,4000,3891,-109
+2024-11-01,Customer Success,Marketing Programs,3500,3896,396
+2024-11-01,Customer Success,Facilities,3000,3271,271
+2024-11-01,Customer Success,Training,1500,1522,22
+2024-11-01,Customer Success,Other,1000,1171,171
+2024-12-01,Sales,Salaries & Wages,55200,58498,3298
+2024-12-01,Sales,Software & Cloud,19200,23633,4433
+2024-12-01,Sales,Contractors,14400,15280,880
+2024-12-01,Sales,Travel & Events,9600,10632,1032
+2024-12-01,Sales,Marketing Programs,8400,9459,1059
+2024-12-01,Sales,Facilities,7200,8335,1135
+2024-12-01,Sales,Training,3600,3901,301
+2024-12-01,Sales,Other,2400,2647,247
+2024-12-01,Marketing,Salaries & Wages,36800,34102,-2698
+2024-12-01,Marketing,Software & Cloud,12800,13264,464
+2024-12-01,Marketing,Contractors,9600,9369,-231
+2024-12-01,Marketing,Travel & Events,6400,5404,-996
+2024-12-01,Marketing,Marketing Programs,5600,5441,-159
+2024-12-01,Marketing,Facilities,4800,4540,-260
+2024-12-01,Marketing,Training,2400,2078,-322
+2024-12-01,Marketing,Other,1600,1414,-186
+2024-12-01,R&D,Salaries & Wages,27600,30103,2503
+2024-12-01,R&D,Software & Cloud,9600,13771,4171
+2024-12-01,R&D,Contractors,7200,9083,1883
+2024-12-01,R&D,Travel & Events,4800,5024,224
+2024-12-01,R&D,Marketing Programs,4200,4521,321
+2024-12-01,R&D,Facilities,3600,3816,216
+2024-12-01,R&D,Training,1800,1930,130
+2024-12-01,R&D,Other,1200,1433,233
+2024-12-01,Operations,Salaries & Wages,43700,43110,-590
+2024-12-01,Operations,Software & Cloud,15200,17416,2216
+2024-12-01,Operations,Contractors,11400,12271,871
+2024-12-01,Operations,Travel & Events,7600,7109,-491
+2024-12-01,Operations,Marketing Programs,6650,5921,-729
+2024-12-01,Operations,Facilities,5700,5676,-24
+2024-12-01,Operations,Training,2850,2598,-252
+2024-12-01,Operations,Other,1900,2024,124
+2024-12-01,G&A,Salaries & Wages,18400,16996,-1404
+2024-12-01,G&A,Software & Cloud,6400,7371,971
+2024-12-01,G&A,Contractors,4800,5495,695
+2024-12-01,G&A,Travel & Events,3200,2795,-405
+2024-12-01,G&A,Marketing Programs,2800,2534,-266
+2024-12-01,G&A,Facilities,2400,2349,-51
+2024-12-01,G&A,Training,1200,1103,-97
+2024-12-01,G&A,Other,800,729,-71
+2024-12-01,Customer Success,Salaries & Wages,23000,25310,2310
+2024-12-01,Customer Success,Software & Cloud,8000,11114,3114
+2024-12-01,Customer Success,Contractors,6000,6830,830
+2024-12-01,Customer Success,Travel & Events,4000,3892,-108
+2024-12-01,Customer Success,Marketing Programs,3500,3413,-87
+2024-12-01,Customer Success,Facilities,3000,3273,273
+2024-12-01,Customer Success,Training,1500,1415,-85
+2024-12-01,Customer Success,Other,1000,1002,2
+2025-01-01,Sales,Salaries & Wages,57408,68081,10673
+2025-01-01,Sales,Software & Cloud,19968,23886,3918
+2025-01-01,Sales,Contractors,14976,18954,3978
+2025-01-01,Sales,Travel & Events,9984,11054,1070
+2025-01-01,Sales,Marketing Programs,8736,9453,717
+2025-01-01,Sales,Facilities,7488,8501,1013
+2025-01-01,Sales,Training,3744,4392,648
+2025-01-01,Sales,Other,2496,2709,213
+2025-01-01,Marketing,Salaries & Wages,38272,33755,-4517
+2025-01-01,Marketing,Software & Cloud,13312,12900,-412
+2025-01-01,Marketing,Contractors,9984,9879,-105
+2025-01-01,Marketing,Travel & Events,6656,6116,-540
+2025-01-01,Marketing,Marketing Programs,5824,5469,-355
+2025-01-01,Marketing,Facilities,4992,4312,-680
+2025-01-01,Marketing,Training,2496,2059,-437
+2025-01-01,Marketing,Other,1664,1475,-189
+2025-01-01,R&D,Salaries & Wages,28704,33162,4458
+2025-01-01,R&D,Software & Cloud,9984,12875,2891
+2025-01-01,R&D,Contractors,7488,9299,1811
+2025-01-01,R&D,Travel & Events,4992,5307,315
+2025-01-01,R&D,Marketing Programs,4368,4724,356
+2025-01-01,R&D,Facilities,3744,4240,496
+2025-01-01,R&D,Training,1872,2044,172
+2025-01-01,R&D,Other,1248,1410,162
+2025-01-01,Operations,Salaries & Wages,45448,47310,1862
+2025-01-01,Operations,Software & Cloud,15808,20542,4734
+2025-01-01,Operations,Contractors,11856,13400,1544
+2025-01-01,Operations,Travel & Events,7904,7369,-535
+2025-01-01,Operations,Marketing Programs,6916,6124,-792
+2025-01-01,Operations,Facilities,5928,6128,200
+2025-01-01,Operations,Training,2964,2530,-434
+2025-01-01,Operations,Other,1976,1834,-142
+2025-01-01,G&A,Salaries & Wages,19136,19477,341
+2025-01-01,G&A,Software & Cloud,6656,7722,1066
+2025-01-01,G&A,Contractors,4992,5167,175
+2025-01-01,G&A,Travel & Events,3328,2672,-656
+2025-01-01,G&A,Marketing Programs,2912,2671,-241
+2025-01-01,G&A,Facilities,2496,2317,-179
+2025-01-01,G&A,Training,1248,1191,-57
+2025-01-01,G&A,Other,832,921,89
+2025-01-01,Customer Success,Salaries & Wages,23920,25982,2062
+2025-01-01,Customer Success,Software & Cloud,8320,9790,1470
+2025-01-01,Customer Success,Contractors,6240,6736,496
+2025-01-01,Customer Success,Travel & Events,4160,4090,-70
+2025-01-01,Customer Success,Marketing Programs,3640,3746,106
+2025-01-01,Customer Success,Facilities,3120,3122,2
+2025-01-01,Customer Success,Training,1560,1600,40
+2025-01-01,Customer Success,Other,1040,1041,1
+2025-02-01,Sales,Salaries & Wages,57408,67560,10152
+2025-02-01,Sales,Software & Cloud,19968,26944,6976
+2025-02-01,Sales,Contractors,14976,19003,4027
+2025-02-01,Sales,Travel & Events,9984,9828,-156
+2025-02-01,Sales,Marketing Programs,8736,9621,885
+2025-02-01,Sales,Facilities,7488,8178,690
+2025-02-01,Sales,Training,3744,3825,81
+2025-02-01,Sales,Other,2496,2692,196
+2025-02-01,Marketing,Salaries & Wages,38272,32323,-5949
+2025-02-01,Marketing,Software & Cloud,13312,12818,-494
+2025-02-01,Marketing,Contractors,9984,10326,342
+2025-02-01,Marketing,Travel & Events,6656,5527,-1129
+2025-02-01,Marketing,Marketing Programs,5824,5225,-599
+2025-02-01,Marketing,Facilities,4992,4840,-152
+2025-02-01,Marketing,Training,2496,1951,-545
+2025-02-01,Marketing,Other,1664,1449,-215
+2025-02-01,R&D,Salaries & Wages,28704,32993,4289
+2025-02-01,R&D,Software & Cloud,9984,13370,3386
+2025-02-01,R&D,Contractors,7488,8992,1504
+2025-02-01,R&D,Travel & Events,4992,5556,564
+2025-02-01,R&D,Marketing Programs,4368,4880,512
+2025-02-01,R&D,Facilities,3744,3959,215
+2025-02-01,R&D,Training,1872,1913,41
+2025-02-01,R&D,Other,1248,1490,242
+2025-02-01,Operations,Salaries & Wages,45448,47198,1750
+2025-02-01,Operations,Software & Cloud,15808,16384,576
+2025-02-01,Operations,Contractors,11856,14022,2166
+2025-02-01,Operations,Travel & Events,7904,7613,-291
+2025-02-01,Operations,Marketing Programs,6916,7344,428
+2025-02-01,Operations,Facilities,5928,5851,-77
+2025-02-01,Operations,Training,2964,2794,-170
+2025-02-01,Operations,Other,1976,1865,-111
+2025-02-01,G&A,Salaries & Wages,19136,21536,2400
+2025-02-01,G&A,Software & Cloud,6656,7321,665
+2025-02-01,G&A,Contractors,4992,5732,740
+2025-02-01,G&A,Travel & Events,3328,2847,-481
+2025-02-01,G&A,Marketing Programs,2912,2757,-155
+2025-02-01,G&A,Facilities,2496,2182,-314
+2025-02-01,G&A,Training,1248,1120,-128
+2025-02-01,G&A,Other,832,853,21
+2025-02-01,Customer Success,Salaries & Wages,23920,23829,-91
+2025-02-01,Customer Success,Software & Cloud,8320,10958,2638
+2025-02-01,Customer Success,Contractors,6240,7385,1145
+2025-02-01,Customer Success,Travel & Events,4160,3861,-299
+2025-02-01,Customer Success,Marketing Programs,3640,3679,39
+2025-02-01,Customer Success,Facilities,3120,3260,140
+2025-02-01,Customer Success,Training,1560,1587,27
+2025-02-01,Customer Success,Other,1040,1082,42
+2025-03-01,Sales,Salaries & Wages,57408,60281,2873
+2025-03-01,Sales,Software & Cloud,19968,24881,4913
+2025-03-01,Sales,Contractors,14976,16781,1805
+2025-03-01,Sales,Travel & Events,9984,9381,-603
+2025-03-01,Sales,Marketing Programs,8736,9324,588
+2025-03-01,Sales,Facilities,7488,8712,1224
+2025-03-01,Sales,Training,3744,3581,-163
+2025-03-01,Sales,Other,2496,2755,259
+2025-03-01,Marketing,Salaries & Wages,38272,33575,-4697
+2025-03-01,Marketing,Software & Cloud,13312,13169,-143
+2025-03-01,Marketing,Contractors,9984,10352,368
+2025-03-01,Marketing,Travel & Events,6656,5415,-1241
+2025-03-01,Marketing,Marketing Programs,5824,5638,-186
+2025-03-01,Marketing,Facilities,4992,4345,-647
+2025-03-01,Marketing,Training,2496,2214,-282
+2025-03-01,Marketing,Other,1664,1497,-167
+2025-03-01,R&D,Salaries & Wages,28704,31263,2559
+2025-03-01,R&D,Software & Cloud,9984,13554,3570
+2025-03-01,R&D,Contractors,7488,9130,1642
+2025-03-01,R&D,Travel & Events,4992,5427,435
+2025-03-01,R&D,Marketing Programs,4368,4815,447
+2025-03-01,R&D,Facilities,3744,3997,253
+2025-03-01,R&D,Training,1872,2014,142
+2025-03-01,R&D,Other,1248,1427,179
+2025-03-01,Operations,Salaries & Wages,45448,48620,3172
+2025-03-01,Operations,Software & Cloud,15808,17389,1581
+2025-03-01,Operations,Contractors,11856,12902,1046
+2025-03-01,Operations,Travel & Events,7904,6624,-1280
+2025-03-01,Operations,Marketing Programs,6916,7046,130
+2025-03-01,Operations,Facilities,5928,5611,-317
+2025-03-01,Operations,Training,2964,2552,-412
+2025-03-01,Operations,Other,1976,1989,13
+2025-03-01,G&A,Salaries & Wages,19136,19755,619
+2025-03-01,G&A,Software & Cloud,6656,6748,92
+2025-03-01,G&A,Contractors,4992,4879,-113
+2025-03-01,G&A,Travel & Events,3328,2829,-499
+2025-03-01,G&A,Marketing Programs,2912,2550,-362
+2025-03-01,G&A,Facilities,2496,2467,-29
+2025-03-01,G&A,Training,1248,1091,-157
+2025-03-01,G&A,Other,832,770,-62
+2025-03-01,Customer Success,Salaries & Wages,23920,26646,2726
+2025-03-01,Customer Success,Software & Cloud,8320,9836,1516
+2025-03-01,Customer Success,Contractors,6240,7440,1200
+2025-03-01,Customer Success,Travel & Events,4160,3884,-276
+2025-03-01,Customer Success,Marketing Programs,3640,3532,-108
+2025-03-01,Customer Success,Facilities,3120,3006,-114
+2025-03-01,Customer Success,Training,1560,1782,222
+2025-03-01,Customer Success,Other,1040,1097,57
+2025-04-01,Sales,Salaries & Wages,57408,64434,7026
+2025-04-01,Sales,Software & Cloud,19968,25352,5384
+2025-04-01,Sales,Contractors,14976,18062,3086
+2025-04-01,Sales,Travel & Events,9984,10190,206
+2025-04-01,Sales,Marketing Programs,8736,10510,1774
+2025-04-01,Sales,Facilities,7488,7782,294
+2025-04-01,Sales,Training,3744,3583,-161
+2025-04-01,Sales,Other,2496,2598,102
+2025-04-01,Marketing,Salaries & Wages,38272,32193,-6079
+2025-04-01,Marketing,Software & Cloud,13312,14590,1278
+2025-04-01,Marketing,Contractors,9984,10322,338
+2025-04-01,Marketing,Travel & Events,6656,5268,-1388
+2025-04-01,Marketing,Marketing Programs,5824,4736,-1088
+2025-04-01,Marketing,Facilities,4992,4453,-539
+2025-04-01,Marketing,Training,2496,2349,-147
+2025-04-01,Marketing,Other,1664,1280,-384
+2025-04-01,R&D,Salaries & Wages,28704,33825,5121
+2025-04-01,R&D,Software & Cloud,9984,12290,2306
+2025-04-01,R&D,Contractors,7488,9828,2340
+2025-04-01,R&D,Travel & Events,4992,4915,-77
+2025-04-01,R&D,Marketing Programs,4368,4755,387
+2025-04-01,R&D,Facilities,3744,3905,161
+2025-04-01,R&D,Training,1872,1915,43
+2025-04-01,R&D,Other,1248,1548,300
+2025-04-01,Operations,Salaries & Wages,45448,48219,2771
+2025-04-01,Operations,Software & Cloud,15808,17924,2116
+2025-04-01,Operations,Contractors,11856,12275,419
+2025-04-01,Operations,Travel & Events,7904,6556,-1348
+2025-04-01,Operations,Marketing Programs,6916,6617,-299
+2025-04-01,Operations,Facilities,5928,5976,48
+2025-04-01,Operations,Training,2964,2830,-134
+2025-04-01,Operations,Other,1976,1985,9
+2025-04-01,G&A,Salaries & Wages,19136,17276,-1860
+2025-04-01,G&A,Software & Cloud,6656,7362,706
+2025-04-01,G&A,Contractors,4992,5194,202
+2025-04-01,G&A,Travel & Events,3328,3195,-133
+2025-04-01,G&A,Marketing Programs,2912,3051,139
+2025-04-01,G&A,Facilities,2496,2391,-105
+2025-04-01,G&A,Training,1248,1093,-155
+2025-04-01,G&A,Other,832,800,-32
+2025-04-01,Customer Success,Salaries & Wages,23920,24849,929
+2025-04-01,Customer Success,Software & Cloud,8320,9859,1539
+2025-04-01,Customer Success,Contractors,6240,7235,995
+2025-04-01,Customer Success,Travel & Events,4160,3873,-287
+2025-04-01,Customer Success,Marketing Programs,3640,3945,305
+2025-04-01,Customer Success,Facilities,3120,3341,221
+2025-04-01,Customer Success,Training,1560,1621,61
+2025-04-01,Customer Success,Other,1040,1108,68
+2025-05-01,Sales,Salaries & Wages,57408,60930,3522
+2025-05-01,Sales,Software & Cloud,19968,24052,4084
+2025-05-01,Sales,Contractors,14976,17679,2703
+2025-05-01,Sales,Travel & Events,9984,9854,-130
+2025-05-01,Sales,Marketing Programs,8736,9528,792
+2025-05-01,Sales,Facilities,7488,8300,812
+2025-05-01,Sales,Training,3744,3634,-110
+2025-05-01,Sales,Other,2496,2778,282
+2025-05-01,Marketing,Salaries & Wages,38272,32147,-6125
+2025-05-01,Marketing,Software & Cloud,13312,13432,120
+2025-05-01,Marketing,Contractors,9984,9645,-339
+2025-05-01,Marketing,Travel & Events,6656,4922,-1734
+2025-05-01,Marketing,Marketing Programs,5824,5172,-652
+2025-05-01,Marketing,Facilities,4992,4586,-406
+2025-05-01,Marketing,Training,2496,2138,-358
+2025-05-01,Marketing,Other,1664,1477,-187
+2025-05-01,R&D,Salaries & Wages,28704,32107,3403
+2025-05-01,R&D,Software & Cloud,9984,12387,2403
+2025-05-01,R&D,Contractors,7488,9102,1614
+2025-05-01,R&D,Travel & Events,4992,5082,90
+2025-05-01,R&D,Marketing Programs,4368,4873,505
+2025-05-01,R&D,Facilities,3744,3984,240
+2025-05-01,R&D,Training,1872,2063,191
+2025-05-01,R&D,Other,1248,1440,192
+2025-05-01,Operations,Salaries & Wages,45448,45514,66
+2025-05-01,Operations,Software & Cloud,15808,17883,2075
+2025-05-01,Operations,Contractors,11856,13368,1512
+2025-05-01,Operations,Travel & Events,7904,6646,-1258
+2025-05-01,Operations,Marketing Programs,6916,6965,49
+2025-05-01,Operations,Facilities,5928,6075,147
+2025-05-01,Operations,Training,2964,2893,-71
+2025-05-01,Operations,Other,1976,2042,66
+2025-05-01,G&A,Salaries & Wages,19136,17760,-1376
+2025-05-01,G&A,Software & Cloud,6656,7274,618
+2025-05-01,G&A,Contractors,4992,5407,415
+2025-05-01,G&A,Travel & Events,3328,3033,-295
+2025-05-01,G&A,Marketing Programs,2912,2760,-152
+2025-05-01,G&A,Facilities,2496,2200,-296
+2025-05-01,G&A,Training,1248,1182,-66
+2025-05-01,G&A,Other,832,861,29
+2025-05-01,Customer Success,Salaries & Wages,23920,27425,3505
+2025-05-01,Customer Success,Software & Cloud,8320,10471,2151
+2025-05-01,Customer Success,Contractors,6240,6624,384
+2025-05-01,Customer Success,Travel & Events,4160,4370,210
+2025-05-01,Customer Success,Marketing Programs,3640,3777,137
+2025-05-01,Customer Success,Facilities,3120,2892,-228
+2025-05-01,Customer Success,Training,1560,1636,76
+2025-05-01,Customer Success,Other,1040,1026,-14
+2025-06-01,Sales,Salaries & Wages,57408,59023,1615
+2025-06-01,Sales,Software & Cloud,19968,24565,4597
+2025-06-01,Sales,Contractors,14976,19401,4425
+2025-06-01,Sales,Travel & Events,9984,9983,-1
+2025-06-01,Sales,Marketing Programs,8736,9571,835
+2025-06-01,Sales,Facilities,7488,9242,1754
+2025-06-01,Sales,Training,3744,4349,605
+2025-06-01,Sales,Other,2496,2757,261
+2025-06-01,Marketing,Salaries & Wages,38272,34310,-3962
+2025-06-01,Marketing,Software & Cloud,13312,12910,-402
+2025-06-01,Marketing,Contractors,9984,9407,-577
+2025-06-01,Marketing,Travel & Events,6656,5714,-942
+2025-06-01,Marketing,Marketing Programs,5824,5262,-562
+2025-06-01,Marketing,Facilities,4992,4571,-421
+2025-06-01,Marketing,Training,2496,2289,-207
+2025-06-01,Marketing,Other,1664,1445,-219
+2025-06-01,R&D,Salaries & Wages,28704,32787,4083
+2025-06-01,R&D,Software & Cloud,9984,13749,3765
+2025-06-01,R&D,Contractors,7488,9599,2111
+2025-06-01,R&D,Travel & Events,4992,5613,621
+2025-06-01,R&D,Marketing Programs,4368,4973,605
+2025-06-01,R&D,Facilities,3744,4212,468
+2025-06-01,R&D,Training,1872,2083,211
+2025-06-01,R&D,Other,1248,1347,99
+2025-06-01,Operations,Salaries & Wages,45448,41602,-3846
+2025-06-01,Operations,Software & Cloud,15808,19012,3204
+2025-06-01,Operations,Contractors,11856,12890,1034
+2025-06-01,Operations,Travel & Events,7904,7482,-422
+2025-06-01,Operations,Marketing Programs,6916,6119,-797
+2025-06-01,Operations,Facilities,5928,5858,-70
+2025-06-01,Operations,Training,2964,2743,-221
+2025-06-01,Operations,Other,1976,1895,-81
+2025-06-01,G&A,Salaries & Wages,19136,16126,-3010
+2025-06-01,G&A,Software & Cloud,6656,7238,582
+2025-06-01,G&A,Contractors,4992,5489,497
+2025-06-01,G&A,Travel & Events,3328,3022,-306
+2025-06-01,G&A,Marketing Programs,2912,2629,-283
+2025-06-01,G&A,Facilities,2496,2406,-90
+2025-06-01,G&A,Training,1248,1197,-51
+2025-06-01,G&A,Other,832,680,-152
+2025-06-01,Customer Success,Salaries & Wages,23920,25662,1742
+2025-06-01,Customer Success,Software & Cloud,8320,10684,2364
+2025-06-01,Customer Success,Contractors,6240,7589,1349
+2025-06-01,Customer Success,Travel & Events,4160,4581,421
+2025-06-01,Customer Success,Marketing Programs,3640,4085,445
+2025-06-01,Customer Success,Facilities,3120,3436,316
+2025-06-01,Customer Success,Training,1560,1631,71
+2025-06-01,Customer Success,Other,1040,1178,138
+2025-07-01,Sales,Salaries & Wages,57408,61911,4503
+2025-07-01,Sales,Software & Cloud,19968,25517,5549
+2025-07-01,Sales,Contractors,14976,19023,4047
+2025-07-01,Sales,Travel & Events,9984,11507,1523
+2025-07-01,Sales,Marketing Programs,8736,9349,613
+2025-07-01,Sales,Facilities,7488,8317,829
+2025-07-01,Sales,Training,3744,4009,265
+2025-07-01,Sales,Other,2496,3014,518
+2025-07-01,Marketing,Salaries & Wages,38272,34714,-3558
+2025-07-01,Marketing,Software & Cloud,13312,15193,1881
+2025-07-01,Marketing,Contractors,9984,9246,-738
+2025-07-01,Marketing,Travel & Events,6656,5503,-1153
+2025-07-01,Marketing,Marketing Programs,5824,5073,-751
+2025-07-01,Marketing,Facilities,4992,4755,-237
+2025-07-01,Marketing,Training,2496,2294,-202
+2025-07-01,Marketing,Other,1664,1381,-283
+2025-07-01,R&D,Salaries & Wages,28704,31199,2495
+2025-07-01,R&D,Software & Cloud,9984,13453,3469
+2025-07-01,R&D,Contractors,7488,8926,1438
+2025-07-01,R&D,Travel & Events,4992,4813,-179
+2025-07-01,R&D,Marketing Programs,4368,5178,810
+2025-07-01,R&D,Facilities,3744,4428,684
+2025-07-01,R&D,Training,1872,2103,231
+2025-07-01,R&D,Other,1248,1393,145
+2025-07-01,Operations,Salaries & Wages,45448,48826,3378
+2025-07-01,Operations,Software & Cloud,15808,18099,2291
+2025-07-01,Operations,Contractors,11856,13812,1956
+2025-07-01,Operations,Travel & Events,7904,6953,-951
+2025-07-01,Operations,Marketing Programs,6916,6437,-479
+2025-07-01,Operations,Facilities,5928,6061,133
+2025-07-01,Operations,Training,2964,2727,-237
+2025-07-01,Operations,Other,1976,2078,102
+2025-07-01,G&A,Salaries & Wages,19136,18744,-392
+2025-07-01,G&A,Software & Cloud,6656,6984,328
+2025-07-01,G&A,Contractors,4992,5222,230
+2025-07-01,G&A,Travel & Events,3328,2891,-437
+2025-07-01,G&A,Marketing Programs,2912,2878,-34
+2025-07-01,G&A,Facilities,2496,2317,-179
+2025-07-01,G&A,Training,1248,1114,-134
+2025-07-01,G&A,Other,832,863,31
+2025-07-01,Customer Success,Salaries & Wages,23920,29619,5699
+2025-07-01,Customer Success,Software & Cloud,8320,11678,3358
+2025-07-01,Customer Success,Contractors,6240,7324,1084
+2025-07-01,Customer Success,Travel & Events,4160,4198,38
+2025-07-01,Customer Success,Marketing Programs,3640,4191,551
+2025-07-01,Customer Success,Facilities,3120,3353,233
+2025-07-01,Customer Success,Training,1560,1513,-47
+2025-07-01,Customer Success,Other,1040,1134,94
+2025-08-01,Sales,Salaries & Wages,57408,65857,8449
+2025-08-01,Sales,Software & Cloud,19968,24395,4427
+2025-08-01,Sales,Contractors,14976,16360,1384
+2025-08-01,Sales,Travel & Events,9984,9409,-575
+2025-08-01,Sales,Marketing Programs,8736,9847,1111
+2025-08-01,Sales,Facilities,7488,7989,501
+2025-08-01,Sales,Training,3744,3938,194
+2025-08-01,Sales,Other,2496,2823,327
+2025-08-01,Marketing,Salaries & Wages,38272,36059,-2213
+2025-08-01,Marketing,Software & Cloud,13312,13621,309
+2025-08-01,Marketing,Contractors,9984,10086,102
+2025-08-01,Marketing,Travel & Events,6656,5270,-1386
+2025-08-01,Marketing,Marketing Programs,5824,5018,-806
+2025-08-01,Marketing,Facilities,4992,4262,-730
+2025-08-01,Marketing,Training,2496,2304,-192
+2025-08-01,Marketing,Other,1664,1508,-156
+2025-08-01,R&D,Salaries & Wages,28704,31589,2885
+2025-08-01,R&D,Software & Cloud,9984,12932,2948
+2025-08-01,R&D,Contractors,7488,9181,1693
+2025-08-01,R&D,Travel & Events,4992,5510,518
+2025-08-01,R&D,Marketing Programs,4368,4429,61
+2025-08-01,R&D,Facilities,3744,4047,303
+2025-08-01,R&D,Training,1872,2000,128
+2025-08-01,R&D,Other,1248,1671,423
+2025-08-01,Operations,Salaries & Wages,45448,48611,3163
+2025-08-01,Operations,Software & Cloud,15808,18239,2431
+2025-08-01,Operations,Contractors,11856,13497,1641
+2025-08-01,Operations,Travel & Events,7904,8309,405
+2025-08-01,Operations,Marketing Programs,6916,6681,-235
+2025-08-01,Operations,Facilities,5928,5857,-71
+2025-08-01,Operations,Training,2964,3058,94
+2025-08-01,Operations,Other,1976,2056,80
+2025-08-01,G&A,Salaries & Wages,19136,19204,68
+2025-08-01,G&A,Software & Cloud,6656,7157,501
+2025-08-01,G&A,Contractors,4992,5833,841
+2025-08-01,G&A,Travel & Events,3328,3270,-58
+2025-08-01,G&A,Marketing Programs,2912,2817,-95
+2025-08-01,G&A,Facilities,2496,2507,11
+2025-08-01,G&A,Training,1248,1012,-236
+2025-08-01,G&A,Other,832,833,1
+2025-08-01,Customer Success,Salaries & Wages,23920,25637,1717
+2025-08-01,Customer Success,Software & Cloud,8320,10649,2329
+2025-08-01,Customer Success,Contractors,6240,7613,1373
+2025-08-01,Customer Success,Travel & Events,4160,4066,-94
+2025-08-01,Customer Success,Marketing Programs,3640,3459,-181
+2025-08-01,Customer Success,Facilities,3120,3459,339
+2025-08-01,Customer Success,Training,1560,1537,-23
+2025-08-01,Customer Success,Other,1040,1106,66
+2025-09-01,Sales,Salaries & Wages,57408,61959,4551
+2025-09-01,Sales,Software & Cloud,19968,25177,5209
+2025-09-01,Sales,Contractors,14976,15759,783
+2025-09-01,Sales,Travel & Events,9984,11058,1074
+2025-09-01,Sales,Marketing Programs,8736,9629,893
+2025-09-01,Sales,Facilities,7488,8958,1470
+2025-09-01,Sales,Training,3744,4483,739
+2025-09-01,Sales,Other,2496,2797,301
+2025-09-01,Marketing,Salaries & Wages,38272,31153,-7119
+2025-09-01,Marketing,Software & Cloud,13312,13159,-153
+2025-09-01,Marketing,Contractors,9984,9096,-888
+2025-09-01,Marketing,Travel & Events,6656,5389,-1267
+2025-09-01,Marketing,Marketing Programs,5824,5148,-676
+2025-09-01,Marketing,Facilities,4992,4015,-977
+2025-09-01,Marketing,Training,2496,2195,-301
+2025-09-01,Marketing,Other,1664,1378,-286
+2025-09-01,R&D,Salaries & Wages,28704,33680,4976
+2025-09-01,R&D,Software & Cloud,9984,13147,3163
+2025-09-01,R&D,Contractors,7488,9147,1659
+2025-09-01,R&D,Travel & Events,4992,5270,278
+2025-09-01,R&D,Marketing Programs,4368,4728,360
+2025-09-01,R&D,Facilities,3744,4160,416
+2025-09-01,R&D,Training,1872,1853,-19
+2025-09-01,R&D,Other,1248,1436,188
+2025-09-01,Operations,Salaries & Wages,45448,51277,5829
+2025-09-01,Operations,Software & Cloud,15808,20678,4870
+2025-09-01,Operations,Contractors,11856,14000,2144
+2025-09-01,Operations,Travel & Events,7904,7662,-242
+2025-09-01,Operations,Marketing Programs,6916,6506,-410
+2025-09-01,Operations,Facilities,5928,6529,601
+2025-09-01,Operations,Training,2964,2834,-130
+2025-09-01,Operations,Other,1976,1988,12
+2025-09-01,G&A,Salaries & Wages,19136,18118,-1018
+2025-09-01,G&A,Software & Cloud,6656,7416,760
+2025-09-01,G&A,Contractors,4992,5061,69
+2025-09-01,G&A,Travel & Events,3328,2935,-393
+2025-09-01,G&A,Marketing Programs,2912,2550,-362
+2025-09-01,G&A,Facilities,2496,2352,-144
+2025-09-01,G&A,Training,1248,1310,62
+2025-09-01,G&A,Other,832,798,-34
+2025-09-01,Customer Success,Salaries & Wages,23920,25610,1690
+2025-09-01,Customer Success,Software & Cloud,8320,10729,2409
+2025-09-01,Customer Success,Contractors,6240,7637,1397
+2025-09-01,Customer Success,Travel & Events,4160,3888,-272
+2025-09-01,Customer Success,Marketing Programs,3640,3787,147
+2025-09-01,Customer Success,Facilities,3120,3581,461
+2025-09-01,Customer Success,Training,1560,1636,76
+2025-09-01,Customer Success,Other,1040,1138,98
+2025-10-01,Sales,Salaries & Wages,57408,70690,13282
+2025-10-01,Sales,Software & Cloud,19968,24732,4764
+2025-10-01,Sales,Contractors,14976,18233,3257
+2025-10-01,Sales,Travel & Events,9984,9987,3
+2025-10-01,Sales,Marketing Programs,8736,10395,1659
+2025-10-01,Sales,Facilities,7488,7471,-17
+2025-10-01,Sales,Training,3744,3833,89
+2025-10-01,Sales,Other,2496,2712,216
+2025-10-01,Marketing,Salaries & Wages,38272,36086,-2186
+2025-10-01,Marketing,Software & Cloud,13312,14385,1073
+2025-10-01,Marketing,Contractors,9984,10623,639
+2025-10-01,Marketing,Travel & Events,6656,5048,-1608
+2025-10-01,Marketing,Marketing Programs,5824,5354,-470
+2025-10-01,Marketing,Facilities,4992,4444,-548
+2025-10-01,Marketing,Training,2496,2064,-432
+2025-10-01,Marketing,Other,1664,1557,-107
+2025-10-01,R&D,Salaries & Wages,28704,31366,2662
+2025-10-01,R&D,Software & Cloud,9984,11705,1721
+2025-10-01,R&D,Contractors,7488,9134,1646
+2025-10-01,R&D,Travel & Events,4992,4848,-144
+2025-10-01,R&D,Marketing Programs,4368,4706,338
+2025-10-01,R&D,Facilities,3744,4421,677
+2025-10-01,R&D,Training,1872,2092,220
+2025-10-01,R&D,Other,1248,1585,337
+2025-10-01,Operations,Salaries & Wages,45448,45356,-92
+2025-10-01,Operations,Software & Cloud,15808,16747,939
+2025-10-01,Operations,Contractors,11856,12359,503
+2025-10-01,Operations,Travel & Events,7904,6950,-954
+2025-10-01,Operations,Marketing Programs,6916,6298,-618
+2025-10-01,Operations,Facilities,5928,6146,218
+2025-10-01,Operations,Training,2964,2736,-228
+2025-10-01,Operations,Other,1976,1772,-204
+2025-10-01,G&A,Salaries & Wages,19136,19216,80
+2025-10-01,G&A,Software & Cloud,6656,7322,666
+2025-10-01,G&A,Contractors,4992,5304,312
+2025-10-01,G&A,Travel & Events,3328,2967,-361
+2025-10-01,G&A,Marketing Programs,2912,2825,-87
+2025-10-01,G&A,Facilities,2496,2409,-87
+2025-10-01,G&A,Training,1248,1230,-18
+2025-10-01,G&A,Other,832,822,-10
+2025-10-01,Customer Success,Salaries & Wages,23920,26640,2720
+2025-10-01,Customer Success,Software & Cloud,8320,10667,2347
+2025-10-01,Customer Success,Contractors,6240,6718,478
+2025-10-01,Customer Success,Travel & Events,4160,4122,-38
+2025-10-01,Customer Success,Marketing Programs,3640,3782,142
+2025-10-01,Customer Success,Facilities,3120,3437,317
+2025-10-01,Customer Success,Training,1560,1486,-74
+2025-10-01,Customer Success,Other,1040,1248,208
+2025-11-01,Sales,Salaries & Wages,57408,64952,7544
+2025-11-01,Sales,Software & Cloud,19968,24009,4041
+2025-11-01,Sales,Contractors,14976,16413,1437
+2025-11-01,Sales,Travel & Events,9984,10155,171
+2025-11-01,Sales,Marketing Programs,8736,9477,741
+2025-11-01,Sales,Facilities,7488,8064,576
+2025-11-01,Sales,Training,3744,4021,277
+2025-11-01,Sales,Other,2496,2700,204
+2025-11-01,Marketing,Salaries & Wages,38272,35810,-2462
+2025-11-01,Marketing,Software & Cloud,13312,13268,-44
+2025-11-01,Marketing,Contractors,9984,9738,-246
+2025-11-01,Marketing,Travel & Events,6656,5878,-778
+2025-11-01,Marketing,Marketing Programs,5824,5967,143
+2025-11-01,Marketing,Facilities,4992,4254,-738
+2025-11-01,Marketing,Training,2496,2087,-409
+2025-11-01,Marketing,Other,1664,1432,-232
+2025-11-01,R&D,Salaries & Wages,28704,34809,6105
+2025-11-01,R&D,Software & Cloud,9984,12399,2415
+2025-11-01,R&D,Contractors,7488,9088,1600
+2025-11-01,R&D,Travel & Events,4992,5304,312
+2025-11-01,R&D,Marketing Programs,4368,4622,254
+2025-11-01,R&D,Facilities,3744,4090,346
+2025-11-01,R&D,Training,1872,2000,128
+2025-11-01,R&D,Other,1248,1273,25
+2025-11-01,Operations,Salaries & Wages,45448,42089,-3359
+2025-11-01,Operations,Software & Cloud,15808,17912,2104
+2025-11-01,Operations,Contractors,11856,13048,1192
+2025-11-01,Operations,Travel & Events,7904,7263,-641
+2025-11-01,Operations,Marketing Programs,6916,6091,-825
+2025-11-01,Operations,Facilities,5928,5823,-105
+2025-11-01,Operations,Training,2964,2984,20
+2025-11-01,Operations,Other,1976,2063,87
+2025-11-01,G&A,Salaries & Wages,19136,18334,-802
+2025-11-01,G&A,Software & Cloud,6656,6986,330
+2025-11-01,G&A,Contractors,4992,5390,398
+2025-11-01,G&A,Travel & Events,3328,2847,-481
+2025-11-01,G&A,Marketing Programs,2912,2535,-377
+2025-11-01,G&A,Facilities,2496,2290,-206
+2025-11-01,G&A,Training,1248,1245,-3
+2025-11-01,G&A,Other,832,812,-20
+2025-11-01,Customer Success,Salaries & Wages,23920,27940,4020
+2025-11-01,Customer Success,Software & Cloud,8320,10129,1809
+2025-11-01,Customer Success,Contractors,6240,7768,1528
+2025-11-01,Customer Success,Travel & Events,4160,4022,-138
+2025-11-01,Customer Success,Marketing Programs,3640,3811,171
+2025-11-01,Customer Success,Facilities,3120,3946,826
+2025-11-01,Customer Success,Training,1560,1691,131
+2025-11-01,Customer Success,Other,1040,1100,60
+2025-12-01,Sales,Salaries & Wages,57408,64368,6960
+2025-12-01,Sales,Software & Cloud,19968,26390,6422
+2025-12-01,Sales,Contractors,14976,19601,4625
+2025-12-01,Sales,Travel & Events,9984,10052,68
+2025-12-01,Sales,Marketing Programs,8736,8602,-134
+2025-12-01,Sales,Facilities,7488,8298,810
+2025-12-01,Sales,Training,3744,4012,268
+2025-12-01,Sales,Other,2496,2831,335
+2025-12-01,Marketing,Salaries & Wages,38272,37456,-816
+2025-12-01,Marketing,Software & Cloud,13312,14110,798
+2025-12-01,Marketing,Contractors,9984,10239,255
+2025-12-01,Marketing,Travel & Events,6656,5184,-1472
+2025-12-01,Marketing,Marketing Programs,5824,5382,-442
+2025-12-01,Marketing,Facilities,4992,5120,128
+2025-12-01,Marketing,Training,2496,2246,-250
+2025-12-01,Marketing,Other,1664,1528,-136
+2025-12-01,R&D,Salaries & Wages,28704,33581,4877
+2025-12-01,R&D,Software & Cloud,9984,14815,4831
+2025-12-01,R&D,Contractors,7488,8867,1379
+2025-12-01,R&D,Travel & Events,4992,5288,296
+2025-12-01,R&D,Marketing Programs,4368,5049,681
+2025-12-01,R&D,Facilities,3744,4538,794
+2025-12-01,R&D,Training,1872,2008,136
+2025-12-01,R&D,Other,1248,1474,226
+2025-12-01,Operations,Salaries & Wages,45448,45143,-305
+2025-12-01,Operations,Software & Cloud,15808,18494,2686
+2025-12-01,Operations,Contractors,11856,12830,974
+2025-12-01,Operations,Travel & Events,7904,6858,-1046
+2025-12-01,Operations,Marketing Programs,6916,6767,-149
+2025-12-01,Operations,Facilities,5928,6311,383
+2025-12-01,Operations,Training,2964,2684,-280
+2025-12-01,Operations,Other,1976,1967,-9
+2025-12-01,G&A,Salaries & Wages,19136,19161,25
+2025-12-01,G&A,Software & Cloud,6656,6907,251
+2025-12-01,G&A,Contractors,4992,5245,253
+2025-12-01,G&A,Travel & Events,3328,2764,-564
+2025-12-01,G&A,Marketing Programs,2912,2909,-3
+2025-12-01,G&A,Facilities,2496,2759,263
+2025-12-01,G&A,Training,1248,1288,40
+2025-12-01,G&A,Other,832,790,-42
+2025-12-01,Customer Success,Salaries & Wages,23920,27289,3369
+2025-12-01,Customer Success,Software & Cloud,8320,10518,2198
+2025-12-01,Customer Success,Contractors,6240,7400,1160
+2025-12-01,Customer Success,Travel & Events,4160,4583,423
+2025-12-01,Customer Success,Marketing Programs,3640,3560,-80
+2025-12-01,Customer Success,Facilities,3120,3627,507
+2025-12-01,Customer Success,Training,1560,1613,53
+2025-12-01,Customer Success,Other,1040,1235,195
+2026-01-01,Sales,Salaries & Wages,59616,68101,8485
+2026-01-01,Sales,Software & Cloud,20736,25871,5135
+2026-01-01,Sales,Contractors,15552,19290,3738
+2026-01-01,Sales,Travel & Events,10368,11261,893
+2026-01-01,Sales,Marketing Programs,9072,9961,889
+2026-01-01,Sales,Facilities,7776,9045,1269
+2026-01-01,Sales,Training,3888,4044,156
+2026-01-01,Sales,Other,2592,2576,-16
+2026-01-01,Marketing,Salaries & Wages,39744,37900,-1844
+2026-01-01,Marketing,Software & Cloud,13824,14978,1154
+2026-01-01,Marketing,Contractors,10368,10207,-161
+2026-01-01,Marketing,Travel & Events,6912,5769,-1143
+2026-01-01,Marketing,Marketing Programs,6048,5640,-408
+2026-01-01,Marketing,Facilities,5184,4557,-627
+2026-01-01,Marketing,Training,2592,2132,-460
+2026-01-01,Marketing,Other,1728,1544,-184
+2026-01-01,R&D,Salaries & Wages,29808,37176,7368
+2026-01-01,R&D,Software & Cloud,10368,12741,2373
+2026-01-01,R&D,Contractors,7776,10476,2700
+2026-01-01,R&D,Travel & Events,5184,5330,146
+2026-01-01,R&D,Marketing Programs,4536,4783,247
+2026-01-01,R&D,Facilities,3888,4870,982
+2026-01-01,R&D,Training,1944,2132,188
+2026-01-01,R&D,Other,1296,1392,96
+2026-01-01,Operations,Salaries & Wages,47196,46653,-543
+2026-01-01,Operations,Software & Cloud,16416,20163,3747
+2026-01-01,Operations,Contractors,12312,14426,2114
+2026-01-01,Operations,Travel & Events,8208,7434,-774
+2026-01-01,Operations,Marketing Programs,7182,7210,28
+2026-01-01,Operations,Facilities,6156,6490,334
+2026-01-01,Operations,Training,3078,2841,-237
+2026-01-01,Operations,Other,2052,2117,65
+2026-01-01,G&A,Salaries & Wages,19872,19075,-797
+2026-01-01,G&A,Software & Cloud,6912,7403,491
+2026-01-01,G&A,Contractors,5184,5228,44
+2026-01-01,G&A,Travel & Events,3456,3070,-386
+2026-01-01,G&A,Marketing Programs,3024,2826,-198
+2026-01-01,G&A,Facilities,2592,2410,-182
+2026-01-01,G&A,Training,1296,1154,-142
+2026-01-01,G&A,Other,864,888,24
+2026-01-01,Customer Success,Salaries & Wages,24840,27502,2662
+2026-01-01,Customer Success,Software & Cloud,8640,11453,2813
+2026-01-01,Customer Success,Contractors,6480,8222,1742
+2026-01-01,Customer Success,Travel & Events,4320,4500,180
+2026-01-01,Customer Success,Marketing Programs,3780,4593,813
+2026-01-01,Customer Success,Facilities,3240,3370,130
+2026-01-01,Customer Success,Training,1620,1766,146
+2026-01-01,Customer Success,Other,1080,1158,78
+2026-02-01,Sales,Salaries & Wages,59616,75446,15830
+2026-02-01,Sales,Software & Cloud,20736,29898,9162
+2026-02-01,Sales,Contractors,15552,16912,1360
+2026-02-01,Sales,Travel & Events,10368,10189,-179
+2026-02-01,Sales,Marketing Programs,9072,10368,1296
+2026-02-01,Sales,Facilities,7776,9231,1455
+2026-02-01,Sales,Training,3888,4371,483
+2026-02-01,Sales,Other,2592,2922,330
+2026-02-01,Marketing,Salaries & Wages,39744,36866,-2878
+2026-02-01,Marketing,Software & Cloud,13824,14923,1099
+2026-02-01,Marketing,Contractors,10368,10060,-308
+2026-02-01,Marketing,Travel & Events,6912,6105,-807
+2026-02-01,Marketing,Marketing Programs,6048,4624,-1424
+2026-02-01,Marketing,Facilities,5184,4860,-324
+2026-02-01,Marketing,Training,2592,2089,-503
+2026-02-01,Marketing,Other,1728,1652,-76
+2026-02-01,R&D,Salaries & Wages,29808,34208,4400
+2026-02-01,R&D,Software & Cloud,10368,13152,2784
+2026-02-01,R&D,Contractors,7776,9993,2217
+2026-02-01,R&D,Travel & Events,5184,5254,70
+2026-02-01,R&D,Marketing Programs,4536,4846,310
+2026-02-01,R&D,Facilities,3888,4118,230
+2026-02-01,R&D,Training,1944,2145,201
+2026-02-01,R&D,Other,1296,1553,257
+2026-02-01,Operations,Salaries & Wages,47196,50686,3490
+2026-02-01,Operations,Software & Cloud,16416,18906,2490
+2026-02-01,Operations,Contractors,12312,14301,1989
+2026-02-01,Operations,Travel & Events,8208,7635,-573
+2026-02-01,Operations,Marketing Programs,7182,6997,-185
+2026-02-01,Operations,Facilities,6156,6435,279
+2026-02-01,Operations,Training,3078,3147,69
+2026-02-01,Operations,Other,2052,2030,-22
+2026-02-01,G&A,Salaries & Wages,19872,18826,-1046
+2026-02-01,G&A,Software & Cloud,6912,7568,656
+2026-02-01,G&A,Contractors,5184,5409,225
+2026-02-01,G&A,Travel & Events,3456,2896,-560
+2026-02-01,G&A,Marketing Programs,3024,2999,-25
+2026-02-01,G&A,Facilities,2592,2433,-159
+2026-02-01,G&A,Training,1296,1217,-79
+2026-02-01,G&A,Other,864,790,-74
+2026-02-01,Customer Success,Salaries & Wages,24840,27786,2946
+2026-02-01,Customer Success,Software & Cloud,8640,11136,2496
+2026-02-01,Customer Success,Contractors,6480,7471,991
+2026-02-01,Customer Success,Travel & Events,4320,4912,592
+2026-02-01,Customer Success,Marketing Programs,3780,4104,324
+2026-02-01,Customer Success,Facilities,3240,3946,706
+2026-02-01,Customer Success,Training,1620,1785,165
+2026-02-01,Customer Success,Other,1080,1136,56
+2026-03-01,Sales,Salaries & Wages,59616,66118,6502
+2026-03-01,Sales,Software & Cloud,20736,27778,7042
+2026-03-01,Sales,Contractors,15552,19130,3578
+2026-03-01,Sales,Travel & Events,10368,10856,488
+2026-03-01,Sales,Marketing Programs,9072,9816,744
+2026-03-01,Sales,Facilities,7776,7917,141
+2026-03-01,Sales,Training,3888,4135,247
+2026-03-01,Sales,Other,2592,2575,-17
+2026-03-01,Marketing,Salaries & Wages,39744,36647,-3097
+2026-03-01,Marketing,Software & Cloud,13824,13724,-100
+2026-03-01,Marketing,Contractors,10368,9673,-695
+2026-03-01,Marketing,Travel & Events,6912,5659,-1253
+2026-03-01,Marketing,Marketing Programs,6048,5377,-671
+2026-03-01,Marketing,Facilities,5184,4290,-894
+2026-03-01,Marketing,Training,2592,1999,-593
+2026-03-01,Marketing,Other,1728,1462,-266
+2026-03-01,R&D,Salaries & Wages,29808,30740,932
+2026-03-01,R&D,Software & Cloud,10368,13115,2747
+2026-03-01,R&D,Contractors,7776,10770,2994
+2026-03-01,R&D,Travel & Events,5184,5218,34
+2026-03-01,R&D,Marketing Programs,4536,5333,797
+2026-03-01,R&D,Facilities,3888,4174,286
+2026-03-01,R&D,Training,1944,2192,248
+2026-03-01,R&D,Other,1296,1482,186
+2026-03-01,Operations,Salaries & Wages,47196,47497,301
+2026-03-01,Operations,Software & Cloud,16416,19729,3313
+2026-03-01,Operations,Contractors,12312,14922,2610
+2026-03-01,Operations,Travel & Events,8208,7716,-492
+2026-03-01,Operations,Marketing Programs,7182,7089,-93
+2026-03-01,Operations,Facilities,6156,5865,-291
+2026-03-01,Operations,Training,3078,3059,-19
+2026-03-01,Operations,Other,2052,2042,-10
+2026-03-01,G&A,Salaries & Wages,19872,20072,200
+2026-03-01,G&A,Software & Cloud,6912,7618,706
+2026-03-01,G&A,Contractors,5184,5972,788
+2026-03-01,G&A,Travel & Events,3456,2712,-744
+2026-03-01,G&A,Marketing Programs,3024,2769,-255
+2026-03-01,G&A,Facilities,2592,2626,34
+2026-03-01,G&A,Training,1296,1158,-138
+2026-03-01,G&A,Other,864,792,-72
+2026-03-01,Customer Success,Salaries & Wages,24840,26807,1967
+2026-03-01,Customer Success,Software & Cloud,8640,10029,1389
+2026-03-01,Customer Success,Contractors,6480,7729,1249
+2026-03-01,Customer Success,Travel & Events,4320,5045,725
+2026-03-01,Customer Success,Marketing Programs,3780,4306,526
+2026-03-01,Customer Success,Facilities,3240,3324,84
+2026-03-01,Customer Success,Training,1620,1601,-19
+2026-03-01,Customer Success,Other,1080,1156,76
+2026-04-01,Sales,Salaries & Wages,59616,72019,12403
+2026-04-01,Sales,Software & Cloud,20736,25818,5082
+2026-04-01,Sales,Contractors,15552,18329,2777
+2026-04-01,Sales,Travel & Events,10368,11441,1073
+2026-04-01,Sales,Marketing Programs,9072,10542,1470
+2026-04-01,Sales,Facilities,7776,8648,872
+2026-04-01,Sales,Training,3888,3929,41
+2026-04-01,Sales,Other,2592,2686,94
+2026-04-01,Marketing,Salaries & Wages,39744,34334,-5410
+2026-04-01,Marketing,Software & Cloud,13824,12528,-1296
+2026-04-01,Marketing,Contractors,10368,10552,184
+2026-04-01,Marketing,Travel & Events,6912,5516,-1396
+2026-04-01,Marketing,Marketing Programs,6048,5440,-608
+2026-04-01,Marketing,Facilities,5184,5224,40
+2026-04-01,Marketing,Training,2592,2380,-212
+2026-04-01,Marketing,Other,1728,1453,-275
+2026-04-01,R&D,Salaries & Wages,29808,36674,6866
+2026-04-01,R&D,Software & Cloud,10368,14926,4558
+2026-04-01,R&D,Contractors,7776,9378,1602
+2026-04-01,R&D,Travel & Events,5184,5260,76
+2026-04-01,R&D,Marketing Programs,4536,5105,569
+2026-04-01,R&D,Facilities,3888,4125,237
+2026-04-01,R&D,Training,1944,2356,412
+2026-04-01,R&D,Other,1296,1310,14
+2026-04-01,Operations,Salaries & Wages,47196,44605,-2591
+2026-04-01,Operations,Software & Cloud,16416,18761,2345
+2026-04-01,Operations,Contractors,12312,13248,936
+2026-04-01,Operations,Travel & Events,8208,7703,-505
+2026-04-01,Operations,Marketing Programs,7182,7152,-30
+2026-04-01,Operations,Facilities,6156,6138,-18
+2026-04-01,Operations,Training,3078,3162,84
+2026-04-01,Operations,Other,2052,1823,-229
+2026-04-01,G&A,Salaries & Wages,19872,19086,-786
+2026-04-01,G&A,Software & Cloud,6912,7314,402
+2026-04-01,G&A,Contractors,5184,5420,236
+2026-04-01,G&A,Travel & Events,3456,3094,-362
+2026-04-01,G&A,Marketing Programs,3024,2667,-357
+2026-04-01,G&A,Facilities,2592,2396,-196
+2026-04-01,G&A,Training,1296,1240,-56
+2026-04-01,G&A,Other,864,847,-17
+2026-04-01,Customer Success,Salaries & Wages,24840,26190,1350
+2026-04-01,Customer Success,Software & Cloud,8640,12333,3693
+2026-04-01,Customer Success,Contractors,6480,8828,2348
+2026-04-01,Customer Success,Travel & Events,4320,3998,-322
+2026-04-01,Customer Success,Marketing Programs,3780,4100,320
+2026-04-01,Customer Success,Facilities,3240,4136,896
+2026-04-01,Customer Success,Training,1620,1772,152
+2026-04-01,Customer Success,Other,1080,1202,122
+2026-05-01,Sales,Salaries & Wages,59616,67119,7503
+2026-05-01,Sales,Software & Cloud,20736,26316,5580
+2026-05-01,Sales,Contractors,15552,18905,3353
+2026-05-01,Sales,Travel & Events,10368,10521,153
+2026-05-01,Sales,Marketing Programs,9072,10490,1418
+2026-05-01,Sales,Facilities,7776,8655,879
+2026-05-01,Sales,Training,3888,4101,213
+2026-05-01,Sales,Other,2592,2749,157
+2026-05-01,Marketing,Salaries & Wages,39744,35663,-4081
+2026-05-01,Marketing,Software & Cloud,13824,13560,-264
+2026-05-01,Marketing,Contractors,10368,9969,-399
+2026-05-01,Marketing,Travel & Events,6912,6092,-820
+2026-05-01,Marketing,Marketing Programs,6048,5397,-651
+2026-05-01,Marketing,Facilities,5184,4809,-375
+2026-05-01,Marketing,Training,2592,2264,-328
+2026-05-01,Marketing,Other,1728,1561,-167
+2026-05-01,R&D,Salaries & Wages,29808,34610,4802
+2026-05-01,R&D,Software & Cloud,10368,13695,3327
+2026-05-01,R&D,Contractors,7776,10284,2508
+2026-05-01,R&D,Travel & Events,5184,5229,45
+2026-05-01,R&D,Marketing Programs,4536,5579,1043
+2026-05-01,R&D,Facilities,3888,4558,670
+2026-05-01,R&D,Training,1944,2066,122
+2026-05-01,R&D,Other,1296,1472,176
+2026-05-01,Operations,Salaries & Wages,47196,45771,-1425
+2026-05-01,Operations,Software & Cloud,16416,19251,2835
+2026-05-01,Operations,Contractors,12312,12864,552
+2026-05-01,Operations,Travel & Events,8208,8168,-40
+2026-05-01,Operations,Marketing Programs,7182,6714,-468
+2026-05-01,Operations,Facilities,6156,5425,-731
+2026-05-01,Operations,Training,3078,2827,-251
+2026-05-01,Operations,Other,2052,1837,-215
+2026-05-01,G&A,Salaries & Wages,19872,19032,-840
+2026-05-01,G&A,Software & Cloud,6912,8132,1220
+2026-05-01,G&A,Contractors,5184,5588,404
+2026-05-01,G&A,Travel & Events,3456,2817,-639
+2026-05-01,G&A,Marketing Programs,3024,2690,-334
+2026-05-01,G&A,Facilities,2592,2769,177
+2026-05-01,G&A,Training,1296,1205,-91
+2026-05-01,G&A,Other,864,830,-34
+2026-05-01,Customer Success,Salaries & Wages,24840,29111,4271
+2026-05-01,Customer Success,Software & Cloud,8640,12662,4022
+2026-05-01,Customer Success,Contractors,6480,8321,1841
+2026-05-01,Customer Success,Travel & Events,4320,4409,89
+2026-05-01,Customer Success,Marketing Programs,3780,4120,340
+2026-05-01,Customer Success,Facilities,3240,3698,458
+2026-05-01,Customer Success,Training,1620,1632,12
+2026-05-01,Customer Success,Other,1080,1115,35

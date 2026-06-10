@@ -215,15 +215,21 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
             "chart": perf_chart,
         })
 
-    # --- One insight slide per dimension (bar). Cap both the number of dimensions
-    # (cost) and the bars per chart (readability — a 1000-value dimension is unreadable). ---
-    for dim in dims:
+    # --- One insight slide per dimension. Cap the number of dimensions (cost) and the
+    # bars per chart (readability). Vary the chart type per dimension so a deck isn't
+    # wall-to-wall identical bars: horizontal bar -> donut (share) -> vertical column. ---
+    _DIM_CHART_KINDS = ["bar", "column", "donut"]
+    for di, dim in enumerate(dims):
         bd = battery["dimensions"][dim]["breakdown"]
         mv = battery["dimensions"][dim]["movers"]
         f = _dim_facts(battery, dim)
         x = [_label(r[0]) for r in bd.rows[:_MAX_BARS]]
         vals = [float(r[1] or 0) for r in bd.rows[:_MAX_BARS]]
-        chart = ChartSpec(kind="bar", title=f"{m} by {dim} ({period})", x=x,
+        # A donut only reads well with a handful of slices; fall back to bars otherwise.
+        kind = _DIM_CHART_KINDS[di % len(_DIM_CHART_KINDS)]
+        if kind == "donut" and len(x) > 7:
+            kind = "column"
+        chart = ChartSpec(kind=kind, title=f"{m} by {dim} ({period})", x=x,
                           series={m: vals}, highlight=x[0] if x else None)
         approved = [money(f["leader"][1]), pct(f["leader_share"], signed=False)]
         if f["top_riser"]:

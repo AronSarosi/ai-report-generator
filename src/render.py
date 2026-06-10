@@ -65,12 +65,13 @@ def _theme(brand: Optional[dict]) -> Theme:
 # --------------------------------------------------------------------------- #
 # Charts
 # --------------------------------------------------------------------------- #
-def render_chart(spec: ChartSpec, path: Path, accent: str = ACCENT) -> Path:
+def render_chart(spec: ChartSpec, path: Path, accent: str = ACCENT, wide: bool = False) -> Path:
     import matplotlib.pyplot as plt
 
     apply_mpl_style()
-    fig, ax = plt.subplots(figsize=(7.8, 4.0))
+    fig, ax = plt.subplots(figsize=(10.8, 3.2) if wide else (7.8, 4.0))
     name, ys = next(iter(spec.series.items()))
+    labels = spec.x
 
     if spec.kind == "line":
         xs = list(range(len(spec.x)))
@@ -83,8 +84,34 @@ def render_chart(spec: ChartSpec, path: Path, accent: str = ACCENT) -> Path:
         ax.set_xticklabels(spec.x, rotation=45, ha="right", fontsize=8)
         ax.yaxis.set_major_formatter(FuncFormatter(lambda v, p: money(v)))
         ax.margins(x=0.02)
+    elif spec.kind == "donut":
+        # Share of total: top slices + an "Other" remainder; the leader is accented.
+        pairs = list(zip(labels, ys))[:6]
+        rest = sum(ys[6:])
+        if rest > 0:
+            pairs.append(("Other", rest))
+        dlabels = [p[0] for p in pairs]
+        dvals = [p[1] for p in pairs]
+        palette = [accent, INK, GRAY_500, GRAY_300, "#9AA8Bd", "#5B6B82", GRAY_100]
+        colors = [accent if (spec.highlight and dlabels[i] == spec.highlight) else
+                  palette[i % len(palette)] for i in range(len(dlabels))]
+        ax.pie(dvals, labels=dlabels, colors=colors, startangle=90, counterclock=False,
+               wedgeprops={"width": 0.42, "edgecolor": PAPER, "linewidth": 2},
+               textprops={"fontsize": 9, "color": GRAY_900},
+               autopct=lambda p: f"{p:.0f}%" if p >= 6 else "")
+        ax.set(aspect="equal")
+    elif spec.kind == "column":  # vertical bars
+        xs = list(range(len(labels)))
+        colors = [accent if (spec.highlight and labels[i] == spec.highlight) else GRAY_300
+                  for i in range(len(labels))]
+        ax.bar(xs, ys, color=colors)
+        ax.set_xticks(xs)
+        ax.set_xticklabels(labels, rotation=30, ha="right", fontsize=9)
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda v, p: money(v)))
+        for x, val in zip(xs, ys):
+            ax.annotate(money(val), (x, val), textcoords="offset points",
+                        xytext=(0, 4), ha="center", fontsize=8, color=GRAY_900)
     else:  # horizontal bar (sorted desc -> largest on top)
-        labels = spec.x
         y_pos = list(range(len(labels)))[::-1]
         colors = [accent if (spec.highlight and labels[i] == spec.highlight) else GRAY_300
                   for i in range(len(labels))]
@@ -159,18 +186,21 @@ def _full_bg(slide, color: str):
     return bg
 
 
-def _cover_slide(prs, report: Report, t):
-    """A striking dark, full-bleed cover: brand-ink background, an accent rule, and the
-    title set large in white — the kind of cover an image-rich template would give."""
+def _cover_slide(prs, report: Report, t, dark: bool = True):
+    """The cover: title at the very top with nothing above it, an accent rule, then the
+    subtitle. Dark = full-bleed brand-ink panel with a white title; light = clean white
+    cover with an ink title (varied across decks)."""
     s = prs.slides.add_slide(prs.slide_layouts[6])
-    _full_bg(s, t.ink)
-    kicker = (report.period and f"PERFORMANCE REVIEW  ·  {report.period}") or "PERFORMANCE REVIEW"
-    _set(_box(s, 0.85, 2.35, 11.6, 0.4).paragraphs[0], kicker, 14, t.font_body, t.accent, bold=True)
-    _rule(s, 0.9, 2.95, 1.7, 6, color=t.accent)
-    _set(_box(s, 0.8, 3.2, 11.7, 2.0).paragraphs[0], report.title, SZ_DECK_TITLE,
-         t.font_head, PAPER, bold=True)
-    _set(_box(s, 0.85, 5.5, 11.7, 0.6).paragraphs[0], report.subtitle, SZ_SUB,
-         t.font_body, GRAY_300)
+    if dark:
+        _full_bg(s, t.ink)
+        title_color, sub_color = PAPER, GRAY_300
+    else:
+        title_color, sub_color = t.ink, GRAY_500
+    _set(_box(s, 0.85, 0.85, 11.6, 2.0).paragraphs[0], report.title, SZ_DECK_TITLE,
+         t.font_head, title_color, bold=True)
+    _rule(s, 0.9, 3.0, 1.7, 6, color=t.accent)
+    _set(_box(s, 0.85, 3.25, 11.6, 0.6).paragraphs[0], report.subtitle, SZ_SUB,
+         t.font_body, sub_color)
 
 
 def _exec_slide(prs, report: Report, t):
@@ -256,31 +286,30 @@ def _kpis_from_chart(spec: ChartSpec) -> list[tuple[str, str]]:
     return [(money(v), str(lbl)) for lbl, v in pairs]
 
 
-def _kpi_band(slide, kpis: list[tuple[str, str]], t, top: float = 5.55):
-    """A horizontal row of KPI cards: a big number over a label, accent rule on top."""
+def _kpi_band(slide, kpis: list[tuple[str, str]], descriptions: list[str], t, top: float = 5.2):
+    """A horizontal row of KPI cards: a big number, then a one-line insight beneath it
+    (not just a label — the label is already on the chart above)."""
     n = len(kpis) or 1
     gap = 0.5
     card_w = (CONTENT_W_IN - gap * (n - 1)) / n
     for i, (val, label) in enumerate(kpis):
         x = MARGIN_IN + i * (card_w + gap)
+        desc = descriptions[i] if i < len(descriptions) else label
+        if len(desc) > 120:
+            desc = desc[:117] + "..."
         _rule(slide, x, top, card_w, 4, color=t.accent)
-        _set(_box(slide, x, top + 0.12, card_w, 0.85).paragraphs[0], val, 30, t.font_head, t.ink, bold=True)
-        _set(_box(slide, x, top + 0.95, card_w, 0.55).paragraphs[0], label, 12, t.font_body, GRAY_500)
+        _set(_box(slide, x, top + 0.1, card_w, 0.7).paragraphs[0], val, 27, t.font_head, t.ink, bold=True)
+        _set(_box(slide, x, top + 0.78, card_w, 1.55).paragraphs[0], desc, 11, t.font_body, GRAY_500)
 
 
 def _insight_slide_kpi(prs, sec, chart_path: Optional[Path], t):
-    """Alternate layout: title on top, a centred chart, then three key numbers across the
-    bottom — so the deck isn't every-slide-the-same chart-left/callout-right."""
+    """Alternate layout: title on top, a wide chart, then key numbers each with a short
+    insight across the bottom — so the deck isn't every-slide chart-left/callout-right."""
     src = f"Source: {sec.citations[0] if sec.citations else 'database'}, verified against the data."
     s = _content_slide(prs, sec.kicker, sec.action_title, src, t)
     if chart_path:
-        s.shapes.add_picture(str(chart_path), Inches(3.57), Inches(1.8), width=Inches(6.2))
-    if sec.so_what:
-        tf = _box(s, 0.5, 5.0, CONTENT_W_IN, 0.45)
-        p = tf.paragraphs[0]
-        p.alignment = PP_ALIGN.CENTER
-        _set(p, sec.so_what, 13, t.font_body, t.ink, bold=True)
-    _kpi_band(s, _kpis_from_chart(sec.chart), t)
+        s.shapes.add_picture(str(chart_path), Inches(1.0), Inches(1.7), width=Inches(11.3))
+    _kpi_band(s, _kpis_from_chart(sec.chart), sec.bullets, t)
 
 
 def _reco_slide(prs, report: Report, t):
@@ -348,17 +377,19 @@ def render_report(report: Report, out_dir=None, charts_dir=None, brand=None) -> 
     prs.slide_width = Inches(SLIDE_W_IN)
     prs.slide_height = Inches(SLIDE_H_IN)
 
-    _cover_slide(prs, report, t)
+    cover_dark = (brand or {}).get("cover", "dark") != "light"
+    _cover_slide(prs, report, t, dark=cover_dark)
     _exec_slide(prs, report, t)
-    # Alternate insight layouts so the deck varies slide to slide: the classic
-    # chart-left/takeaway-right, then the centred-chart + KPI-band layout.
+    # Mostly the classic chart-left/takeaway-right layout, with ONE KPI-band slide per
+    # deck (the second insight) so there's variety without it being repetitive.
     insight_n = 0
     for i, sec in enumerate(report.sections):
+        use_kpi = insight_n == 1 and sec.chart is not None
         cpath = None
         if sec.chart:
             cpath = charts_dir / f"chart_{i}.png"
-            render_chart(sec.chart, cpath, accent=t.accent)
-        if insight_n % 2 == 1 and sec.chart:
+            render_chart(sec.chart, cpath, accent=t.accent, wide=use_kpi)
+        if use_kpi:
             _insight_slide_kpi(prs, sec, cpath, t)
         else:
             _insight_slide(prs, sec, cpath, t)

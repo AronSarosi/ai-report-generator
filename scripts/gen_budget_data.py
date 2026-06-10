@@ -33,6 +33,20 @@ DEPARTMENTS = {
     "Customer Success": (50_000, 1.06, 0.04),   # over (scaling)
 }
 
+# Budget line items within each department, with the share of the department's budget
+# and a cost-pressure multiplier (so e.g. Software/Cloud runs hot). Splitting the budget
+# into line items takes the dataset from ~150 to a few thousand realistic rows.
+COST_CATEGORIES = {
+    "Salaries & Wages": (0.46, 1.00),
+    "Software & Cloud": (0.16, 1.15),
+    "Contractors": (0.12, 1.08),
+    "Travel & Events": (0.08, 0.92),
+    "Marketing Programs": (0.07, 0.97),
+    "Facilities": (0.06, 1.00),
+    "Training": (0.03, 0.95),
+    "Other": (0.02, 1.00),
+}
+
 
 def _months(n: int) -> list[date]:
     out, y, m = [], START.year, START.month
@@ -50,10 +64,13 @@ def generate() -> pd.DataFrame:
         t = i / (N_MONTHS - 1)
         annual_growth = 1 + 0.04 * (mo.year - START.year)   # budgets grow ~4%/yr
         for dept, (base, ratio0, drift) in DEPARTMENTS.items():
-            budget = round(base * annual_growth)
-            actual = round(budget * (ratio0 + drift * t) * float(rng.lognormal(0, 0.04)))
-            rows.append({"month": mo.isoformat(), "department": dept,
-                         "budget": budget, "actual": actual, "variance": actual - budget})
+            dept_budget = base * annual_growth
+            for cat, (share, pressure) in COST_CATEGORIES.items():
+                budget = round(dept_budget * share)
+                actual = round(budget * (ratio0 + drift * t) * pressure
+                               * float(rng.lognormal(0, 0.06)))
+                rows.append({"month": mo.isoformat(), "department": dept, "category": cat,
+                             "budget": budget, "actual": actual, "variance": actual - budget})
     return pd.DataFrame(rows)
 
 
