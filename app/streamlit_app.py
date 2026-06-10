@@ -10,6 +10,7 @@ Run from the project root:
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 import sys
@@ -24,7 +25,7 @@ import streamlit as st  # noqa: E402
 
 from src.branding import extract_brand  # noqa: E402
 from src.config import get_settings  # noqa: E402
-from src.data_tool import answer_data_question, load_file_to_sqlite, profile_dataset  # noqa: E402
+from src.data_tool import answer_data_question, load_file_to_sqlite  # noqa: E402
 from src.legal import CONTACT_EMAIL, PRIVACY_MD, TERMS_MD  # noqa: E402
 from src.limits import check, consume  # noqa: E402
 from src.render import render_report  # noqa: E402
@@ -37,10 +38,6 @@ st.set_page_config(page_title="AI Report Generator",
                    layout="wide", initial_sidebar_state="collapsed")
 settings = get_settings()
 UPLOAD_TYPES = ["csv", "tsv", "xlsx", "xlsm", "xls", "json"]
-
-# Pre-filled prompts so clicking "Use sample data" lets the user run immediately.
-SAMPLE_GEN_PROMPT = "Generate a monthly sales report highlighting the winning products and regions."
-SAMPLE_CHAT_Q = "Which region declined the most last month?"
 
 # Minimum sizes: nothing below 10pt (~0.84rem); written text >= 11pt (~0.92rem).
 CSS = """
@@ -119,6 +116,28 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .policy-title {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:2rem; margin:.6rem 0 .3rem 0;}
 .policy-back {color:#9AA4B4; text-decoration:none; font-size:.95rem;}
 .policy-back:hover {color:#C9D2DE; text-decoration:underline;}
+
+/* Example-reports showcase (browse between reports, scroll within to see all slides) */
+.showcase-h {text-align:center; font-family:'Lato',-apple-system,Segoe UI,sans-serif; color:#EAF1FB; font-weight:900; font-size:1.7rem; margin:2.4rem 0 .2rem 0;}
+.showcase-sub {text-align:center; color:#9AA4B4; font-size:1.0rem; max-width:760px; margin:0 auto 1.0rem auto; line-height:1.45;}
+.showcase-pick {text-align:center; color:#EAF1FB; font-size:1.05rem; padding-top:.35rem;}
+.showcase-pick b {color:#fff;}
+.pgdots {margin-top:.45rem;}
+.pgdot {display:inline-block; width:7px; height:7px; border-radius:50%; background:#3A4660; margin:0 3px;}
+.pgdot.on {background:#2E6DB4; width:18px; border-radius:4px;}
+.showcase-meta {background:#16202E; border:1px solid #2E3C52; color:#C4CCD8; padding:.55rem .85rem; border-radius:6px; font-size:.95rem; line-height:1.4; margin:.6rem 0 .7rem 0;}
+/* the deck "viewer" frame */
+.deckframe {background:#0B1018; border:1px solid #2E3C52; border-radius:10px; box-shadow:0 14px 40px rgba(0,0,0,.55); overflow:hidden; max-width:1000px; margin:0 auto;}
+.deckbar {background:#1A2231; border-bottom:1px solid #2E3C52; padding:.5rem .7rem;}
+.deckbar .dot {display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:6px;}
+.deckbar .dot.r {background:#ff5f57;} .deckbar .dot.y {background:#febc2e;} .deckbar .dot.g {background:#28c840;}
+.deckscroll {max-height:640px; overflow-y:auto; padding:14px; scroll-behavior:smooth;}
+.deckslide {display:block; width:100%; border:1px solid #E6E8EB; border-radius:4px; box-shadow:0 4px 14px rgba(0,0,0,.4); margin-bottom:14px;}
+.deckscroll::-webkit-scrollbar {width:10px;} .deckscroll::-webkit-scrollbar-thumb {background:#3A4660; border-radius:5px;}
+/* the arrow buttons: fixed circles, centered in their column */
+.st-key-ex_prev, .st-key-ex_next {display:flex; justify-content:center; align-items:center; height:100%;}
+.st-key-ex_prev button, .st-key-ex_next button {width:48px !important; min-width:48px !important; height:48px !important; padding:0 !important; font-size:1.5rem; line-height:1; border-radius:50% !important; background:#1F2A44; border:1px solid #2E3C52;}
+.st-key-ex_prev button:hover, .st-key-ex_next button:hover {background:#2E6DB4; border-color:#2E6DB4; color:#fff;}
 </style>
 """
 
@@ -167,50 +186,71 @@ def _load_examples() -> list[dict]:
         return []
 
 
-def render_examples() -> None:
+@st.cache_data(show_spinner=False)
+def _deck_scroll_html(key: str, thumbs: tuple[str, ...]) -> str:
+    """A scrollable 'deck viewer' frame: the report's slides stacked vertically inside a
+    fixed-height, scrollable card. Slides are inlined as base64 so no static server is
+    needed. Scroll within the frame to flip through all the slides."""
+    imgs = []
+    for t in thumbs:
+        p = _ROOT / t
+        if p.exists():
+            b64 = base64.b64encode(p.read_bytes()).decode("ascii")
+            imgs.append(f"<img class='deckslide' src='data:image/png;base64,{b64}'/>")
+    return (
+        "<div class='deckframe'><div class='deckbar'>"
+        "<span class='dot r'></span><span class='dot y'></span><span class='dot g'></span>"
+        "</div><div class='deckscroll'>" + "".join(imgs) + "</div></div>"
+    )
+
+
+def render_examples_showcase() -> None:
+    """Browseable showcase of the pre-built example reports: arrows to switch between the
+    four domains, scroll inside the frame to see every slide. Static (instant, no tokens)."""
     examples = _load_examples()
     if not examples:
-        hint("Example reports haven't been built yet. Run `python scripts/build_examples.py`.")
         return
-    hint("Real reports the engine generated from four different datasets — view every slide, "
-         "download the deck, then try your own data in the Generate Report tab. These are "
-         "pre-built, so they load instantly.")
-    titles = [f"{e['title']}  ·  {e['domain']}" for e in examples]
-    choice = st.radio("Example", titles, label_visibility="collapsed", horizontal=True)
-    ex = examples[titles.index(choice)]
+    st.markdown("<div class='showcase-h'>See what it produces</div>", unsafe_allow_html=True)
+    st.markdown("<div class='showcase-sub'>Real reports the engine generated from four different "
+                "datasets. Use the arrows to browse, and scroll inside the frame to see every "
+                "slide.</div>", unsafe_allow_html=True)
 
-    st.markdown(f"<div class='datastatus'><b>{ex['title_text']}</b> &nbsp;|&nbsp; period "
+    n = len(examples)
+    idx = st.session_state.get("ex_idx", 0) % n
+    left, mid, right = st.columns([1, 6, 1], vertical_alignment="center")
+    if left.button("‹", key="ex_prev"):
+        idx = (idx - 1) % n
+    if right.button("›", key="ex_next"):
+        idx = (idx + 1) % n
+    st.session_state["ex_idx"] = idx
+    ex = examples[idx]
+
+    dots = "".join(f"<span class='pgdot {'on' if i == idx else ''}'></span>" for i in range(n))
+    mid.markdown(f"<div class='showcase-pick'><b>{ex['title']}</b> · {ex['domain']}"
+                 f"<div class='pgdots'>{dots}</div></div>", unsafe_allow_html=True)
+
+    st.markdown(f"<div class='showcase-meta'>{ex['title_text']} &nbsp;|&nbsp; period "
                 f"{ex['period']} &nbsp;|&nbsp; {ex['rows']:,} rows &times; {ex['cols']} columns "
-                f"&nbsp;|&nbsp; {ex['n_sections']} insight slides</div>", unsafe_allow_html=True)
-    hint(ex["description"])
-    st.markdown("".join(f"<span class='datachip'>{c}</span>" for c in ex["columns"]),
+                f"&nbsp;|&nbsp; {ex['n_sections']} insight slides &mdash; {ex['description']}</div>",
                 unsafe_allow_html=True)
 
-    # Downloads (static files — no LLM call)
-    cols = st.columns(3)
+    st.markdown(_deck_scroll_html(ex["key"], tuple(ex["thumbs"])), unsafe_allow_html=True)
+
+    d1, d2, d3 = st.columns(3)
     pdf = _ROOT / ex["pdf"] if ex["pdf"] else None
-    pptx = _ROOT / ex["pptx"]
-    csv = _ROOT / ex["csv"]
+    pptx, csv = _ROOT / ex["pptx"], _ROOT / ex["csv"]
     if pdf and pdf.exists():
-        cols[0].download_button("⬇ Full report (PDF)", pdf.read_bytes(),
-                                f"{ex['key']}_report.pdf", "application/pdf",
-                                use_container_width=True)
+        d1.download_button("⬇ Full report (PDF)", pdf.read_bytes(), f"{ex['key']}_report.pdf",
+                           "application/pdf", use_container_width=True, key=f"dl_pdf_{ex['key']}")
     if pptx.exists():
-        cols[1].download_button(
+        d2.download_button(
             "⬇ Editable deck (PPTX)", pptx.read_bytes(), f"{ex['key']}_report.pptx",
             "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            use_container_width=True)
+            use_container_width=True, key=f"dl_pptx_{ex['key']}")
     if csv.exists():
-        csv_label = "⬇ Source data (CSV sample)" if ex.get("csv_sampled") else "⬇ Source data (CSV)"
-        cols[2].download_button(csv_label, csv.read_bytes(),
-                                f"{ex['key']}_data.csv", "text/csv",
-                                use_container_width=True)
-
-    # Slides, full width, in order.
-    for t in ex["thumbs"]:
-        img = _ROOT / t
-        if img.exists():
-            st.image(str(img), use_container_width=True)
+        lbl = "⬇ Source data (CSV sample)" if ex.get("csv_sampled") else "⬇ Source data (CSV)"
+        d3.download_button(lbl, csv.read_bytes(), f"{ex['key']}_data.csv", "text/csv",
+                           use_container_width=True, key=f"dl_csv_{ex['key']}")
 
 
 # --------------------------------------------------------------------------- #
@@ -270,31 +310,6 @@ def _process_uploads(files) -> None:
                 pass
 
 
-def _load_sample() -> None:
-    st.session_state.setdefault("tables", {})
-    if Path(settings.db_path).exists():
-        try:
-            prof = profile_dataset(table="sales")
-            st.session_state["tables"]["sales"] = {"rows": prof.n_rows, "file": "sample sales data"}
-            st.session_state["active_table"] = "sales"
-            return
-        except Exception:  # noqa: BLE001
-            pass
-    sample = Path(settings.out_dir) / "sales_sample.csv"
-    if not sample.exists():
-        # Fresh deploy with no baked-in data: generate the sample on demand.
-        import subprocess
-        gen = Path(__file__).resolve().parents[1] / "scripts" / "gen_sales_data.py"
-        try:
-            subprocess.run([sys.executable, str(gen)], check=True, capture_output=True, timeout=180)
-        except Exception:  # noqa: BLE001
-            pass
-    if sample.exists():
-        n = load_file_to_sqlite(sample, table="sales")
-        st.session_state["tables"]["sales"] = {"rows": n, "file": "sample sales data"}
-        st.session_state["active_table"] = "sales"
-
-
 def data_panel(suffix: str) -> str | None:
     """Uploader + shared status + active-dataset picker. Returns the active table."""
     field_label("Upload your data (CSV or Excel, one or more files)")
@@ -305,26 +320,13 @@ def data_panel(suffix: str) -> str | None:
 
     tables = st.session_state.get("tables", {})
     if not tables:
-        # Hint on the left, "Use sample data" on the right (same row, aligned under Browse files).
-        c_hint, c_btn = st.columns([5, 1.6])
-        c_hint.markdown("<div class='hint' style='margin-top:.55rem'>Upload a file, or click "
-                        '"Use sample data", to begin.</div>', unsafe_allow_html=True)
-        if c_btn.button("Use sample data", key=f"sample_{suffix}"):
-            _load_sample()
-            # Pre-fill this tab's prompt so the user can generate/ask right away. (Only the
-            # current tab's widget is set (it is created after this, so the write is safe).
-            if suffix == "gen" and not st.session_state.get("gen_prompt"):
-                st.session_state["gen_prompt"] = SAMPLE_GEN_PROMPT
-            elif suffix == "chat" and not st.session_state.get("chat_q"):
-                st.session_state["chat_q"] = SAMPLE_CHAT_Q
-            tables = st.session_state.get("tables", {})
+        hint("Upload a CSV or Excel file to begin. New here? See the example reports below "
+             "for what the engine produces.")
     if not tables:
         return None
 
     names = list(tables.keys())
-    is_sample = tables[names[0]]["file"] == "sample sales data"
-    msg = ("Using the bundled <b>sample sales data</b>." if is_sample
-           else "Your data is loaded and <b>shared across both tabs</b>.")
+    msg = "Your data is loaded and <b>shared across both tabs</b>."
     chips = "".join(f"<span class='datachip'>{t} · {tables[t]['rows']:,} rows</span>" for t in names)
     st.markdown(f"<div class='datastatus'>&#10003; {msg}<br>{chips}</div>", unsafe_allow_html=True)
 
@@ -428,14 +430,7 @@ st.markdown('<div class="app-sub">Upload your sales, finance, or operations data
             'Or ask questions in plain English and get instant answers, all computed from your own '
             'data.</div>', unsafe_allow_html=True)
 
-tab_examples, tab_gen, tab_chat = st.tabs(
-    ["Example Reports", "Generate Report", "Ask Your Data"])
-
-# --------------------------------------------------------------------------- #
-# Tab 0 - Example Reports (pre-built; instant; demonstrates data-agnostic breadth)
-# --------------------------------------------------------------------------- #
-with tab_examples:
-    render_examples()
+tab_gen, tab_chat = st.tabs(["Generate Report", "Ask Your Data"])
 
 # --------------------------------------------------------------------------- #
 # Tab 1 - Generate Report
@@ -527,7 +522,9 @@ with tab_gen:
         if res["pdf"]:
             d2.download_button("⬇ Download PDF", Path(res["pdf"]).read_bytes(),
                                "report.pdf", "application/pdf")
-    st.markdown(HERO_GENERATE, unsafe_allow_html=True)
+
+    # Showcase of pre-built example reports (browse + scroll), in place of an illustration.
+    render_examples_showcase()
 
 # --------------------------------------------------------------------------- #
 # Tab 2 - Ask Your Data
