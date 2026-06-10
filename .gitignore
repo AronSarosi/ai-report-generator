@@ -4,5 +4,6 @@ data/db/
 data/out/
 data/charts/
 data/torture/
+data/ui_shots/
 __pycache__/
 *.pyc
