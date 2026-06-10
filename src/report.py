@@ -23,7 +23,7 @@ from src.analysis import compute_battery
 from src.config import get_chat_model, get_settings
 from src.data_tool import profile_dataset
 from src.obs import get_callbacks
-from src.schemas import (ChartSpec, KeyMessage, Report, ReportRequest, ReportSection)
+from src.schemas import ChartSpec, KeyMessage, Report, ReportRequest, ReportSection
 
 
 # --------------------------------------------------------------------------- #
@@ -85,7 +85,8 @@ def _no_dashes(s: str) -> str:
 # Structured-output drafts (the LLM fills ONLY text fields)
 # --------------------------------------------------------------------------- #
 class SectionDraft(BaseModel):
-    action_title: str = Field(description="Full-sentence assertion <=15 words, active voice, includes a number")
+    action_title: str = Field(description="Full-sentence assertion <=15 words, active voice, "
+                                          "includes a number")
     narrative: str = Field(description="2-4 sentence explanation grounded in the figures")
     bullets: list[str] = Field(default_factory=list, description="2-3 short supporting points")
     so_what: str = Field(description="One-sentence takeaway / implication")
@@ -100,7 +101,8 @@ class ExecDraft(BaseModel):
 
 
 class RecsDraft(BaseModel):
-    recommendations: list[str] = Field(description="3-4 specific, verb-first actions grounded in the findings")
+    recommendations: list[str] = Field(description="3-4 specific, verb-first actions grounded "
+                                                   "in the findings")
 
 
 # --------------------------------------------------------------------------- #
@@ -137,7 +139,8 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
     # --- Executive summary ---
     if battery["prior_total"] is not None:
         exec_lines = [f"Total {m}: {money(battery['period_total'])} in {period} "
-                      f"(prior {prior}: {money(battery['prior_total'])}, change {pct(battery['delta_pct'])})."]
+                      f"(prior {prior}: {money(battery['prior_total'])}, "
+                      f"change {pct(battery['delta_pct'])})."]
         approved = [money(battery["period_total"]), money(battery["prior_total"]),
                     pct(battery["delta_pct"]), signed_money(battery["delta"])]
     else:
@@ -177,8 +180,11 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
             "grounding": (f"Total {m} {period}: {money(battery['period_total'])} vs {prior}: "
                           f"{money(battery['prior_total'])} ({pct(battery['delta_pct'])}). Peak month "
                           f"{money(peak_val)}.\n\n{trend.title}\n{_table_md(trend.columns, trend.rows)}"),
+            # Approve every figure the grounding table shows, not just the headline:
+            # the model may legitimately cite any month from the trend it was given.
             "approved": [money(battery["period_total"]), money(battery["prior_total"]),
-                         pct(battery["delta_pct"]), signed_money(battery["delta"]), money(peak_val)],
+                         pct(battery["delta_pct"]), signed_money(battery["delta"]), money(peak_val),
+                         *[money(t) for t in totals]],
             "chart": perf_chart,
         })
 
@@ -196,11 +202,17 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
             approved += [signed_money(f["top_riser"][3])]
         if f["top_faller"]:
             approved += [signed_money(f["top_faller"][3])]
+        # Every value shown in the grounding tables is a real SQL result, so the model
+        # may cite it: approve the breakdown rows it sees (_table_md shows 12) ...
+        approved += [money(r[1]) for r in bd.rows[:12]]
         grounding = f"{bd.title}\n{_table_md(bd.columns, bd.rows)}"
         instruction = f"Explain the {m} breakdown by {dim} for {period}: who leads and the concentration"
         if mv.rows:
             grounding += f"\n\n{mv.title}\n{_table_md(mv.columns, mv.rows, limit=6)}"
             instruction += ", plus the biggest mover versus the prior period."
+            # ... and the mover rows (current, prior, delta for the 6 shown).
+            for r in mv.rows[:6]:
+                approved += [money(r[1]), money(r[2]), signed_money(r[3])]
         else:
             instruction += "."
         specs.append({
@@ -210,11 +222,13 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
         })
 
     # --- Recommendations ---
+    # Approved set = the exec summary's (specs[0]): the grounding is the same exec_lines,
+    # NOT the last dimension's loop-local `approved`.
     specs.append({
         "id": "reco", "kind": "reco", "kicker": "RECOMMENDATIONS",
         "instruction": "Given the findings, write 3-4 specific, prioritized, verb-first "
                        "recommendations a finance leader could act on next month.",
-        "grounding": "\n".join(exec_lines), "approved": approved, "chart": None,
+        "grounding": "\n".join(exec_lines), "approved": list(specs[0]["approved"]), "chart": None,
     })
     return specs
 
@@ -231,10 +245,15 @@ _WRITER_SYS = (
     "Refer to the metric by the exact name used in the data (for example actual, spend, budget, "
     "units); do NOT call it revenue unless that is genuinely its name. "
     "Write in crisp, executive prose. CRITICAL: you may cite ONLY the approved figures given to "
-    "you, using those exact strings. Never invent or recompute any other number."
+    "you, using those exact strings. Never invent or recompute any other number: no sums, "
+    "differences, ratios, roundings, or percentages of your own. If the figure you want is not "
+    "in the approved list, express the point in words without a number."
 )
 
-_FIG_RE = re.compile(r"[-+]?\$\s?\d[\d,]*(?:\.\d+)?\s*[kKmMbB]?|[-+]?\d[\d,]*(?:\.\d+)?\s*%")
+# A number must END on a digit ("\d(?:[\d,]*\d)?"), or the match would swallow a
+# trailing comma in running text ("$1,591, and").
+_FIG_RE = re.compile(
+    r"[-+]?\$\s?\d(?:[\d,]*\d)?(?:\.\d+)?\s*[kKmMbB]?|[-+]?\d(?:[\d,]*\d)?(?:\.\d+)?\s*%")
 
 
 def _norm(t: str) -> str:
@@ -243,6 +262,10 @@ def _norm(t: str) -> str:
 
 def _unapproved_figures(text: str, approved: list[str]) -> list[str]:
     ok = {_norm(a) for a in approved}
+    # Prose legitimately moves a figure's sign into words ("declined by $10k" for the
+    # approved "-$10k"), so an UNSIGNED citation also matches a signed approved figure.
+    # An explicit "-" in the text still has to match exactly.
+    ok |= {n.lstrip("-") for n in ok}
     return [t for t in _FIG_RE.findall(text) if _norm(t) not in ok]
 
 
@@ -322,29 +345,66 @@ def node_write(state: GState, config=None) -> dict:
     return {"sections": sections, "exec_draft": exec_draft, "recs": recs}
 
 
+_MAX_REGEN = 3
+
+
+def _strict_note(bad: list[str]) -> str:
+    return (f"\n\nA previous draft cited figures that are NOT in the approved list: {bad}. "
+            f"These were computed or invented — that is forbidden. Rewrite using ONLY the "
+            f"approved figures above, as exact strings. If a number you want is not approved, "
+            f"omit it and describe the point in words instead.")
+
+
+def _verify_section(spec: dict, sec: ReportSection, config=None) -> ReportSection:
+    """Regenerate a section while it cites unapproved figures (bounded retries),
+    re-checking each redraft — a redraft can invent new figures too."""
+    for _ in range(_MAX_REGEN + 1):  # final iteration is a check without a regen budget
+        text = " ".join([sec.action_title, sec.narrative, *sec.bullets, sec.so_what or ""])
+        bad = _unapproved_figures(text, spec["approved"])
+        if not bad:
+            break
+        sec = _section_from_draft(spec, _draft(spec, strict=_strict_note(bad), config=config))
+    return sec
+
+
 def node_verify(state: GState, config=None) -> dict:
-    """Re-check each written section for figures outside its approved set; regenerate once."""
+    """Re-check everything the LLM wrote — sections AND the exec summary AND the
+    recommendations — for figures outside the approved sets; regenerate offenders."""
     specs = {s["id"]: s for s in state["plan"]}
     fixed: list[ReportSection] = []
     for sec in state["sections"]:
         spec_id = sec.citations[0].split(":")[0] if sec.citations else None
         spec = specs.get(spec_id) or next(
             (s for s in state["plan"] if s["kicker"] == sec.kicker), None)
-        if not spec:
-            fixed.append(sec)
-            continue
-        text = " ".join([sec.action_title, sec.narrative, *sec.bullets, sec.so_what or ""])
-        bad = _unapproved_figures(text, spec["approved"])
-        if bad:
-            strict = (f"\n\nA previous draft invented these figures: {bad}. Rewrite using ONLY "
-                      f"the approved figures above.")
-            sec = _section_from_draft(spec, _draft(spec, strict=strict, config=config))
-        fixed.append(sec)
-    return {"sections": fixed}
+        fixed.append(_verify_section(spec, sec, config) if spec else sec)
+    out: dict = {"sections": fixed}
+
+    # Exec draft: title + governing thought + key messages.
+    ed, exec_spec = state.get("exec_draft"), specs.get("exec")
+    if ed and exec_spec:
+        for _ in range(_MAX_REGEN + 1):
+            text = " ".join([ed.title, ed.governing_thought, *[km.text for km in ed.key_messages]])
+            bad = _unapproved_figures(text, exec_spec["approved"])
+            if not bad:
+                break
+            ed = _draft(exec_spec, strict=_strict_note(bad), config=config)
+        out["exec_draft"] = ed
+
+    # Recommendations.
+    recs, reco_spec = state.get("recs"), specs.get("reco")
+    if recs and reco_spec:
+        for _ in range(_MAX_REGEN + 1):
+            bad = _unapproved_figures(" ".join(recs), reco_spec["approved"])
+            if not bad:
+                break
+            recs = _draft(reco_spec, strict=_strict_note(bad), config=config).recommendations
+        out["recs"] = recs
+
+    return out
 
 
 def node_assemble(state: GState) -> dict:
-    b, profile, req = state["battery"], state["profile"], state["request"]
+    b, profile = state["battery"], state["profile"]
     ed: ExecDraft = state["exec_draft"]
     # Prefer the model's concise title; fall back to a clean data-derived one. Guard against
     # the model echoing a long prompt (a title should be short).
