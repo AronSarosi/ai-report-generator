@@ -10,9 +10,10 @@ Container Apps** (scale-to-zero → ~$0 when idle):
 | `srg-api` | FastAPI service: `/generate`, `/chat`, `/health` (`APP_MODE=api`) | 8000 |
 
 Plus: Log Analytics, an Azure OpenAI account with `gpt-4o-mini` + `text-embedding-3-small`
-deployments, and a monthly cost budget with email alerts. The image is built **in the
-cloud** with `az acr build` — local Docker is not required. Secrets (LLM keys, Langfuse)
-travel as Container Apps **secrets**, never baked into the image.
+deployments, and a monthly cost budget with email alerts. The image is built with local
+Docker and pushed to ACR (ACR Tasks / `az acr build` is `TasksOperationsNotAllowed` on
+free-trial subscriptions). Secrets (LLM keys, Langfuse) travel as Container Apps
+**secrets**, never baked into the image.
 
 ## Deploy
 

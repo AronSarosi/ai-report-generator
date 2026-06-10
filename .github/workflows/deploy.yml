@@ -47,10 +47,15 @@ jobs:
           ACR=$(az acr list -g "$RESOURCE_GROUP" --query "[0].name" -o tsv)
           echo "ACR=$ACR" >> "$GITHUB_ENV"
 
-      # Build in the cloud (no Docker setup in the runner); sha tag for revision
-      # traceability, latest kept for infra/deploy.ps1 re-runs.
-      - name: Build image in ACR
-        run: az acr build -r "$ACR" -t "ai-report-generator:${{ github.sha }}" -t "ai-report-generator:latest" .
+      # Build on the runner and push: ACR Tasks (az acr build) is not permitted on
+      # free-trial subscriptions. Sha tag for revision traceability, latest kept
+      # for infra/deploy.ps1 re-runs.
+      - name: Build and push image
+        run: |
+          az acr login -n "$ACR"
+          docker build -t "$ACR.azurecr.io/ai-report-generator:${{ github.sha }}" \
+                       -t "$ACR.azurecr.io/ai-report-generator:latest" .
+          docker push --all-tags "$ACR.azurecr.io/ai-report-generator"
 
       - name: Update container apps
         run: |

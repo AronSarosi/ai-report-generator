@@ -70,11 +70,19 @@ az group create -n $ResourceGroup -l $Location -o none
 az acr create -n $AcrName -g $ResourceGroup --sku Basic --admin-enabled true -o none
 Write-Host "Resource group + registry ready."
 
-# --- 3. cloud image build ------------------------------------------------------------
+# --- 3. image build + push -----------------------------------------------------------
+# Built locally and pushed: ACR Tasks (`az acr build`) is blocked on free-trial
+# subscriptions (TasksOperationsNotAllowed). Plain docker push works everywhere.
 if (-not $SkipBuild) {
-    Write-Host "Building image in ACR (the LibreOffice layer makes the first build ~10-20 min)..."
-    az acr build -r $AcrName -t "ai-report-generator:$ImageTag" $repoRoot
-    if (-not $?) { throw "az acr build failed" }
+    $image = "$AcrName.azurecr.io/ai-report-generator:$ImageTag"
+    Write-Host "Building $image locally (the LibreOffice layer makes the first build slow)..."
+    az acr login -n $AcrName
+    if (-not $?) { throw "az acr login failed (is Docker running?)" }
+    docker build -t $image $repoRoot
+    if (-not $?) { throw "docker build failed" }
+    Write-Host "Pushing to ACR (first push uploads ~1.5 GB)..."
+    docker push $image
+    if (-not $?) { throw "docker push failed" }
 }
 
 # --- 4. secrets for the template -----------------------------------------------------
