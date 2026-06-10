@@ -1,0 +1,132 @@
+[
+  {
+    "key": "retail_sales",
+    "title": "Retail Sales Review",
+    "domain": "Retail / Commerce",
+    "description": "Two years of daily sales across regions, channels, categories and products. The report finds the winning category, the laggard region, and the channel shift.",
+    "rows": 104567,
+    "cols": 12,
+    "columns": [
+      "date",
+      "region",
+      "channel",
+      "category",
+      "product",
+      "units",
+      "unit_price",
+      "discount_pct",
+      "revenue",
+      "unit_cost",
+      "cost",
+      "gross_profit"
+    ],
+    "title_text": "May 2026 Revenue Insights",
+    "period": "2026-05",
+    "n_sections": 5,
+    "pdf": "app/examples/retail_sales/report.pdf",
+    "pptx": "app/examples/retail_sales/report.pptx",
+    "csv": "app/examples/retail_sales/data.csv",
+    "thumbs": [
+      "app/examples/retail_sales/slide_1.png",
+      "app/examples/retail_sales/slide_2.png",
+      "app/examples/retail_sales/slide_3.png",
+      "app/examples/retail_sales/slide_4.png",
+      "app/examples/retail_sales/slide_5.png",
+      "app/examples/retail_sales/slide_6.png",
+      "app/examples/retail_sales/slide_7.png",
+      "app/examples/retail_sales/slide_8.png"
+    ],
+    "csv_sampled": true
+  },
+  {
+    "key": "fpa_budget",
+    "title": "Budget vs Actuals (FP&A)",
+    "domain": "Finance / FP&A",
+    "description": "Monthly budget-vs-actuals by department. A completely different shape from the sales data (no products/regions) \u2014 same engine, FP&A report.",
+    "rows": 144,
+    "cols": 5,
+    "columns": [
+      "month",
+      "department",
+      "budget",
+      "actual",
+      "variance"
+    ],
+    "title_text": "May Financial Performance Overview",
+    "period": "2026-05",
+    "n_sections": 2,
+    "pdf": "app/examples/fpa_budget/report.pdf",
+    "pptx": "app/examples/fpa_budget/report.pptx",
+    "csv": "app/examples/fpa_budget/data.csv",
+    "thumbs": [
+      "app/examples/fpa_budget/slide_1.png",
+      "app/examples/fpa_budget/slide_2.png",
+      "app/examples/fpa_budget/slide_3.png",
+      "app/examples/fpa_budget/slide_4.png",
+      "app/examples/fpa_budget/slide_5.png"
+    ],
+    "csv_sampled": false
+  },
+  {
+    "key": "saas_metrics",
+    "title": "SaaS Growth Metrics",
+    "domain": "SaaS / Subscriptions",
+    "description": "MRR, new and churned revenue, and active customers by plan and region. Surfaces the plan driving growth and where churn concentrates.",
+    "rows": 384,
+    "cols": 7,
+    "columns": [
+      "month",
+      "plan",
+      "region",
+      "active_customers",
+      "mrr",
+      "new_mrr",
+      "churned_mrr"
+    ],
+    "title_text": "Monthly MRR Performance Analysis",
+    "period": "2026-05",
+    "n_sections": 3,
+    "pdf": "app/examples/saas_metrics/report.pdf",
+    "pptx": "app/examples/saas_metrics/report.pptx",
+    "csv": "app/examples/saas_metrics/data.csv",
+    "thumbs": [
+      "app/examples/saas_metrics/slide_1.png",
+      "app/examples/saas_metrics/slide_2.png",
+      "app/examples/saas_metrics/slide_3.png",
+      "app/examples/saas_metrics/slide_4.png",
+      "app/examples/saas_metrics/slide_5.png",
+      "app/examples/saas_metrics/slide_6.png"
+    ],
+    "csv_sampled": false
+  },
+  {
+    "key": "marketing_analytics",
+    "title": "Marketing Channel Performance",
+    "domain": "Marketing / Web",
+    "description": "Sessions, conversions, revenue and ad spend by channel. Shows the efficient channels, the expensive ones, and what is declining.",
+    "rows": 120,
+    "cols": 6,
+    "columns": [
+      "month",
+      "channel",
+      "sessions",
+      "conversions",
+      "revenue",
+      "ad_spend"
+    ],
+    "title_text": "Revenue Growth and Channel Insights",
+    "period": "2026-05",
+    "n_sections": 2,
+    "pdf": "app/examples/marketing_analytics/report.pdf",
+    "pptx": "app/examples/marketing_analytics/report.pptx",
+    "csv": "app/examples/marketing_analytics/data.csv",
+    "thumbs": [
+      "app/examples/marketing_analytics/slide_1.png",
+      "app/examples/marketing_analytics/slide_2.png",
+      "app/examples/marketing_analytics/slide_3.png",
+      "app/examples/marketing_analytics/slide_4.png",
+      "app/examples/marketing_analytics/slide_5.png"
+    ],
+    "csv_sampled": false
+  }
+]

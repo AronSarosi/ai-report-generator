@@ -42,7 +42,7 @@ def _months(n: int) -> list[date]:
     return out
 
 
-def main() -> None:
+def generate() -> pd.DataFrame:
     rng = np.random.default_rng(SEED)
     rows = []
     months = _months(N_MONTHS)
@@ -54,8 +54,11 @@ def main() -> None:
             actual = round(budget * (ratio0 + drift * t) * float(rng.lognormal(0, 0.04)))
             rows.append({"month": mo.isoformat(), "department": dept,
                          "budget": budget, "actual": actual, "variance": actual - budget})
+    return pd.DataFrame(rows)
 
-    df = pd.DataFrame(rows)
+
+def main() -> None:
+    df = generate()
     root = Path(__file__).resolve().parents[1]
     out = root / "data" / "out" / "budget_vs_actuals.csv"
     out.parent.mkdir(parents=True, exist_ok=True)

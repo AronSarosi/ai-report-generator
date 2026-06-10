@@ -18,36 +18,32 @@ OUT = Path(__file__).resolve().parents[1] / "data" / "ui_shots"
 OUT.mkdir(parents=True, exist_ok=True)
 
 
-def _load(page):
-    """Wait until Streamlit has actually painted its widgets (it streams over a
-    websocket, so networkidle alone fires too early)."""
-    page.goto(BASE, wait_until="networkidle", timeout=60000)
-    page.wait_for_selector('button:has-text("Use sample data")', timeout=45000)
-    page.wait_for_selector('[data-testid="stFileUploaderDropzone"]', timeout=45000)
-    page.wait_for_timeout(2500)  # let fonts + the hero SVG settle
-
-
 def main() -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch()
 
-        # --- Desktop, Generate tab ---
+        # --- Desktop: lands on Example Reports tab ---
         page = browser.new_page(viewport={"width": 1440, "height": 900})
-        _load(page)
-        page.screenshot(path=str(OUT / "01_landing_generate.png"), full_page=True)
+        page.goto(BASE, wait_until="networkidle", timeout=60000)
+        page.wait_for_selector('[data-baseweb="tab"]', timeout=45000)
+        page.wait_for_timeout(3500)
+        page.screenshot(path=str(OUT / "01_examples_tab.png"), full_page=True)
+
+        # Generate tab
+        try:
+            page.get_by_role("tab", name="Generate Report").click()
+            page.wait_for_timeout(2500)
+            page.screenshot(path=str(OUT / "02_generate_tab.png"), full_page=True)
+        except Exception as e:  # noqa: BLE001
+            print("generate tab:", e)
 
         # Ask Your Data tab
         try:
             page.get_by_role("tab", name="Ask Your Data").click()
             page.wait_for_timeout(2500)
-            page.screenshot(path=str(OUT / "02_chat_tab.png"), full_page=True)
+            page.screenshot(path=str(OUT / "03_chat_tab.png"), full_page=True)
         except Exception as e:  # noqa: BLE001
             print("chat tab:", e)
-
-        # --- Mobile width ---
-        m = browser.new_page(viewport={"width": 390, "height": 844})
-        _load(m)
-        m.screenshot(path=str(OUT / "03_mobile_landing.png"), full_page=True)
 
         browser.close()
     print(f"shots in {OUT}")

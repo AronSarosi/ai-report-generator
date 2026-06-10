@@ -10,6 +10,7 @@ Run from the project root:
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 import tempfile
@@ -147,6 +148,69 @@ def field_label(text: str) -> None:
 
 def hint(text: str) -> None:
     st.markdown(f"<div class='hint'>{text}</div>", unsafe_allow_html=True)
+
+
+# --------------------------------------------------------------------------- #
+# Example Reports gallery (pre-built decks served statically — instant, no tokens)
+# --------------------------------------------------------------------------- #
+_ROOT = Path(__file__).resolve().parents[1]
+_EXAMPLES_MANIFEST = _ROOT / "app" / "examples" / "manifest.json"
+
+
+@st.cache_data(show_spinner=False)
+def _load_examples() -> list[dict]:
+    if not _EXAMPLES_MANIFEST.exists():
+        return []
+    try:
+        return json.loads(_EXAMPLES_MANIFEST.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        return []
+
+
+def render_examples() -> None:
+    examples = _load_examples()
+    if not examples:
+        hint("Example reports haven't been built yet. Run `python scripts/build_examples.py`.")
+        return
+    hint("Real reports the engine generated from four different datasets — view every slide, "
+         "download the deck, then try your own data in the Generate Report tab. These are "
+         "pre-built, so they load instantly.")
+    titles = [f"{e['title']}  ·  {e['domain']}" for e in examples]
+    choice = st.radio("Example", titles, label_visibility="collapsed", horizontal=True)
+    ex = examples[titles.index(choice)]
+
+    st.markdown(f"<div class='datastatus'><b>{ex['title_text']}</b> &nbsp;|&nbsp; period "
+                f"{ex['period']} &nbsp;|&nbsp; {ex['rows']:,} rows &times; {ex['cols']} columns "
+                f"&nbsp;|&nbsp; {ex['n_sections']} insight slides</div>", unsafe_allow_html=True)
+    hint(ex["description"])
+    st.markdown("".join(f"<span class='datachip'>{c}</span>" for c in ex["columns"]),
+                unsafe_allow_html=True)
+
+    # Downloads (static files — no LLM call)
+    cols = st.columns(3)
+    pdf = _ROOT / ex["pdf"] if ex["pdf"] else None
+    pptx = _ROOT / ex["pptx"]
+    csv = _ROOT / ex["csv"]
+    if pdf and pdf.exists():
+        cols[0].download_button("⬇ Full report (PDF)", pdf.read_bytes(),
+                                f"{ex['key']}_report.pdf", "application/pdf",
+                                use_container_width=True)
+    if pptx.exists():
+        cols[1].download_button(
+            "⬇ Editable deck (PPTX)", pptx.read_bytes(), f"{ex['key']}_report.pptx",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            use_container_width=True)
+    if csv.exists():
+        csv_label = "⬇ Source data (CSV sample)" if ex.get("csv_sampled") else "⬇ Source data (CSV)"
+        cols[2].download_button(csv_label, csv.read_bytes(),
+                                f"{ex['key']}_data.csv", "text/csv",
+                                use_container_width=True)
+
+    # Slides, full width, in order.
+    for t in ex["thumbs"]:
+        img = _ROOT / t
+        if img.exists():
+            st.image(str(img), use_container_width=True)
 
 
 # --------------------------------------------------------------------------- #
@@ -364,7 +428,14 @@ st.markdown('<div class="app-sub">Upload your sales, finance, or operations data
             'Or ask questions in plain English and get instant answers, all computed from your own '
             'data.</div>', unsafe_allow_html=True)
 
-tab_gen, tab_chat = st.tabs(["Generate Report", "Ask Your Data"])
+tab_examples, tab_gen, tab_chat = st.tabs(
+    ["Example Reports", "Generate Report", "Ask Your Data"])
+
+# --------------------------------------------------------------------------- #
+# Tab 0 - Example Reports (pre-built; instant; demonstrates data-agnostic breadth)
+# --------------------------------------------------------------------------- #
+with tab_examples:
+    render_examples()
 
 # --------------------------------------------------------------------------- #
 # Tab 1 - Generate Report
