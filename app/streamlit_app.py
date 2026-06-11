@@ -222,10 +222,7 @@ def render_examples_showcase() -> None:
     examples = _load_examples()
     if not examples:
         return
-    st.markdown("<div class='showcase-h'>See what it produces</div>", unsafe_allow_html=True)
-    st.markdown("<div class='showcase-sub'>Real reports the engine generated from different "
-                "datasets, each styled like a different brand template. Use the arrows to browse, "
-                "and scroll inside the preview to see the full report.</div>",
+    st.markdown("<div class='showcase-sub'>Real reports generated with the AI Report Generator.</div>",
                 unsafe_allow_html=True)
 
     n = len(examples)
@@ -305,19 +302,20 @@ def _process_uploads(files) -> None:
                 pass
 
 
-def data_panel(suffix: str) -> str | None:
-    """Uploader + shared status + active-dataset picker. Returns the active table."""
+def data_uploader(suffix: str) -> None:
+    """Just the data drag-and-drop. Status + picker are rendered by data_status()."""
     field_label("Upload your data (CSV or Excel, one or more files)")
     files = st.file_uploader("data", type=UPLOAD_TYPES, accept_multiple_files=True,
                              key=f"up_{suffix}", label_visibility="collapsed")
     if files:
         _process_uploads(files)
 
+
+def data_status(suffix: str) -> str | None:
+    """Shared status + active-dataset picker for the loaded data. Returns the active table."""
     tables = st.session_state.get("tables", {})
     if not tables:
-        hint("Upload a CSV or Excel file to begin. New here? See the example reports below "
-             "for what the engine produces.")
-    if not tables:
+        hint("Upload a CSV or Excel file to begin.")
         return None
 
     names = list(tables.keys())
@@ -333,6 +331,45 @@ def data_panel(suffix: str) -> str | None:
         st.session_state["active_table"] = active
         return active
     return names[0]
+
+
+def data_panel(suffix: str) -> str | None:
+    """Uploader + shared status + active-dataset picker. Returns the active table."""
+    data_uploader(suffix)
+    return data_status(suffix)
+
+
+def brand_uploader() -> None:
+    """The optional brand-template drag-and-drop (+ its own status). Sets st.session_state['brand']."""
+    field_label("Brand template (optional)")
+    tmpl = st.file_uploader("template", type=["pptx", "potx"], key="tmpl_gen",
+                            label_visibility="collapsed",
+                            help="Upload a PowerPoint template or a past report and the deck adopts "
+                                 "its brand colors and fonts. Leave empty for the default style.")
+    if tmpl is not None:
+        sig = (tmpl.name, tmpl.size)
+        if st.session_state.get("_brand_sig") != sig:
+            tpath = Path(tempfile.gettempdir()) / "template_upload.pptx"
+            tpath.write_bytes(tmpl.getvalue())
+            st.session_state["brand"] = extract_brand(tpath)
+            st.session_state["_brand_sig"] = sig
+            try:
+                tpath.unlink()
+            except OSError:
+                pass
+        brand = st.session_state.get("brand") or {}
+        if brand:
+            st.markdown(
+                f"<div class='datastatus'>&#10003; Brand picked up from <b>{tmpl.name}</b>, accent "
+                f"<b>{brand.get('accent', 'n/a')}</b>, fonts <b>{brand.get('font_head', 'n/a')}</b> / "
+                f"<b>{brand.get('font_body', 'n/a')}</b>. Your deck will use these.</div>",
+                unsafe_allow_html=True)
+        else:
+            hint("Couldn't read a theme from that file, so the deck will use the default style.")
+    else:
+        st.session_state.pop("brand", None)
+        st.session_state.pop("_brand_sig", None)
+        hint("Optional: give the deck your brand. Without a template it uses the clean default style.")
 
 
 # --------------------------------------------------------------------------- #
@@ -429,38 +466,14 @@ tab_gen, tab_chat = st.tabs(["Generate Report", "Ask Your Data"])
 # Tab 1 - Generate Report
 # --------------------------------------------------------------------------- #
 with tab_gen:
-    active = data_panel("gen")
-
-    # Optional brand template: the deck adopts its colors + fonts.
-    field_label("Brand template (optional)")
-    tmpl = st.file_uploader("template", type=["pptx", "potx"], key="tmpl_gen",
-                            label_visibility="collapsed",
-                            help="Upload a PowerPoint template or a past report and the deck adopts "
-                                 "its brand colors and fonts. Leave empty for the default style.")
-    if tmpl is not None:
-        sig = (tmpl.name, tmpl.size)
-        if st.session_state.get("_brand_sig") != sig:
-            tpath = Path(tempfile.gettempdir()) / "template_upload.pptx"
-            tpath.write_bytes(tmpl.getvalue())
-            st.session_state["brand"] = extract_brand(tpath)
-            st.session_state["_brand_sig"] = sig
-            try:
-                tpath.unlink()
-            except OSError:
-                pass
-        brand = st.session_state.get("brand") or {}
-        if brand:
-            st.markdown(
-                f"<div class='datastatus'>&#10003; Brand picked up from <b>{tmpl.name}</b>, accent "
-                f"<b>{brand.get('accent', 'n/a')}</b>, fonts <b>{brand.get('font_head', 'n/a')}</b> / "
-                f"<b>{brand.get('font_body', 'n/a')}</b>. Your deck will use these.</div>",
-                unsafe_allow_html=True)
-        else:
-            hint("Couldn't read a theme from that file, so the deck will use the default style.")
-    else:
-        st.session_state.pop("brand", None)
-        st.session_state.pop("_brand_sig", None)
-        hint("Optional: give the deck your brand. Without a template it uses the clean default style.")
+    # Data and brand-template uploaders side by side: drop your data on the left, an
+    # optional brand template on the right. The data confirmation/picker spans below.
+    up_data, up_brand = st.columns(2)
+    with up_data:
+        data_uploader("gen")
+    with up_brand:
+        brand_uploader()
+    active = data_status("gen")
 
     field_label("What report do you want?")
     prompt = st.text_area(
