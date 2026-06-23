@@ -2,8 +2,9 @@
 
 AI Report Generator: turns a tabular data file + a plain-English prompt (and an optional
 PowerPoint brand template) into a board-ready PPTX/PDF report whose every quoted number is
-computed from the data, never invented by the LLM. A second surface ("Ask Your Data")
-answers questions via LLM-generated read-only SQL.
+computed from the data, never invented by the LLM. A second, programmatic surface (Talk2Data,
+exposed via the FastAPI `/chat` endpoint and the eval harness, not the UI) answers questions
+via LLM-generated read-only SQL.
 
 ## Architecture: data flow from upload to final report
 
@@ -34,31 +35,35 @@ CSV/TSV/Excel/JSON  +  prompt  +  optional .pptx/.potx brand template
 
 Key principle: **the system owns the numbers and charts; the model only writes prose.**
 
-Second path — Talk2Data (`src/data_tool.py`): question → `generate_sql()` (LLM) →
-`run_select()` with defense in depth (read-only `mode=ro` connection + `PRAGMA query_only`,
-single-statement SELECT/WITH only, keyword denylist, enforced outer LIMIT, query timeout).
+Second path - Talk2Data (`src/data_tool.py`), the programmatic `/chat` surface (no UI tab):
+question -> `generate_sql()` (LLM) -> `run_select()` with defense in depth (read-only
+`mode=ro` connection + `PRAGMA query_only`, single-statement SELECT/WITH only, keyword
+denylist, enforced outer LIMIT, query timeout). The profiling + SQL engine it uses is the
+same one that backs report generation.
 
 Entry points:
-- `app/streamlit_app.py` — Streamlit UI (two tabs sharing one uploaded dataset); also
+- `app/streamlit_app.py` - Streamlit UI (report generation from one uploaded dataset); also
   applies per-IP monthly usage caps (`src/limits.py`) and footer legal pages (`src/legal.py`).
-- `app/main.py` — FastAPI: `GET /health`, `POST /generate` (multipart: intent, fmt,
-  optional file → PPTX/PDF download), `POST /chat` (question → JSON answer + SQL).
-- `eval/run_all.py` — full LLM eval suite (costs API money): Talk2Data golden QA
+- `app/main.py` - FastAPI: `GET /health`, `POST /generate` (multipart: intent, fmt,
+  optional file -> PPTX/PDF download), `POST /chat` (question -> JSON answer + SQL; the
+  programmatic Talk2Data surface, not exposed in the UI).
+- `eval/run_all.py` - full LLM eval suite (costs API money): Talk2Data golden QA
   (`run_eval.py`) + report-pipeline figure-grounding/structure (`run_report_eval.py`).
-- `tests/` — deterministic pytest suite, no LLM calls (runs in CI): SQL guardrails,
-  profiler role inference, battery math vs pandas ground truth, verifier logic.
-- `infra/deploy.ps1` + `infra/main.bicep` — one-command Azure deploy (Container Apps
-  UI + API from one image via `APP_MODE`, Azure OpenAI, Log Analytics, cost budget).
-- `.github/workflows/` — `ci.yml` (PR: ruff + pytest), `deploy.yml` (main: OIDC login,
-  `az acr build`, update both container apps).
+- `tests/` - deterministic pytest suite, no LLM calls (runs in CI): SQL guardrails,
+  profiler role inference, battery math vs pandas ground truth, verifier logic, render smoke.
+- `Dockerfile` - one image runs either the UI or the API (`APP_MODE=ui|api`); deployed to
+  Google Cloud Run (scale-to-zero).
+- `.github/workflows/ci.yml` - push/PR: ruff + pytest.
 
 ## Model client configuration
 
 Everything provider-related funnels through **`src/config.py`**:
 - `Settings(BaseSettings)` reads the project-root `.env` (pydantic-settings, case-insensitive).
 - `get_chat_model()` / `get_embeddings()` return LangChain clients for the configured
-  provider: `PROVIDER=openai` → `ChatOpenAI`/`OpenAIEmbeddings`; `PROVIDER=azure` →
-  `AzureChatOpenAI`/`AzureOpenAIEmbeddings`. No other module instantiates an LLM client.
+  provider: `PROVIDER=openai` -> `ChatOpenAI`/`OpenAIEmbeddings`; `PROVIDER=azure` ->
+  `AzureChatOpenAI`/`AzureOpenAIEmbeddings` (an optional client-side switch for those who
+  use Azure OpenAI; the live deployment uses plain OpenAI). No other module instantiates an
+  LLM client.
 - Langfuse tracing lives in `src/obs.py` (`get_callbacks()`); it is passed as a LangChain
   callback into the report graph and the text-to-SQL call, and is a silent no-op when the
   Langfuse keys are unset.
@@ -90,26 +95,26 @@ docker build -t ai-report-generator . ; docker run -p 8501:8501 --env-file .env 
 PDF export requires LibreOffice on PATH (the Docker image installs `libreoffice-impress`);
 without it you still get the PPTX.
 
-Azure deployment (Container Apps + ACR cloud build) is documented step-by-step in
-`docs/azure_deploy.md`.
+Deployment: the single `Dockerfile` image is deployed to Google Cloud Run (scale-to-zero);
+the same image serves the UI or, with `APP_MODE=api`, the FastAPI service.
 
 ## Environment variables (all read by `Settings` in src/config.py)
 
 | Variable | Required | Default / notes |
 |---|---|---|
-| `PROVIDER` | no | `openai`; set `azure` to switch the whole app to Azure OpenAI |
-| `OPENAI_API_KEY` | **yes** (when PROVIDER=openai) | — |
+| `PROVIDER` | no | `openai` (the live default); set `azure` to use Azure OpenAI clients |
+| `OPENAI_API_KEY` | **yes** (when PROVIDER=openai) | - |
 | `OPENAI_CHAT_MODEL` | no | `gpt-4o-mini` |
 | `OPENAI_EMBED_MODEL` | no | `text-embedding-3-small` |
-| `AZURE_OPENAI_API_KEY` | yes when PROVIDER=azure | — |
-| `AZURE_OPENAI_ENDPOINT` | yes when PROVIDER=azure | — |
+| `AZURE_OPENAI_API_KEY` | yes when PROVIDER=azure | - |
+| `AZURE_OPENAI_ENDPOINT` | yes when PROVIDER=azure | - |
 | `AZURE_OPENAI_API_VERSION` | no | `2024-10-21` |
-| `AZURE_OPENAI_CHAT_DEPLOYMENT` | yes when PROVIDER=azure | — |
-| `AZURE_OPENAI_EMBED_DEPLOYMENT` | yes when PROVIDER=azure (embeddings only) | — |
-| `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` | no | both set → tracing on, else off |
+| `AZURE_OPENAI_CHAT_DEPLOYMENT` | yes when PROVIDER=azure | - |
+| `AZURE_OPENAI_EMBED_DEPLOYMENT` | yes when PROVIDER=azure (embeddings only) | - |
+| `LANGFUSE_PUBLIC_KEY` / `LANGFUSE_SECRET_KEY` | no | both set -> tracing on, else off |
 | `LANGFUSE_HOST` | no | `https://cloud.langfuse.com` |
 | `DB_PATH` | no | `data/db/sales.sqlite` |
-| `DOCS_DIR`, `CHROMA_DIR`, `CHARTS_DIR`, `OUT_DIR` | no | under `data/` |
+| `CHARTS_DIR`, `OUT_DIR` | no | under `data/` |
 
 `.env` is gitignored and excluded from the Docker build context (`.dockerignore`); never
 commit secrets.

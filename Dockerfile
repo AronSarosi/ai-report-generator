@@ -24,6 +24,11 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+# Files copied from a Windows host arrive without the Unix executable bit, so
+# the ENTRYPOINT script must be made executable explicitly (else Cloud Run fails
+# to start with "permission denied").
+RUN chmod +x docker/entrypoint.sh
+
 # Bake the demo datasets into the image so "Use sample data" works out of the box,
 # then hand /app to the non-root user (the app writes data/db|out|charts at runtime).
 RUN python scripts/gen_sales_data.py && python scripts/gen_budget_data.py \
@@ -32,9 +37,10 @@ RUN python scripts/gen_sales_data.py && python scripts/gen_budget_data.py \
 USER appuser
 ENV HOME=/home/appuser
 
-# Azure Container Apps provides the port via $PORT; default to 8501 for local runs.
-ENV PORT=8501 APP_MODE=ui
-EXPOSE 8501
+# The platform provides the listen port via $PORT (Cloud Run defaults to 8080,
+# Azure Container Apps also injects it); default to 8080 for local parity with Cloud Run.
+ENV PORT=8080 APP_MODE=ui
+EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s \
     CMD ["python", "docker/healthcheck.py"]

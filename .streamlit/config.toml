@@ -1,11 +1,11 @@
-# Professional dark theme + chrome settings for the Streamlit app.
+# Warm light theme + chrome settings for the Streamlit app.
 
 [theme]
-base = "dark"
-primaryColor = "#4A90D9"
-backgroundColor = "#0E1420"
-secondaryBackgroundColor = "#1A2231"
-textColor = "#E6E8EB"
+base = "light"
+primaryColor = "#B5532E"
+backgroundColor = "#F2ECE3"
+secondaryBackgroundColor = "#FBF8F2"
+textColor = "#221E19"
 
 [client]
 # Hide the developer toolbar (the "Deploy" button + menu) for a clean app look.

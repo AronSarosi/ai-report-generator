@@ -1,5 +1,5 @@
-"""Docker HEALTHCHECK probe (used by `docker run` locally; Container Apps uses its
-own HTTP probes configured in infra/main.bicep).
+"""Docker HEALTHCHECK probe (used by `docker run` locally; the Cloud Run deployment uses
+its own HTTP health checks).
 
 Hits the liveness route of whichever server APP_MODE selected.
 """
