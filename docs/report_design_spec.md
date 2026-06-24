@@ -1,9 +1,9 @@
-# Consulting-Grade Finance Report Generator — Design Spec
+# Consulting-Grade Finance Report Generator - Design Spec
 
 A data-agnostic spec for the automated PowerPoint (`python-pptx`) + PDF (LibreOffice
 headless) generator, derived from MBB/Big-4 deck conventions (Minto Pyramid, BCG action
 titles), Tufte's data-ink principle, and IBCS business-charting standards. All values are
-opinionated defaults — implement these as-is; they live in one `src/style.py` constants
+opinionated defaults - implement these as-is; they live in one `src/style.py` constants
 module so the deck and the charts never drift.
 
 > Source of truth for Step A6 (default report template / narrative rules) and Step A7
@@ -11,7 +11,7 @@ module so the deck and the charts never drift.
 
 ## 1. Structure & Narrative
 
-**Governing rule — Pyramid Principle (Minto):** lead with the answer, then support it.
+**Governing rule - Pyramid Principle (Minto):** lead with the answer, then support it.
 Top-down: governing thought -> 3 key messages -> evidence.
 
 - **Governing thought:** one sentence the whole deck proves (e.g. "Q2 results are on plan;
@@ -45,9 +45,9 @@ Zones for a standard content slide (top->bottom). EMU at 914,400/in; full slide 
 |---|---|---|---|
 | Kicker / section label | 0.30 | 0.25 | ALL-CAPS, accent color, 11pt (e.g. "FINANCIAL PERFORMANCE") |
 | Action title | 0.55 | 0.85 | The assertion, 24pt bold, dark navy, left-aligned, <=2 lines |
-| Hairline rule | 1.45 | — | 1pt accent line under title, full content width |
+| Hairline rule | 1.45 | - | 1pt accent line under title, full content width |
 | Body | 1.65 | 4.55 | Single chart OR table OR content block |
-| So-what callout box | right ~30% of body OR bottom-right | — | Tinted box, accent border, 1-2 sentence takeaway / key number |
+| So-what callout box | right ~30% of body OR bottom-right | - | Tinted box, accent border, 1-2 sentence takeaway / key number |
 | Source / footnote line | 7.05 | 0.25 | 8pt gray, left ("Source: ..."); page # right |
 
 - Side margins: 0.5 in (content width 12.333 in / 11,277,600 EMU). Title/body/source all
@@ -77,22 +77,22 @@ green, negative = red, totals = dark navy. Label positives above the bar, negati
 
 ## 4. Visual System
 
-**Color palette — named constants (hex):**
+**Color palette - named constants (hex):**
 ```
-INK        = "#1F2A44"   # near-black navy — titles, totals, primary bars
-ACCENT     = "#2E6DB4"   # corporate blue — the ONE highlight (kicker, rule, emphasis)
+INK        = "#1F2A44"   # near-black navy - titles, totals, primary bars
+ACCENT     = "#2E6DB4"   # corporate blue - the ONE highlight (kicker, rule, emphasis)
 GRAY_900   = "#3C4450"   # body text dark
 GRAY_500   = "#7A828C"   # secondary text, source line, context bars
 GRAY_300   = "#C0C5C9"   # muted bars/lines
 GRAY_100   = "#E6E8EB"   # gridlines, table rules, callout box fill
-POSITIVE   = "#2E8B6F"   # green — favorable variance / up
-NEGATIVE   = "#C0392B"   # red — unfavorable variance / down
+POSITIVE   = "#2E8B6F"   # green - favorable variance / up
+NEGATIVE   = "#C0392B"   # red - unfavorable variance / down
 PAPER      = "#FFFFFF"
 ```
 RAG status chips: POSITIVE / "#E0A53B" (amber) / NEGATIVE.
 
 **Typography (safe in PowerPoint + LibreOffice):**
-- Headings/titles: **Georgia** (serif, MBB-credible) — or Arial Bold for a single-family look.
+- Headings/titles: **Georgia** (serif, MBB-credible) - or Arial Bold for a single-family look.
 - Body/charts: **Arial** (universal; renders identically in LibreOffice).
 - Pairing: Georgia titles + Arial body (McKinsey-style default).
 - Sizes: kicker 11pt / action title 24pt bold / subhead 13pt / body 11pt / chart labels
@@ -132,7 +132,7 @@ matplotlib gives full Tufte control and identical PDF output).
 | (b) Exec summary / key messages | Kicker "EXECUTIVE SUMMARY"; action title = governing thought; body = 3-5 assertion bullets each with a POSITIVE/NEGATIVE RAG chip; no chart. |
 | (c) Section divider | INK full-bleed (or left ACCENT band); section number + name centered, Georgia 32pt white; no source line. |
 | (d) Single-chart insight | Kicker + action title + hairline; matplotlib chart in left ~68% of BODY_BOX; so-what callout box (GRAY_100 fill, ACCENT left border, Arial 11pt) in right ~30%; source line. The workhorse slide. |
-| (e) Breakdown / table | Action title; banded table — header row INK fill/white text, body rows alternating PAPER/GRAY_100, 1pt GRAY_300 rules, right-align numbers, no vertical borders; variance column colored POSITIVE/NEGATIVE. |
+| (e) Breakdown / table | Action title; banded table - header row INK fill/white text, body rows alternating PAPER/GRAY_100, 1pt GRAY_300 rules, right-align numbers, no vertical borders; variance column colored POSITIVE/NEGATIVE. |
 | (f) Recommendations | Kicker "RECOMMENDATIONS"; numbered imperative actions (verb-first), each with owner + timeframe; optional priority chips. |
 | (g) Sources | Action title "Sources & methodology"; Arial 9pt reference list; data-as-of date and assumptions. |
 

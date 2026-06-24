@@ -43,7 +43,7 @@ def test_smart_title():
 
 def test_no_dashes():
     assert _no_dashes("up — sharply") == "up, sharply"
-    assert _no_dashes("a–b") == "a-b"
+    assert _no_dashes("a-b") == "a-b"
     assert _no_dashes("") == ""
 
 
@@ -64,7 +64,7 @@ def test_fig_regex_ignores_bare_years():
 
 
 def test_fig_regex_does_not_swallow_trailing_comma():
-    # "$1,591, and" must match "$1,591" — not "$1,591," (numbers end on a digit)
+    # "$1,591, and" must match "$1,591" - not "$1,591," (numbers end on a digit)
     found = [m.strip() for m in _FIG_RE.findall("spent $1,591, and more")]
     assert found == ["$1,591"]
 

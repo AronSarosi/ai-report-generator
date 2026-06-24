@@ -7,7 +7,7 @@ quality) run before opening the public link. Findings and the fixes applied.
 
 ### Critical
 - **Arbitrary file write / RCE via upload filename** (`app/main.py`). The API wrote
-  uploads to `tempfile.gettempdir() / file.filename` — an absolute or `../` filename
+  uploads to `tempfile.gettempdir() / file.filename` - an absolute or `../` filename
   could overwrite files under `/app` (which the container owns), i.e. remote code
   execution on restart. **Fix:** the temp name is now generated server-side
   (`upload_<uuid><ext>`), the extension is allowlisted, and the raw file is always
@@ -28,7 +28,7 @@ quality) run before opening the public link. Findings and the fixes applied.
   profiler, a per-call `max_tokens` cap, a row cap (`MAX_ROWS`) and a 25 MB upload limit
   on both surfaces.
 - **Dirty headers crashed the loader** (duplicate/empty column names → uncaught 500 on
-  the API). **Fix:** headers are cleaned at load — whitespace trimmed, blanks filled,
+  the API). **Fix:** headers are cleaned at load - whitespace trimmed, blanks filled,
   duplicates de-duped, and double-quotes (the SQL-identifier-injection vector) stripped.
 - **SQL identifier injection via column names.** Uploaded headers flowed unescaped into
   f-string SQL; a header containing `"` could break out of the quoted identifier. **Fix:**
@@ -55,17 +55,17 @@ quality) run before opening the public link. Findings and the fixes applied.
 - **IP-based caps are spoofable** via `X-Forwarded-For`. This is acknowledged as a soft
   lead-magnet gate; the **global daily ceiling and the OpenAI account spend cap are the
   real backstops**. Set a hard monthly limit in the OpenAI dashboard
-  (platform.openai.com → Billing → Limits) — that is the one true ceiling for a personal
+  (platform.openai.com → Billing → Limits) - that is the one true ceiling for a personal
   key and lives outside this repo.
 - **Cross-tenant reads via Talk2Data.** The read-only SQLite connection blocks writes but
   not reads of other transient uploaded tables; a crafted *question* could read another
   visitor's data. Low impact for a demo (uploads are transient and non-sensitive, and the
   per-request table is dropped immediately). Full isolation would use a per-session
-  database file — noted as future hardening.
+  database file - noted as future hardening.
 - **Prompt injection via dataset cells** can put attacker text into report prose, but the
   verifier strips any unapproved `$`/`%` figure and the model has no tools, so impact is
   cosmetic.
-- **`defusedxml` for the PPTX template parser** (`src/branding.py`) — recommended hardening
+- **`defusedxml` for the PPTX template parser** (`src/branding.py`) - recommended hardening
   against XML-bomb DoS on the brand-template upload; deferred.
 
 ## Validation

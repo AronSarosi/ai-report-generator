@@ -5,7 +5,7 @@ latency, tokens, cost). We hand a Langfuse callback handler to LangChain/LangGra
 then captures the whole report-generation tree without any code in the business logic.
 
 If no Langfuse keys are configured, get_callbacks() returns [] and everything still runs
-normally — tracing is strictly optional.
+normally - tracing is strictly optional.
 """
 
 from __future__ import annotations
@@ -22,13 +22,19 @@ def _handler():
     if not s.langfuse_enabled:
         return None
     try:
-        from langfuse.callback import CallbackHandler
+        from langfuse import Langfuse
+        from langfuse.langchain import CallbackHandler
 
-        return CallbackHandler(
+        # In langfuse v3 the CallbackHandler takes no keys; it uses the Langfuse
+        # client, which reads LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY /
+        # LANGFUSE_HOST from the environment. Initialise the client explicitly
+        # with our settings first, then hand back a keyless handler.
+        Langfuse(
             public_key=s.langfuse_public_key,
             secret_key=s.langfuse_secret_key,
             host=s.langfuse_host,
         )
+        return CallbackHandler()
     except Exception:  # noqa: BLE001 - never let tracing break the app
         return None
 

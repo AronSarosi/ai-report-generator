@@ -4,16 +4,16 @@ For each sample dataset this runs the whole LangGraph pipeline (analyze -> plan 
 verify -> assemble), then re-derives the approved figures *deterministically* (profile ->
 battery -> plan are pure given the data) and checks:
 
-  1. Figure grounding — every $ / % figure anywhere in the report text exists in the
+  1. Figure grounding - every $ / % figure anywhere in the report text exists in the
      approved set computed from the database. Insight sections are checked against their
      own section's approved figures (same rule the runtime verify node enforces); the
      title, governing thought, key messages and recommendations are checked against the
-     union of all approved figures — the runtime verify node does NOT cover those, so
+     union of all approved figures - the runtime verify node does NOT cover those, so
      this eval closes that gap.
-  2. Structure — the report has the shape the renderer expects (title length, key-message
+  2. Structure - the report has the shape the renderer expects (title length, key-message
      count and statuses, sections with non-empty charts, recommendation count, sources).
 
-Run from the project root (makes real LLM calls — costs API money):
+Run from the project root (makes real LLM calls - costs API money):
     python eval/run_report_eval.py
 """
 

@@ -4,7 +4,7 @@ For each dataset it loads the data, builds a report, renders the PPTX/PDF, and r
 whether it crashed, how many LLM-cited figures were ungrounded (should be 0), and basic
 structure. Outputs land in data/torture/out/ with an index.md summary.
 
-    python scripts/run_torture.py        (makes real LLM calls — costs API money)
+    python scripts/run_torture.py        (makes real LLM calls - costs API money)
 """
 
 from __future__ import annotations
@@ -70,7 +70,7 @@ def run_one(name: str) -> dict:
     except ValueError as e:               # intentional guardrail (e.g. no numeric measure)
         rec["status"] = "rejected"
         rec["detail"] = str(e)
-    except Exception as e:                # noqa: BLE001 — capture crashes, don't stop the run
+    except Exception as e:                # noqa: BLE001 - capture crashes, don't stop the run
         rec["status"] = "CRASH"
         rec["detail"] = f"{type(e).__name__}: {e}"
         rec["trace"] = traceback.format_exc()

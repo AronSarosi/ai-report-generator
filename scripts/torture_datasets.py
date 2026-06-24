@@ -29,7 +29,7 @@ def _rng(seed: int) -> np.random.Generator:
 
 
 def clean_sales(rng):
-    """A normal, clean dataset — the baseline."""
+    """A normal, clean dataset - the baseline."""
     rows = []
     for mo in MONTHS:
         for r in REGIONS:
@@ -75,7 +75,7 @@ def no_time_column(rng):
 
 
 def no_numeric_column(rng):
-    """Only categorical columns — should yield a clean 'no measure' message, not a crash."""
+    """Only categorical columns - should yield a clean 'no measure' message, not a crash."""
     return pd.DataFrame({"date": MONTHS * 2,
                          "region": (REGIONS + REGIONS)[:len(MONTHS) * 2],
                          "status": ["open", "closed"] * len(MONTHS)})

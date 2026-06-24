@@ -4,8 +4,8 @@ We read the template's theme (ppt/theme/theme1.xml) straight from the .pptx/.pot
 accent color, the dark/text color, and the major/minor fonts. The renderer applies these to its
 own clean layout, so an uploaded corporate template makes the deck come out on-brand.
 
-We deliberately do NOT copy the template's master slides or logos — placement is too
-template-specific to reproduce reliably — colors + fonts are what make a deck read as "ours".
+We deliberately do NOT copy the template's master slides or logos - placement is too
+template-specific to reproduce reliably - colors + fonts are what make a deck read as "ours".
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ def _hex_from(el) -> Optional[str]:
 
 
 def extract_brand(template_path) -> dict:
-    """Return {'accent','ink','font_head','font_body'} — any key may be missing on failure."""
+    """Return {'accent','ink','font_head','font_body'} - any key may be missing on failure."""
     out: dict = {}
     try:
         with zipfile.ZipFile(template_path) as z:
@@ -53,7 +53,7 @@ def extract_brand(template_path) -> dict:
                 out["font_head"] = major.get("typeface")
             if minor is not None and minor.get("typeface"):
                 out["font_body"] = minor.get("typeface")
-    except Exception:  # noqa: BLE001 — a malformed template just yields no branding
+    except Exception:  # noqa: BLE001 - a malformed template just yields no branding
         return {}
     # Drop empty values so callers can use dict.get() with their own defaults.
     return {k: v for k, v in out.items() if v}

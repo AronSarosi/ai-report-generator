@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field
 
 
 # --------------------------------------------------------------------------- #
-# Dataset profiling (what the data IS — discovered at runtime, never hardcoded)
+# Dataset profiling (what the data IS - discovered at runtime, never hardcoded)
 # --------------------------------------------------------------------------- #
 class ColumnRole(str, Enum):
     TIME = "time"            # a date/time axis

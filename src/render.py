@@ -187,7 +187,7 @@ def _content_slide(prs, kicker, title, source, t):
     s = prs.slides.add_slide(prs.slide_layouts[6])
     _set(_box(s, *KICKER_BOX).paragraphs[0], kicker.upper(), SZ_KICKER, t.font_body, t.accent, bold=True)
     _set(_box(s, *TITLE_BOX).paragraphs[0], title, SZ_TITLE, t.font_head, t.ink, bold=True)
-    # No rule under the title — whitespace separates it (underlines read as AI-generated).
+    # No rule under the title - whitespace separates it (underlines read as AI-generated).
     if source:
         _set(_box(s, *SOURCE_BOX).paragraphs[0], source, SZ_SOURCE, t.font_body, GRAY_500)
     return s
@@ -229,7 +229,7 @@ def _exec_slide(prs, report: Report, t):
     tf = _box(s, 0.5, 2.05, CONTENT_W_IN, 4.6)
     for i, km in enumerate(report.key_messages):
         p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
-        # One universal bullet color (the brand accent) regardless of sentiment — colored
+        # One universal bullet color (the brand accent) regardless of sentiment - colored
         # red/green dots read like a status alert rather than a finished report.
         chip = p.add_run()
         chip.text = "●  "
@@ -251,7 +251,7 @@ def _insight_slide(prs, sec, chart_path: Optional[Path], t):
 
 
 def _callout(slide, label, takeaway, bullets, t, left=8.5, top=1.95, width=4.3):
-    """A brand-colored header band over a light card — the insight callout."""
+    """A brand-colored header band over a light card - the insight callout."""
     hdr = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(left), Inches(top), Inches(width), Inches(0.5))
     hdr.fill.solid()
     hdr.fill.fore_color.rgb = _rgb(t.ink)
@@ -313,7 +313,7 @@ def _kpis_from_chart(spec: ChartSpec) -> list[tuple[str, str]]:
 
 def _kpi_band(slide, kpis: list[tuple[str, str]], t, top: float = 5.2):
     """A horizontal row of KPI cards: a big number, then a one-line insight beneath it
-    (not just a label — the label is already on the chart above)."""
+    (not just a label - the label is already on the chart above)."""
     n = len(kpis) or 1
     gap = 0.45
     card_w = (CONTENT_W_IN - gap * (n - 1)) / n
@@ -419,7 +419,7 @@ def render_report(report: Report, out_dir=None, charts_dir=None, brand=None) -> 
             _insight_slide(prs, sec, cpath, t)
         insight_n += 1
     _reco_slide(prs, report, t)
-    # No standalone "Sources & methodology" slide — a single-line appendix reads as an
+    # No standalone "Sources & methodology" slide - a single-line appendix reads as an
     # unfinished slide. Provenance lives in each slide's source footer and in report.json.
 
     pptx_path = _save_robust(prs, out_dir / "report.pptx")
@@ -439,7 +439,7 @@ if __name__ == "__main__":
     # (fast/cheap iteration on the visual design).
     cached = Path(get_settings().out_dir) / "report.json"
     if os.getenv("REUSE_REPORT") == "1" and cached.exists():
-        print("(reusing cached report.json — no LLM call)")
+        print("(reusing cached report.json - no LLM call)")
         rep = load_report(cached)
     else:
         rep = build_report(ReportRequest(intent="Monthly sales review", table="sales"))

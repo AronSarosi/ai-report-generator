@@ -8,7 +8,7 @@ programmatically (the "production API" surface):
     POST /chat              -> a question           ->  JSON answer + the SQL used
 
 This surface is public, so it carries the same usage caps as the UI (a per-client
-monthly allowance plus a global daily ceiling — src/limits.py) so a single caller
+monthly allowance plus a global daily ceiling - src/limits.py) so a single caller
 cannot run up the owner's OpenAI bill.
 
 Run locally:
@@ -69,7 +69,7 @@ def _ingest(file: UploadFile | None) -> str:
 
     A unique table per request is what stops two concurrent callers from overwriting
     each other's data (the API would otherwise share one 'data' table). The temp
-    filename is generated here — NEVER derived from client-supplied file.filename
+    filename is generated here - NEVER derived from client-supplied file.filename
     (that would allow path traversal / overwriting app files)."""
     if file is None:
         return "sales"
@@ -94,9 +94,9 @@ def _ingest(file: UploadFile | None) -> str:
         load_file_to_sqlite(tmp, table=table)
     except HTTPException:
         raise
-    except ValueError as e:               # bad/empty file — safe, specific message
+    except ValueError as e:               # bad/empty file - safe, specific message
         raise HTTPException(status_code=422, detail=f"Could not read the file: {e}")
-    except Exception:                     # noqa: BLE001 — don't leak internals
+    except Exception:                     # noqa: BLE001 - don't leak internals
         log.exception("ingest failed")
         raise HTTPException(status_code=422, detail="Could not read the uploaded file.")
     finally:
@@ -125,11 +125,11 @@ async def generate(request: Request, intent: str = Form(...), fmt: str = Form("p
     try:
         report = build_report(ReportRequest(intent=intent, table=table))
         paths = render_report(report, out_dir=out_dir, charts_dir=out_dir)
-    except ValueError as e:               # data has no numeric column, etc. — safe to show
+    except ValueError as e:               # data has no numeric column, etc. - safe to show
         raise HTTPException(status_code=422, detail=str(e))
     except HTTPException:
         raise
-    except Exception:                     # noqa: BLE001 — don't leak internals to the client
+    except Exception:                     # noqa: BLE001 - don't leak internals to the client
         log.exception("report generation failed")
         raise HTTPException(status_code=500, detail="Report generation failed. Please try again.")
     finally:

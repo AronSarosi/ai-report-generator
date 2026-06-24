@@ -10,7 +10,7 @@ fixed set of real signals for the reporting period:
     - the biggest movers by every dimension (period vs prior period)
 
 Every number here comes from a real SQL query (run read-only via data_tool.run_select),
-so the report narrative can be grounded in — and later verified against — these results.
+so the report narrative can be grounded in - and later verified against - these results.
 """
 
 from __future__ import annotations

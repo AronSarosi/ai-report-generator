@@ -1,6 +1,6 @@
 """Talk2Data: load any tabular file, profile it, and answer questions with safe SQL.
 
-This is the data-agnostic core. Nothing here knows about "sales" specifically — it
+This is the data-agnostic core. Nothing here knows about "sales" specifically - it
 discovers the schema of whatever table it is pointed at and reasons from that.
 
 Pipeline:
@@ -34,7 +34,7 @@ from src.schemas import ColumnProfile, ColumnRole, DatasetProfile, SQLResult
 # Bound the work a single upload can create (cost + memory + readability).
 MAX_ROWS = 200_000
 _NUMERIC_JUNK = re.compile(r"[,$€£%\s]")
-_NULL_TOKENS = {"", "na", "n/a", "nan", "none", "null", "-", "—", "."}
+_NULL_TOKENS = {"", "na", "n/a", "nan", "none", "null", "-", "-", "."}
 
 
 def _clean_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -196,7 +196,7 @@ def profile_dataset(db_path=None, table: str = "sales") -> DatasetProfile:
                 role = ColumnRole.MEASURE
                 cmin, cmax = _fmt(ser.min()), _fmt(ser.max())
         else:
-            # A categorical to group by — but a near-unique text column (free-text notes,
+            # A categorical to group by - but a near-unique text column (free-text notes,
             # ids) makes a useless 1000-bar breakdown, so cap the absolute cardinality too.
             is_dim = n_unique <= max(50, n_rows // 2) and n_unique <= 1000
             role = ColumnRole.DIMENSION if is_dim else ColumnRole.OTHER
@@ -283,7 +283,7 @@ that answers it. Rules:
       FROM "<table>" GROUP BY "<dim>")
     SELECT k, cur, prev, cur - prev AS change FROM t ORDER BY change ASC LIMIT 1
   Use ORDER BY change ASC for "declined the most", DESC for "grew the most". Do NOT answer a
-  "declined/grew the most" question with just the lowest/highest total — it is the change
+  "declined/grew the most" question with just the lowest/highest total - it is the change
   between the two periods.
 - Never modify data.
 - If the question cannot be answered from THIS schema (it is off-topic, general

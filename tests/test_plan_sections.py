@@ -1,4 +1,4 @@
-"""_plan_sections: deterministic planning — section specs, charts, approved figures."""
+"""_plan_sections: deterministic planning - section specs, charts, approved figures."""
 
 from src.report import _FIG_RE, _plan_sections
 
@@ -28,7 +28,7 @@ def test_insight_sections_have_charts(sales_battery, sales_profile):
 
 def test_every_approved_figure_is_verifiable(sales_battery, sales_profile):
     # The verify node can only catch violations if the approved strings themselves
-    # are matched by the figure regex — otherwise the writer cites them and the
+    # are matched by the figure regex - otherwise the writer cites them and the
     # verifier flags its own approved values.
     specs = _plan_sections(sales_battery, sales_profile)
     for s in specs:

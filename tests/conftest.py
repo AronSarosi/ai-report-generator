@@ -1,6 +1,6 @@
 """Shared fixtures: throwaway sqlite databases built from DataFrames.
 
-Everything under tests/ is deterministic and makes NO LLM calls — the LLM-dependent
+Everything under tests/ is deterministic and makes NO LLM calls - the LLM-dependent
 checks live in eval/ and run manually (they cost API money).
 """
 

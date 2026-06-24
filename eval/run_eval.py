@@ -5,7 +5,7 @@ then run the question through Talk2Data (LLM-generated read-only SQL) and check 
 matches. Outputs a pass-rate and writes eval/REPORT.md. This is the automated trust signal:
 proof that the system's numbers are right, not hallucinated.
 
-Run from the project root (uses your OPENAI_API_KEY / Azure config — costs API money):
+Run from the project root (uses your OPENAI_API_KEY / Azure config - costs API money):
     python eval/run_eval.py        # Talk2Data eval only
     python eval/run_all.py         # Talk2Data + full report-pipeline eval
 """

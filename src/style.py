@@ -7,7 +7,7 @@ deck and the charts never drift. See docs/report_design_spec.md for the rational
 from __future__ import annotations
 
 # --------------------------------------------------------------------------- #
-# Color palette (hex) — gray is context, accent is rationed for emphasis
+# Color palette (hex) - gray is context, accent is rationed for emphasis
 # --------------------------------------------------------------------------- #
 INK = "#1F2A44"        # near-black navy: titles, totals, primary bars
 ACCENT = "#2E6DB4"     # corporate blue: the ONE highlight
@@ -26,7 +26,7 @@ PAPER = "#FFFFFF"
 FONT_HEAD = "Georgia"  # serif titles (MBB-credible)
 FONT_BODY = "Arial"    # universal; identical in LibreOffice
 
-# point sizes (bumped up — small text reads as cheap; consulting decks run large)
+# point sizes (bumped up - small text reads as cheap; consulting decks run large)
 SZ_DECK_TITLE = 46
 SZ_KICKER = 13
 SZ_TITLE = 30

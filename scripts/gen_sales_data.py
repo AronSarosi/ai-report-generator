@@ -14,7 +14,7 @@ Everything is driven by a fixed seed so the data is fully reproducible. Money
 columns let the report talk about revenue, margin, and gross profit (finance-y).
 
 Outputs:
-  data/out/sales_sample.csv   one flat table — this is the file a user "uploads"
+  data/out/sales_sample.csv   one flat table - this is the file a user "uploads"
   data/db/sales.sqlite        the same rows loaded into a `sales` table for dev
 
 Run:  python scripts/gen_sales_data.py

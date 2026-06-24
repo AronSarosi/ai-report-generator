@@ -1,4 +1,4 @@
-"""profile_dataset: runtime role inference — the heart of being data-agnostic."""
+"""profile_dataset: runtime role inference - the heart of being data-agnostic."""
 
 import pandas as pd
 

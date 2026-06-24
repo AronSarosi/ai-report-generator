@@ -27,9 +27,8 @@ from src.render import render_report  # noqa: E402
 from src.report import build_report  # noqa: E402
 from src.schemas import ReportRequest  # noqa: E402
 
-_FAVICON = Path(__file__).parent / "favicon.png"
 st.set_page_config(page_title="AI Report Generator",
-                   page_icon=str(_FAVICON) if _FAVICON.exists() else None,
+                   page_icon="📊",
                    layout="wide", initial_sidebar_state="collapsed")
 settings = get_settings()
 UPLOAD_TYPES = ["csv", "tsv", "xlsx", "xlsm", "xls", "json"]
@@ -41,7 +40,7 @@ UPLOAD_TYPES = ["csv", "tsv", "xlsx", "xlsm", "xls", "json"]
 # Minimum sizes: nothing below 10pt (~0.84rem); written text >= 11pt (~0.92rem).
 CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@400;500;600&display=swap');
 /* Shared modular type scale (Perfect Fourth ~1.333), matched to theme.py across all tools. */
 :root {
   --h1: clamp(2.5rem, 5vw, 3.75rem);
@@ -69,7 +68,7 @@ html, body, [class*="css"], .stMarkdown, p, span, div, label {font-family:'Inter
 .trust .chip {display:inline-flex; align-items:center; gap:.5rem; background:#FFFFFF; border:1px solid #E0D8CB; border-radius:999px; padding:.4rem .9rem; font-size:var(--caption); color:#5B544B; font-weight:500;}
 .trust .chip::before {content:""; width:7px; height:7px; border-radius:50%; background:#B5532E; flex:none;}
 
-.field-label {font-size:1.08rem; font-weight:600; color:#221E19; margin:.65rem 0 .3rem 0;}
+.field-label {font-family:'Newsreader',Georgia,serif; font-size:1.5rem; font-weight:600; color:#221E19; letter-spacing:-.01em; margin:1.3rem 0 .35rem 0;}
 .lede {color:#5B544B; font-size:1.2rem; line-height:1.5; margin:.7rem 0 .9rem 0;}
 .hint {color:#8A8175; font-size:.95rem; margin:.3rem 0 .2rem 0;}
 .datastatus {background:#FBF8F2; border:1px solid #E0D8CB; color:#221E19; padding:.6rem .85rem; border-radius:6px; font-size:.98rem; margin:.5rem 0 .6rem 0;}
@@ -109,7 +108,10 @@ div[class*="st-key-sample_"] button {min-width:160px; width:160px; font-size:1.0
 .rt-bars span.hi {background:#B5532E;}
 .rt-take {margin-top:.65rem; background:#F6EDE6; border-left:3px solid #B5532E; border-radius:3px; padding:.4rem .55rem; font-size:.72rem; color:#221E19; line-height:1.32;}
 .rt-take b {font-size:.64rem; letter-spacing:.06em; color:#B5532E;}
-/* subtle footer links + the standalone privacy/terms pages */
+/* subtle footer: disclaimer, byline, then the standalone privacy/terms links */
+.footer {border-top:1px solid #E0D8CB; margin-top:9rem; padding-top:1.4rem;}
+.footer .discl {color:#8A8175; font-style:italic; font-size:.86rem; line-height:1.55; max-width:760px;}
+.footer .built {color:#8A8175; font-size:.86rem; margin-top:.6rem;}
 .footlink {color:#8A8175 !important; text-decoration:none !important; font-size:.85rem; margin:0 .55rem;}
 .footlink:hover {color:#B5532E !important; text-decoration:none !important;}
 .footsep {color:#B7AD9E;}
@@ -485,11 +487,19 @@ if res:
                            "report.pdf", "application/pdf")
 
 # --------------------------------------------------------------------------- #
-# Footer: subtle, centered Privacy / Terms links (each opens its own themed page)
+# Footer: tool-specific disclaimer, the "Built by Aron Sarosi" byline, then the
+# subtle Terms / Privacy links (each opens its own themed page). This order and
+# styling match the canonical footer used across the other tools.
 # --------------------------------------------------------------------------- #
 st.markdown(
-    "<div style='text-align:center; margin-top:9rem;'>"
-    "<a class='footlink' href='?page=privacy' target='_blank'>Privacy</a>"
-    "<span class='footsep'>&middot;</span>"
+    "<div class='footer'>"
+    "<p class='discl'>Reports are generated from the data you upload, and every figure is "
+    "computed from that data. Sanity-check the output before relying on it. This is a demo, "
+    "not professional advice.</p>"
+    "<p class='built'>Built by Aron Sarosi</p>"
+    "<div style='text-align:center;'>"
     "<a class='footlink' href='?page=terms' target='_blank'>Terms of Use</a>"
+    "<span class='footsep'>&middot;</span>"
+    "<a class='footlink' href='?page=privacy' target='_blank'>Privacy Policy</a>"
+    "</div>"
     "</div>", unsafe_allow_html=True)

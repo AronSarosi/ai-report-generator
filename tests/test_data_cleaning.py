@@ -23,7 +23,7 @@ def test_clean_columns_dedupes_and_strips():
 
 
 def test_clean_columns_strips_doublequote_injection_vector():
-    # a double-quote in a header is the SQL identifier-breakout vector — must be removed
+    # a double-quote in a header is the SQL identifier-breakout vector - must be removed
     df = pd.DataFrame([[1]], columns=['x" FROM data--'])
     assert '"' not in _clean_columns(df).columns[0]
 

@@ -16,7 +16,7 @@ CSV/TSV/Excel/JSON  +  prompt  +  optional .pptx/.potx brand template
    SQLite table (data/db/*.sqlite)     │
         │                              │
         ▼                              │
-  LangGraph engine  src/report.py  —  analyze → plan → write → verify → assemble
+  LangGraph engine  src/report.py  -  analyze → plan → write → verify → assemble
     analyze   profile_dataset() infers column roles (time/measure/dimension/id),
               then compute_battery() (src/analysis.py) runs deterministic SQL:
               period vs prior total, monthly trend, top/bottom by every dimension, movers
@@ -28,7 +28,7 @@ CSV/TSV/Excel/JSON  +  prompt  +  optional .pptx/.potx brand template
     assemble  typed Report (src/schemas.py), persisted to data/out/report.json
         │
         ▼
-  render_report() (src/render.py) — matplotlib chart PNGs + python-pptx deck themed by
+  render_report() (src/render.py) - matplotlib chart PNGs + python-pptx deck themed by
   src/style.py (overridden by the extracted brand), then PDF via headless LibreOffice
   (degrades to PPTX-only when LibreOffice is absent)
 ```
@@ -122,9 +122,9 @@ commit secrets.
 ## Conventions
 
 - Pydantic v2 everywhere; LLM responses are forced through `with_structured_output(...)`.
-- Data-agnostic by design: nothing may hardcode column names — everything derives from
+- Data-agnostic by design: nothing may hardcode column names - everything derives from
   `DatasetProfile` (roles discovered at runtime in `profile_dataset()`).
 - All SQL executed on user data goes through `run_select()`; never open a writable
   connection for query answering.
 - Visual design rules live in `docs/report_design_spec.md`, implemented once in
-  `src/style.py` — change styling there, not in `render.py` call sites.
+  `src/style.py` - change styling there, not in `render.py` call sites.

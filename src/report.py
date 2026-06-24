@@ -192,7 +192,7 @@ def _plan_sections(battery: dict, profile) -> list[dict]:
         "grounding": "\n".join(exec_lines), "approved": approved, "chart": None,
     })
 
-    # --- Performance vs prior (trend line) — only when the data has a time axis ---
+    # --- Performance vs prior (trend line) - only when the data has a time axis ---
     trend = battery["trend"]
     if trend is not None and trend.rows:
         months = [_label(r[0]) for r in trend.rows]
@@ -384,14 +384,14 @@ _MAX_REGEN = 3
 
 def _strict_note(bad: list[str]) -> str:
     return (f"\n\nA previous draft cited figures that are NOT in the approved list: {bad}. "
-            f"These were computed or invented — that is forbidden. Rewrite using ONLY the "
+            f"These were computed or invented - that is forbidden. Rewrite using ONLY the "
             f"approved figures above, as exact strings. If a number you want is not approved, "
             f"omit it and describe the point in words instead.")
 
 
 def _verify_section(spec: dict, sec: ReportSection, config=None) -> ReportSection:
     """Regenerate a section while it cites unapproved figures (bounded retries),
-    re-checking each redraft — a redraft can invent new figures too."""
+    re-checking each redraft - a redraft can invent new figures too."""
     for _ in range(_MAX_REGEN + 1):  # final iteration is a check without a regen budget
         text = " ".join([sec.action_title, sec.narrative, *sec.bullets, sec.so_what or ""])
         bad = _unapproved_figures(text, spec["approved"])
@@ -402,8 +402,8 @@ def _verify_section(spec: dict, sec: ReportSection, config=None) -> ReportSectio
 
 
 def node_verify(state: GState, config=None) -> dict:
-    """Re-check everything the LLM wrote — sections AND the exec summary AND the
-    recommendations — for figures outside the approved sets; regenerate offenders."""
+    """Re-check everything the LLM wrote - sections AND the exec summary AND the
+    recommendations - for figures outside the approved sets; regenerate offenders."""
     specs = {s["id"]: s for s in state["plan"]}
     fixed: list[ReportSection] = []
     for sec in state["sections"]:

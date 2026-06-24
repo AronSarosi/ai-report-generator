@@ -3,7 +3,7 @@
 #
 # Single-stage on purpose: there are no compiled artifacts to discard, and the
 # image weight is dominated by the libreoffice-impress apt layer, which the
-# final image needs anyway — a multi-stage build would not shrink it.
+# final image needs anyway - a multi-stage build would not shrink it.
 FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 MPLCONFIGDIR=/tmp/matplotlib

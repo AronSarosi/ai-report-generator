@@ -2,16 +2,16 @@
 
 Two layers, because this is a public demo running on the owner's own OpenAI credit:
 
-  1. Per-client monthly cap (best-effort, keyed by client IP) — stops one visitor from
+  1. Per-client monthly cap (best-effort, keyed by client IP) - stops one visitor from
      treating the demo as a free production tool. A lead-magnet gate, not a hard boundary.
-  2. Global DAILY ceiling across ALL clients — the real backstop. No matter how many IPs
+  2. Global DAILY ceiling across ALL clients - the real backstop. No matter how many IPs
      (or spoofed forwarded headers) hit the app, total LLM-backed work per day is bounded,
      so a single abuser cannot drain the credit. This is the cheap, high-impact control.
 
 The hardest backstop of all is still the OpenAI account-level spend cap (set that too).
 
 Usage is stored in a small SQLite table. On a scale-to-zero host the file can reset when
-the instance recycles — that only ever makes the caps *more* lenient briefly, never a
+the instance recycles - that only ever makes the caps *more* lenient briefly, never a
 crash, and the global daily ceiling + account spend cap remain as backstops.
 """
 
